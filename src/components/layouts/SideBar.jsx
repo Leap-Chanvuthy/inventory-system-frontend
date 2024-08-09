@@ -1,0 +1,64 @@
+import { Sidebar } from "flowbite-react";
+import { HiArrowSmRight } from "react-icons/hi";
+import { GoHome } from "react-icons/go";
+import { BsCart3 } from "react-icons/bs";
+import { MdOutlineInventory2 } from "react-icons/md";
+import { FiUsers } from "react-icons/fi";
+import { TbBrandGoogleAnalytics } from "react-icons/tb";
+import { RiMoneyPoundCircleLine } from "react-icons/ri";
+import { PiSignOut } from "react-icons/pi";
+import { HiMenu } from "react-icons/hi";
+
+const SideBar = ({ isOpen, toggleSidebar }) => {
+  return (
+    <div
+      className={`${
+        isOpen ? 'fixed inset-0 z-50' : 'hidden'
+      } md:flex md:flex-col md:w-64`}
+    >
+      <Sidebar aria-label="Sidebar with multi-level dropdown example">
+        <button
+          onClick={toggleSidebar}
+          className="p-2 text-gray-600 dark:text-gray-300 focus:outline-none md:hidden"
+        >
+          <HiMenu size={24} />
+        </button>
+        <Sidebar.Items>
+          <Sidebar.ItemGroup>
+            <Sidebar.Item href="#" icon={GoHome}>
+              Dashboard
+            </Sidebar.Item>
+            <Sidebar.Collapse icon={MdOutlineInventory2} label="Inventory">
+              <Sidebar.Item href="#">Products</Sidebar.Item>
+              <Sidebar.Item href="#">Purchase</Sidebar.Item>
+              <Sidebar.Item href="#">Supplier</Sidebar.Item>
+            </Sidebar.Collapse>
+            <Sidebar.Collapse href="#" icon={BsCart3} label="Sale">
+              <Sidebar.Item href="#">Sale Order</Sidebar.Item>
+              <Sidebar.Item href="#">Invoice</Sidebar.Item>
+              <Sidebar.Item href="#">Customer</Sidebar.Item>
+            </Sidebar.Collapse>
+            <Sidebar.Collapse href="#" icon={TbBrandGoogleAnalytics} label="Report Analytics">
+              <Sidebar.Item href="#">Sale Order</Sidebar.Item>
+              <Sidebar.Item href="#">Invoice</Sidebar.Item>
+              <Sidebar.Item href="#">Customer</Sidebar.Item>
+            </Sidebar.Collapse>
+            <Sidebar.Collapse href="#" icon={RiMoneyPoundCircleLine} label="Accounting">
+              <Sidebar.Item href="#">Sale Order</Sidebar.Item>
+              <Sidebar.Item href="#">Invoice</Sidebar.Item>
+              <Sidebar.Item href="#">Customer</Sidebar.Item>
+            </Sidebar.Collapse>
+            <Sidebar.Item href="#" icon={FiUsers}>
+              Users
+            </Sidebar.Item>
+            <Sidebar.Item href="#" icon={PiSignOut}>
+              <span className="text-red font-medium">Sign Out</span>
+            </Sidebar.Item>
+          </Sidebar.ItemGroup>
+        </Sidebar.Items>
+      </Sidebar>
+    </div>
+  );
+};
+
+export default SideBar;
