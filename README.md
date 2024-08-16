@@ -16,7 +16,7 @@ Follow these steps to set up and run the project locally:
 1. **Clone the repository:**
 
 ```bash
-   https://github.com/Leap-Chanvuthy/inventory-system-frontend
+   git clone https://github.com/Leap-Chanvuthy/inventory-system-frontend
    cd inventory-system-frontend
 ```
 
