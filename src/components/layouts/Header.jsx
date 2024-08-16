@@ -3,14 +3,22 @@ import { MdNightlight } from "react-icons/md";
 import { HiMenu } from "react-icons/hi";
 import { Avatar } from "flowbite-react";
 import { useState } from "react";
+import { useSelector , useDispatch } from "react-redux";
+import { toggleTheme } from "../../redux/slices/themeSlice";
 
 const Header = ({ toggleSidebar }) => {
   
   const [darkMode , setDarkMode] = useState(false);
 
+  const dispatch =  useDispatch();
+  const {theme} = useSelector((state) => state.theme);
   const toggle = () =>{
-    setDarkMode(!darkMode);
+    dispatch(toggleTheme());
   }
+
+
+  
+
 
   return (
     <header className="w-full h-14 p-4 flex items-center justify-between">
@@ -24,7 +32,7 @@ const Header = ({ toggleSidebar }) => {
         <h1 className="">Hello</h1>
         <div className="flex justify-between  gap-3 items-center">
           <div>
-          {darkMode ?
+          {theme == 'dark' ?
             <div className="border-2 border-gray-200 p-2 rounded-md cursor-pointer" onClick={toggle}>
               <MdLightMode className="text-gray-500"/>
             </div>
