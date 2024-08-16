@@ -7,7 +7,7 @@ const Partial = ({title , link}) => {
       <div className="flex items-center gap-1">
         <h1 className="font-bold capitalize">{title}</h1>
         <IoChevronForwardSharp className="text-sm" />
-        <Link to={`/${link}`}>
+        <Link to={`/`}>
             <p className="capitalize">{link}</p>
         </Link>
       </div>

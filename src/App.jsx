@@ -6,6 +6,7 @@ import Order from "./pages/order/Order";
 import Test from "./components/Test";
 import Login from "./pages/auth/Login";
 import { useState } from "react";
+import Users from "./pages/users/Users";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -16,6 +17,7 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/users" element={<Users/>} />
             <Route path="/products" element={<Product />} />
             <Route path="/orders" element={<Order />} />
           </Routes>

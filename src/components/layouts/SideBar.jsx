@@ -27,7 +27,7 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
             <Sidebar.Item href="/" active a  icon={GoHome}>
               Dashboard
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={FiUsers}>
+            <Sidebar.Item href="/users" icon={FiUsers}>
               Users
             </Sidebar.Item>
             <Sidebar.Collapse icon={MdOutlineInventory2}  label="Inventory">
