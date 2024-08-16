@@ -1,5 +1,4 @@
 import { Sidebar } from "flowbite-react";
-import { HiArrowSmRight } from "react-icons/hi";
 import { GoHome } from "react-icons/go";
 import { BsCart3 } from "react-icons/bs";
 import { MdOutlineInventory2 } from "react-icons/md";
@@ -25,10 +24,10 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
         </button>
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="#" icon={GoHome}>
+            <Sidebar.Item href="/" a  icon={GoHome}>
               Dashboard
             </Sidebar.Item>
-            <Sidebar.Collapse icon={MdOutlineInventory2} label="Inventory">
+            <Sidebar.Collapse icon={MdOutlineInventory2}  label="Inventory">
               <Sidebar.Item href="#">Products</Sidebar.Item>
               <Sidebar.Item href="#">Purchase</Sidebar.Item>
               <Sidebar.Item href="#">Supplier</Sidebar.Item>

@@ -14,7 +14,7 @@ const Layout = ({ children }) => {
       <SideBar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex-grow flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
-        <main className="flex-grow px-10 py-5 overflow-y-auto">
+        <main className="flex-grow p-5 overflow-y-auto h-[100%]">
           {children}
         </main>
       </div>
