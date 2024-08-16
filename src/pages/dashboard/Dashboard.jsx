@@ -1,4 +1,3 @@
-import ChartComponent from "../../components/charts/Chart";
 import Partial from "../../components/Partial";
 import RecentOrder from "./partials/RecentOrder";
 import Summary from "./partials/Summary";
