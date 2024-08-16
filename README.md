@@ -2,16 +2,6 @@
 
 This is a React project that includes a user list table, a responsive chart, and various other components styled with Tailwind CSS and Flowbite.
 
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Running the Project](#running-the-project)
-- [Building the Project](#building-the-project)
-- [Project Structure](#project-structure)
-- [Dependencies](#dependencies)
-- [License](#license)
-
 ## Prerequisites
 
 Before you begin, ensure you have the following installed on your machine:
