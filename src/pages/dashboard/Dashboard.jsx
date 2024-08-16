@@ -1,11 +1,11 @@
-// src/pages/dashboard/Dashboard.js
-import React from 'react';
+import { IoChevronForwardSharp } from "react-icons/io5";
+import Partial from "../../components/Partial";
+
 
 const Dashboard = () => {
   return (
     <div className=''>
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p>A quick data overview of the inventory.</p>
+      <Partial title='dashboard' link='home' />
     </div>
   );
 };
