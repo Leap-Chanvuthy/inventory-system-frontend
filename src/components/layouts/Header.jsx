@@ -2,23 +2,16 @@ import { MdLightMode } from "react-icons/md";
 import { MdNightlight } from "react-icons/md";
 import { HiMenu } from "react-icons/hi";
 import { Avatar } from "flowbite-react";
-import { useState } from "react";
 import { useSelector , useDispatch } from "react-redux";
 import { toggleTheme } from "../../redux/slices/themeSlice";
 
 const Header = ({ toggleSidebar }) => {
-  
-  const [darkMode , setDarkMode] = useState(false);
 
   const dispatch =  useDispatch();
   const {theme} = useSelector((state) => state.theme);
   const toggle = () =>{
     dispatch(toggleTheme());
   }
-
-
-  
-
 
   return (
     <header className="w-full h-14 p-4 flex items-center justify-between">
