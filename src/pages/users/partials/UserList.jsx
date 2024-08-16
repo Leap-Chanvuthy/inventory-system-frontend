@@ -1,5 +1,7 @@
 import React from 'react';
-import { Table } from "flowbite-react";
+import { Table , TextInput , Button , Select } from "flowbite-react";
+import { IoSearchOutline } from "react-icons/io5";
+
 
 const fakeUsers = [
   {
@@ -86,41 +88,55 @@ const fakeUsers = [
 
 function UserList() {
   return (
-    <div className="overflow-x-auto h-[70vh] overflow-y-scroll my-5">
-      <Table striped>
-        <Table.Head>
-          <Table.HeadCell>Image</Table.HeadCell>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Email</Table.HeadCell>
-          <Table.HeadCell>Phone Number</Table.HeadCell>
-          <Table.HeadCell>Role</Table.HeadCell>
-          <Table.HeadCell>Email Verified At</Table.HeadCell>
-          <Table.HeadCell>
-            <span className="sr-only">Edit</span>
-          </Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {fakeUsers.map((user, index) => (
-            <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              <Table.Cell>
-                <img src={user.image} alt={user.name} className="h-10 w-10 rounded-full" />
-              </Table.Cell>
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                {user.name}
-              </Table.Cell>
-              <Table.Cell>{user.email}</Table.Cell>
-              <Table.Cell>{user.phone}</Table.Cell>
-              <Table.Cell>{user.role}</Table.Cell>
-              <Table.Cell>{user.emailVerifiedAt}</Table.Cell>
-              <Table.Cell>
-                <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                  Edit
-                </a>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+    <div>
+      <div className='my-5 flex flex-col lg:md:flex-row gap-3 justify-between'>
+        <Button color="info">Create New</Button>
+        <div className='flex gap-3'>
+          <TextInput placeholder='Search user' rightIcon={IoSearchOutline} />
+          <Select id="countries"  required>
+            <option>Role</option>
+            <option>Admin</option>
+            <option>Stock Controller</option>
+            <option>Saler</option>
+          </Select>
+        </div>
+      </div>
+      <div className="overflow-x-auto h-[70vh] overflow-y-scroll my-5">
+        <Table striped>
+          <Table.Head>
+            <Table.HeadCell>Image</Table.HeadCell>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Email</Table.HeadCell>
+            <Table.HeadCell>Phone Number</Table.HeadCell>
+            <Table.HeadCell>Role</Table.HeadCell>
+            <Table.HeadCell>Email Verified At</Table.HeadCell>
+            <Table.HeadCell>
+              <span className="sr-only">Edit</span>
+            </Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {fakeUsers.map((user, index) => (
+              <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell>
+                  <img src={user.image} alt={user.name} className="h-10 w-10 rounded-full" />
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {user.name}
+                </Table.Cell>
+                <Table.Cell>{user.email}</Table.Cell>
+                <Table.Cell>{user.phone}</Table.Cell>
+                <Table.Cell>{user.role}</Table.Cell>
+                <Table.Cell>{user.emailVerifiedAt}</Table.Cell>
+                <Table.Cell>
+                  <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+                    Edit
+                  </a>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </div>
     </div>
   );
 }
