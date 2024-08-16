@@ -14,7 +14,7 @@ const Header = ({ toggleSidebar }) => {
   }
 
   return (
-    <header className="w-full h-14 p-4 flex items-center justify-between">
+    <header className="w-full shadow-md h-14 p-4 flex items-center justify-between">
       <button
         onClick={toggleSidebar}
         className="p-2 text-gray-600 dark:text-gray-300 focus:outline-none md:hidden"
@@ -22,7 +22,7 @@ const Header = ({ toggleSidebar }) => {
         <HiMenu size={24} />
       </button>
       <div className="flex w-full items-center justify-between px-4">
-        <h1 className="">Hello</h1>
+        <h1 className=""></h1>
         <div className="flex justify-between  gap-3 items-center">
           <div>
           {theme == 'dark' ?

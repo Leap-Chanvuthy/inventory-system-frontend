@@ -2,8 +2,7 @@ import { Table } from "flowbite-react";
 
 const Test = () => {
   return (
-    <div className="w-full overflow-x-auto"> {/* Updated the div wrapper */}
-      <Table className="overflow-x-scroll"> {/* Corrected the className */}
+      <Table className="max-w-sm"> {/* Corrected the className */}
         <Table.Head>
           <Table.HeadCell>Product name</Table.HeadCell>
           <Table.HeadCell>Color</Table.HeadCell>
@@ -55,7 +54,6 @@ const Test = () => {
           </Table.Row>
         </Table.Body>
       </Table>
-    </div>
   );
 }
 

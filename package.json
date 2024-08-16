@@ -15,6 +15,7 @@
     "@mui/material": "^5.16.7",
     "@mui/x-charts": "^7.9.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "chart.js": "^4.4.3",
     "flowbite-react": "^0.10.1",
     "framer-motion": "^11.2.13",
     "react": "^18.3.1",

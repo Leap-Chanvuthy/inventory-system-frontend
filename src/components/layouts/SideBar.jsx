@@ -24,8 +24,11 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
         </button>
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="/" a  icon={GoHome}>
+            <Sidebar.Item href="/" active a  icon={GoHome}>
               Dashboard
+            </Sidebar.Item>
+            <Sidebar.Item href="#" icon={FiUsers}>
+              Users
             </Sidebar.Item>
             <Sidebar.Collapse icon={MdOutlineInventory2}  label="Inventory">
               <Sidebar.Item href="#">Products</Sidebar.Item>
@@ -37,19 +40,16 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
               <Sidebar.Item href="#">Customer</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Collapse href="#" icon={TbBrandGoogleAnalytics} label="Report Analytics">
-              <Sidebar.Item href="#">Sale Order</Sidebar.Item>
-              <Sidebar.Item href="#">Invoice</Sidebar.Item>
-              <Sidebar.Item href="#">Customer</Sidebar.Item>
-            </Sidebar.Collapse>
             <Sidebar.Collapse href="#" icon={RiMoneyPoundCircleLine} label="Accounting">
               <Sidebar.Item href="#">Sale Order</Sidebar.Item>
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
               <Sidebar.Item href="#">Customer</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Item href="#" icon={FiUsers}>
-              Users
-            </Sidebar.Item>
+            <Sidebar.Collapse href="#" icon={TbBrandGoogleAnalytics} label="Report Analytics">
+              <Sidebar.Item href="#">Sale Order</Sidebar.Item>
+              <Sidebar.Item href="#">Invoice</Sidebar.Item>
+              <Sidebar.Item href="#">Customer</Sidebar.Item>
+            </Sidebar.Collapse>
             <Sidebar.Item href="#" icon={PiSignOut}>
               <span className="text-red font-medium">Sign Out</span>
             </Sidebar.Item>

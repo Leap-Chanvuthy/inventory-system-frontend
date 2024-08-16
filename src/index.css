@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@100..900&display=swap');
 
 html body {
     font-family: "Roboto Condensed", sans-serif;
     font-style: normal;
+}
+
+.khmer {
+    font-family: "Noto Serif Khmer", serif;
+    font-optical-sizing: auto;
+    font-weight: 400px;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
 }

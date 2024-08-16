@@ -2,8 +2,8 @@ import { Table } from "flowbite-react";
 
 const RecentOrder = () => {
   return (
-    <div className="w-full overflow-x-auto"> {/* Updated the div wrapper */}
-      <Table className="overflow-x-scroll"> {/* Corrected the className */}
+    <div className="w-full overflow-x-auto">
+      <Table> 
         <Table.Head>
           <Table.HeadCell>Product name</Table.HeadCell>
           <Table.HeadCell>Color</Table.HeadCell>
