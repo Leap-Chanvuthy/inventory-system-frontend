@@ -15,10 +15,10 @@ Follow these steps to set up and run the project locally:
 
 1. **Clone the repository:**
 
-   ```bash
+```bash
    https://github.com/Leap-Chanvuthy/inventory-system-frontend
    cd inventory-system-frontend
-   ```
+```
 
 2. **Install Dependencies**
 ```bash
@@ -27,7 +27,7 @@ Follow these steps to set up and run the project locally:
 Or using bun:
 
 ```bash
-bun install
+    bun install
 ```
 
 
