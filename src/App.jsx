@@ -7,6 +7,7 @@ import Test from "./components/Test";
 import Login from "./pages/auth/Login";
 import { useState } from "react";
 import Users from "./pages/users/Users";
+import Create from "./pages/users/Create";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/users" element={<Users/>} />
+            <Route path="/users/create" element={<Create/>} />
             <Route path="/products" element={<Product />} />
             <Route path="/orders" element={<Order />} />
           </Routes>

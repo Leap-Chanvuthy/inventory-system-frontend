@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table , TextInput , Button , Select } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
+import { Link } from 'react-router-dom';
 
 
 const fakeUsers = [
@@ -90,7 +91,7 @@ function UserList() {
   return (
     <div>
       <div className='my-5 flex flex-col lg:md:flex-row gap-3 justify-between'>
-        <Button color="info">Create New</Button>
+        <Button color="info"><Link to='/users/create'>Create New</Link></Button>
         <div className='flex gap-3'>
           <TextInput placeholder='Search user' rightIcon={IoSearchOutline} />
           <Select id="countries"  required>
