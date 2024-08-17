@@ -1,6 +1,23 @@
 import { Button, FileInput, Label, TextInput, Select } from "flowbite-react";
+import { useState } from "react";
 
 const CreateForm = () => {
+
+  const [values , setValues] = useState({
+    profile_picture : null,
+    email : '',
+    password : '',
+    password_confirmation : '',
+    role : ''
+  });
+
+  const handleChange = (e) =>{
+    const  value = e.target.value;
+    const key = e.target.id;
+    setValues({...values , [key] : value });
+  }
+
+
   return (
     <div className="my-5">
       <form className="flex flex-col gap-4">
