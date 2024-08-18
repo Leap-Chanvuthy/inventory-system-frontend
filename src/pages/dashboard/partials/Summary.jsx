@@ -1,6 +1,8 @@
 import { useState } from "react";
 import NonFinancailKPICard from "../../../components/NonFinancialKPICard";
 import FinancailKPICard from "../../../components/FinancailKPICard";
+import { IoIosArrowDown , IoIosArrowUp } from "react-icons/io";
+
 
 const Summary = () => {
   const [seeMore, setSeeMore] = useState(false);
@@ -29,10 +31,15 @@ const Summary = () => {
             <NonFinancailKPICard title="no. of user" data={10} />
             <NonFinancailKPICard title="no. of invoice" data={1000} />
           </div>
+          <p className="text-center cursor-pointer flex items-center gap-3 justify-center" onClick={toggle}>
+            See less
+          <IoIosArrowUp />
+        </p>
         </div>
       ) : (
-        <p className="text-center cursor-pointer" onClick={toggle}>
+        <p className="text-center cursor-pointer flex items-center gap-3 justify-center" onClick={toggle}>
           See more
+          <IoIosArrowDown />
         </p>
       )}
     </div>

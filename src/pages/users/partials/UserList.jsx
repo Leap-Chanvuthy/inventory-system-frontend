@@ -106,6 +106,7 @@ function UserList() {
       <div className="overflow-x-auto h-[65vh] overflow-y-scroll my-5">
         <Table striped>
           <Table.Head>
+            <Table.HeadCell>No.</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>Name</Table.HeadCell>
             <Table.HeadCell>Email</Table.HeadCell>
@@ -119,6 +120,7 @@ function UserList() {
           <Table.Body className="divide-y">
             {fakeUsers.map((user, index) => (
               <Table.Row key={index} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell>{index + 1}</Table.Cell>
                 <Table.Cell>
                   <img src={user.image} alt={user.name} className="h-10 w-10 rounded-full" />
                 </Table.Cell>
