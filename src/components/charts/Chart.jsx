@@ -1,42 +1,66 @@
-// import * as React from 'react';
+// import React, { useState, useEffect } from 'react';
 // import { LineChart } from '@mui/x-charts/LineChart';
+// import { useSelector } from 'react-redux';
 
 // function Chart() {
+//   const { theme } = useSelector((state) => state.theme); // Get the theme from Redux
+//   const [chartDimensions, setChartDimensions] = useState({ width: '100%', height: 300 });
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       if (window.innerWidth < 640) {
+//         setChartDimensions({ width: '100%', height: 200 }); // For small screens
+//       } else if (window.innerWidth < 1024) {
+//         setChartDimensions({ width: '100%', height: 250 }); // For medium screens
+//       } else {
+//         setChartDimensions({ width: '100%', height: 300 }); // For large screens
+//       }
+//     };
+
+//     handleResize(); // Set initial dimensions
+//     window.addEventListener('resize', handleResize); // Adjust on resize
+
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
+
 //   return (
-//     <div className='my-5 p-4 border border-gray-300 rounded-lg'>
-//       <h3 className="text-lg font-semibold mb-3">Sales Over Time</h3>
-//       <LineChart
-//         xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-//         series={[
-//           {
-//             data: [2, 5.5, 2, 8.5, 1.5, 5],
-//           },
-//         ]}
-//         width={300}
-//         height={300}
-//       />
+//     <div className={`my-5 w-full p-4 border rounded-lg ${theme === 'dark' ? 'dark:border-gray-700' : 'light:border-gray-200'}`}>
+//       <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'dark:text-white' : 'text-black'}`}>
+//         Sales Over Time
+//       </h3>
+//       <div className="relative h-64 w-full">
+//         <LineChart
+//           xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+//           series={[
+//             {
+//               data: [2, 5.5, 2, 8.5, 1.5, 5],
+//             },
+//           ]}
+//         />
+//       </div>
 //     </div>
 //   );
 // }
-
 
 // export default Chart;
 
 
 import React, { useState, useEffect } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { useSelector } from 'react-redux';
 
 function Chart() {
-  const [chartDimensions, setChartDimensions] = useState({ width: 500, height: 300 });
+  const { theme } = useSelector((state) => state.theme); // Get the theme from Redux
+  const [chartDimensions, setChartDimensions] = useState({ width: '100%', height: 300 });
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
-        setChartDimensions({ width: 300, height: 200 }); // For small screens
+        setChartDimensions({ width: '100%', height: 200 }); // For small screens
       } else if (window.innerWidth < 1024) {
-        setChartDimensions({ width: 400, height: 250 }); // For medium screens
+        setChartDimensions({ width: '100%', height: 250 }); // For medium screens
       } else {
-        setChartDimensions({ width: 500, height: 300 }); // For large screens
+        setChartDimensions({ width: '100%', height: 300 }); // For large screens
       }
     };
 
@@ -46,19 +70,48 @@ function Chart() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Define options similar to PieChart
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+      display: true,
+      position: 'top',
+      labels: {
+        color: theme === 'dark' ? '#fff' : '#000',
+      },
+    },
+    grid: {
+      color: theme === 'dark' ? '#444' : '#ccc',
+    },
+    xAxis: {
+      lineColor: theme === 'dark' ? '#fff' : '#000',
+      tickColor: theme === 'dark' ? '#fff' : '#000',
+    },
+    yAxis: {
+      lineColor: theme === 'dark' ? '#fff' : '#000',
+      tickColor: theme === 'dark' ? '#fff' : '#000',
+    },
+  };
+
   return (
-    <div className="my-5 p-4 border dark:border-gray-700 light:border-gray-200 rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">Sales Over Time</h3>
-      <LineChart
-        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-        series={[
-          {
-            data: [2, 5.5, 2, 8.5, 1.5, 5],
-          },
-        ]}
-        width={chartDimensions.width}
-        height={chartDimensions.height}
-      />
+    <div className={`my-5 w-full p-4 border rounded-lg ${theme === 'dark' ? 'dark:border-gray-700' : 'light:border-gray-200'}`}>
+      <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'dark:text-white' : 'text-black'}`}>
+        Sales Over Time
+      </h3>
+      <div className="relative h-64 w-full">
+        <LineChart
+          xAxis={[{ data: [1, 2, 3, 5, 8, 10], color: options.xAxis.lineColor }]}
+          series={[
+            {
+              data: [2, 5.5, 2, 8.5, 1.5, 5],
+              color: '#009099',
+            },
+          ]}
+
+          grid={options.grid}
+        />
+      </div>
     </div>
   );
 }
