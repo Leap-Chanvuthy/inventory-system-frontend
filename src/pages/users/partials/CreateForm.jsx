@@ -1,5 +1,11 @@
 import { Button, FileInput, Label, TextInput, Select } from "flowbite-react";
 import { useState } from "react";
+import { MdOutlineMarkEmailUnread } from "react-icons/md";
+import { MdLockOpen } from "react-icons/md";
+import { FaUserPen } from "react-icons/fa6";
+
+
+
 
 const CreateForm = () => {
 
@@ -59,10 +65,11 @@ const CreateForm = () => {
             <Label htmlFor="email1" value="Your email" />
           </div>
           <TextInput
-            id="email1"
+            id="email"
             type="email"
             placeholder="name@flowbite.com"
             required
+            rightIcon={MdOutlineMarkEmailUnread}
           />
         </div>
 
@@ -71,17 +78,20 @@ const CreateForm = () => {
             <div className="mb-2 block">
               <Label value="Password" />
             </div>
-            <TextInput id="password" type="password" required />
+            <TextInput id="password" type="password" rightIcon={MdLockOpen} required />
           </div>
           <div className="w-full">
             <div className="mb-2 block">
               <Label value="Password Confirmation" />
             </div>
-            <TextInput id="password_confrimation" type="password" required />
+            <TextInput id="password_confrimation" rightIcon={MdLockOpen} type="password" required />
           </div>
         </div>
 
         <div>
+            <div className="mb-2 block">
+              <Label value="Role" />
+            </div>  
           <Select id="role" required>
             <option>Role</option>
             <option>Admin</option>

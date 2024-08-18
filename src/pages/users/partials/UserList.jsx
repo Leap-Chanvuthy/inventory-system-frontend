@@ -2,6 +2,7 @@ import React from 'react';
 import { Table , TextInput , Button , Select } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from 'react-router-dom';
+import GlobalPagination from '../../../components/Pagination';
 
 
 const fakeUsers = [
@@ -91,7 +92,7 @@ function UserList() {
   return (
     <div>
       <div className='my-5 flex flex-col lg:md:flex-row gap-3 justify-between'>
-        <Button color="info"><Link to='/users/create'>Create New</Link></Button>
+        <Link to='/users/create'><Button color="info">Create New</Button></Link> 
         <div className='flex gap-3'>
           <TextInput placeholder='Search user' rightIcon={IoSearchOutline} />
           <Select id="countries"  required>
@@ -102,7 +103,7 @@ function UserList() {
           </Select>
         </div>
       </div>
-      <div className="overflow-x-auto h-[70vh] overflow-y-scroll my-5">
+      <div className="overflow-x-auto h-[65vh] overflow-y-scroll my-5">
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
@@ -138,6 +139,7 @@ function UserList() {
           </Table.Body>
         </Table>
       </div>
+      <GlobalPagination />
     </div>
   );
 }
