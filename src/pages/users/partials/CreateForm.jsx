@@ -2,9 +2,7 @@ import { Button, FileInput, Label, TextInput, Select } from "flowbite-react";
 import { useState } from "react";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import { MdLockOpen } from "react-icons/md";
-import { FaUserPen } from "react-icons/fa6";
-
-
+import { SuccessToast } from "../../../components/ToastNotification";
 
 
 const CreateForm = () => {
@@ -23,9 +21,15 @@ const CreateForm = () => {
     setValues({...values , [key] : value });
   }
 
+  const [openSuccess, setOpenSuccess] = useState(false);
 
   return (
     <div className="my-5">
+      <SuccessToast
+        open={openSuccess}
+        onClose={() => setOpenSuccess(false)}
+        message="User Created Successfully"
+      />
       <form className="flex flex-col gap-4">
         <div className="flex w-full items-center justify-center">
           <Label
