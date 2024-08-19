@@ -4,6 +4,8 @@ import { HiMenu } from "react-icons/hi";
 import { Avatar } from "flowbite-react";
 import { useSelector , useDispatch } from "react-redux";
 import { toggleTheme } from "../../redux/slices/themeSlice";
+import { Navbar } from "flowbite-react";
+import { Link } from "react-router-dom";
 
 const Header = ({ toggleSidebar }) => {
 
@@ -14,7 +16,7 @@ const Header = ({ toggleSidebar }) => {
   }
 
   return (
-    <header className="w-full shadow-md h-14 p-4 flex items-center justify-between">
+    <Navbar className="w-full  h-14 p-4 flex items-center justify-between">
       <button
         onClick={toggleSidebar}
         className="p-2 text-gray-600 dark:text-gray-300 focus:outline-none md:hidden"
@@ -35,10 +37,12 @@ const Header = ({ toggleSidebar }) => {
             </div>
           }
           </div>
-          <Avatar img="https://www.leapchanvuthy.dev/images/Leapchanvuthy.png" rounded />
+          <Link to='/profile'>
+            <Avatar img="https://www.leapchanvuthy.dev/images/Leapchanvuthy.png" rounded />
+          </Link>
         </div>
       </div>
-    </header>
+    </Navbar>
   );
 };
 
