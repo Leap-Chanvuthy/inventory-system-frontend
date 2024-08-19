@@ -1,18 +1,4 @@
-// import * as React from 'react';
-// import Pagination from '@mui/material/Pagination';
-
-// function GlobalPagination() {
-//   return (
-//       <div className='flex overflow-x-auto justify-center'>
-//           <Pagination className='text-rose-600' color='secondary' shape='rounded' size='medium' count={10} showFirstButton showLastButton />
-//       </div>
-//   );
-// }
-// export default GlobalPagination;
-
-
-
-import { Pagination } from "flowbite-react";
+import { Pagination} from "@mui/material";
 import { useState } from "react";
 
 const GlobalPagination = () => {
@@ -21,8 +7,11 @@ const GlobalPagination = () => {
   const onPageChange = (page) => setCurrentPage(page);
 
   return (
-    <div className="flex overflow-x-auto sm:justify-center">
-      <Pagination currentPage={currentPage} totalPages={100} onPageChange={onPageChange} showIcons />
+    <div className="flex items-center flex-col lg:md:flex-row gap-3 justify-between  dark:bg-gray-700 rounded-lg py-2 px-3">
+        <div>
+          <p className="text-sm hidden lg:md:flex">Showing 1 to 10 of 50 Entities</p>
+        </div>
+        <Pagination size="medium" color="primary" count={5} showFirstButton showLastButton shape="rounded" />
     </div>
   );
 }
