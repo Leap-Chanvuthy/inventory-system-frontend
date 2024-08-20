@@ -1,7 +1,7 @@
 import { TextInput, Button, Table } from "flowbite-react";
 import { CiSearch } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import GlobalPagination from "../../components/Pagination";
+import GlobalPagination from "../../../../components/Pagination";
 
 const ProductList = () => {
     return (

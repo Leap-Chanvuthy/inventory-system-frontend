@@ -31,7 +31,7 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               Users
             </Sidebar.Item>
             <Sidebar.Collapse icon={MdOutlineInventory2}  label="Inventory">
-              <Sidebar.Item href="#">Products</Sidebar.Item>
+              <Sidebar.Item href="/products">Products</Sidebar.Item>
               <Sidebar.Item href="#">Purchase</Sidebar.Item>
               <Sidebar.Item href="#">Supplier</Sidebar.Item>
             </Sidebar.Collapse>
