@@ -3,6 +3,7 @@ import { Table } from "flowbite-react";
 const RecentOrder = () => {
   return (
     <div className="w-full overflow-x-auto">
+      <h4 className="my-3">Recent Sale</h4>
       <Table> 
         <Table.Head>
           <Table.HeadCell>Product name</Table.HeadCell>
