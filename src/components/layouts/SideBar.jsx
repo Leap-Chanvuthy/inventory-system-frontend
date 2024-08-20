@@ -7,8 +7,14 @@ import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import { RiMoneyPoundCircleLine } from "react-icons/ri";
 import { PiSignOut } from "react-icons/pi";
 import { HiMenu } from "react-icons/hi";
+import { useLocation } from "react-router-dom";
 
 const SideBar = ({ isOpen, toggleSidebar }) => {
+  
+  const pathname = useLocation().pathname;
+  
+
+
   return (
     <div
       className={`${
@@ -24,14 +30,14 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
         </button>
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="/" active a  icon={GoHome}>
+            <Sidebar.Item href="/" active={pathname === '/'}  icon={GoHome}>
               Dashboard
             </Sidebar.Item>
-            <Sidebar.Item href="/users" icon={FiUsers}>
+            <Sidebar.Item href="/users" active={pathname === '/users'} icon={FiUsers}>
               Users
             </Sidebar.Item>
             <Sidebar.Collapse icon={MdOutlineInventory2}  label="Inventory">
-              <Sidebar.Item href="/products">Products</Sidebar.Item>
+              <Sidebar.Item href="/products" active={pathname === '/products'}>Products</Sidebar.Item>
               <Sidebar.Item href="#">Purchase</Sidebar.Item>
               <Sidebar.Item href="#">Supplier</Sidebar.Item>
             </Sidebar.Collapse>
