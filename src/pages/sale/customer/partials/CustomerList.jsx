@@ -2,7 +2,7 @@ import React from "react";
 import { Table, TextInput, Button, Select } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import GlobalPagination from "../../components/Pagination";
+import GlobalPagination from "../../../../components/Pagination";
 
 const fakeSaler = [
   {
@@ -87,11 +87,11 @@ const fakeSaler = [
   },
 ];
 
-function SalerList() {
+function CustomerList() {
   return (
     <div>
       <div className="my-5 flex flex-col lg:md:flex-row gap-3 justify-between">
-        <Link to="/users/create">
+        <Link to="/customer/create">
           <Button color="info">Create New</Button>
         </Link>
         <div className="flex gap-3">
@@ -157,4 +157,6 @@ function SalerList() {
   );
 }
 
-export default SalerList;
+export default CustomerList;
+
+
