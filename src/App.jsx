@@ -9,7 +9,7 @@ import { useState } from "react";
 import Users from "./pages/users/Users";
 import Create from "./pages/users/Create";
 import Profile from "./pages/profile/Profile";
-import Customer from "./pages/sale/customer/customer";
+import Customer from "./pages/sale/customer/Customer";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
