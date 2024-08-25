@@ -9,7 +9,7 @@ const Test = () => {
           <Table.HeadCell>Category</Table.HeadCell>
           <Table.HeadCell>Price</Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">Edit</span>
+            <span className="sr-only">Edits</span>
           </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
