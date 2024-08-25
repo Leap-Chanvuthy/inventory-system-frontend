@@ -9,6 +9,7 @@ import { useState } from "react";
 import Users from "./pages/users/Users";
 import Create from "./pages/users/Create";
 import Profile from "./pages/profile/Profile";
+import Saler from "./pages/sale/Customer";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -20,10 +21,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/users" element={<Users/>} />
-            <Route path="/users/create" element={<Create/>} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/create" element={<Create />} />
             <Route path="/products" element={<Product />} />
             <Route path="/orders" element={<Order />} />
+            <Route path="/customer" element={<Saler />} />
           </Routes>
         </Layout>
       ) : (

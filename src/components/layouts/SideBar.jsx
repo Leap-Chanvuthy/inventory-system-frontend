@@ -10,15 +10,12 @@ import { HiMenu } from "react-icons/hi";
 import { useLocation } from "react-router-dom";
 
 const SideBar = ({ isOpen, toggleSidebar }) => {
-  
   const pathname = useLocation().pathname;
-  
-
 
   return (
     <div
       className={`${
-        isOpen ? 'fixed inset-0 z-50' : 'hidden'
+        isOpen ? "fixed inset-0 z-50" : "hidden"
       } md:flex md:flex-col md:w-64`}
     >
       <Sidebar aria-label="Sidebar with multi-level dropdown example">
@@ -30,28 +27,44 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
         </button>
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="/" active={pathname === '/'}  icon={GoHome}>
+            <Sidebar.Item href="/" active={pathname === "/"} icon={GoHome}>
               Dashboard
             </Sidebar.Item>
-            <Sidebar.Item href="/users" active={pathname === '/users'} icon={FiUsers}>
+            <Sidebar.Item
+              href="/users"
+              active={pathname === "/users"}
+              icon={FiUsers}
+            >
               Users
             </Sidebar.Item>
-            <Sidebar.Collapse icon={MdOutlineInventory2}  label="Inventory">
-              <Sidebar.Item href="/products" active={pathname === '/products'}>Products</Sidebar.Item>
+            <Sidebar.Collapse icon={MdOutlineInventory2} label="Inventory">
+              <Sidebar.Item href="/products" active={pathname === "/products"}>
+                Products
+              </Sidebar.Item>
               <Sidebar.Item href="#">Purchase</Sidebar.Item>
               <Sidebar.Item href="#">Supplier</Sidebar.Item>
             </Sidebar.Collapse>
             <Sidebar.Collapse href="#" icon={BsCart3} label="Sale">
               <Sidebar.Item href="#">Sale Order</Sidebar.Item>
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
-              <Sidebar.Item href="#">Customer</Sidebar.Item>
+              <Sidebar.Item href="/customer" active={pathname === "/customer"}>
+                Customer
+              </Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Collapse href="#" icon={RiMoneyPoundCircleLine} label="Accounting">
+            <Sidebar.Collapse
+              href="#"
+              icon={RiMoneyPoundCircleLine}
+              label="Accounting"
+            >
               <Sidebar.Item href="#">Sale Order</Sidebar.Item>
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
               <Sidebar.Item href="#">Customer</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Collapse href="#" icon={TbBrandGoogleAnalytics} label="Report Analytics">
+            <Sidebar.Collapse
+              href="#"
+              icon={TbBrandGoogleAnalytics}
+              label="Report Analytics"
+            >
               <Sidebar.Item href="#">Sale Order</Sidebar.Item>
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
               <Sidebar.Item href="#">Customer</Sidebar.Item>
