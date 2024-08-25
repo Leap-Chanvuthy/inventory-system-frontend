@@ -1,4 +1,4 @@
-import { Button, Modal , TextInput , Select } from "flowbite-react";
+import { Button, Modal, TextInput, Select } from "flowbite-react";
 import { useState } from "react";
 
 const ExportProduct = () => {
@@ -13,8 +13,8 @@ const ExportProduct = () => {
         </Modal.Header>
         <Modal.Body className="dark:bg-gray-800 dark:text-gray-400">
           <div className="space-y-6">
-          <div className="flex flex-col lg:md:flex-row gap-3">
-              <TextInput placeholder="Search product"  />
+            <div className="flex flex-col lg:md:flex-row gap-3">
+              <TextInput placeholder="Search product" />
               <Select id="countries" required>
                 <option>Category</option>
                 <option>Raw Meterials</option>
@@ -36,16 +36,23 @@ const ExportProduct = () => {
           </div>
         </Modal.Body>
         <Modal.Footer className="dark:bg-gray-800">
-          <Button onClick={() => setOpenModal(false)} className="dark:bg-cyan-700 dark:hover:bg-cyan-800">
+          <Button
+            onClick={() => setOpenModal(false)}
+            className="dark:bg-cyan-700 dark:hover:bg-cyan-800"
+          >
             Export
           </Button>
-          <Button color="gray" onClick={() => setOpenModal(false)} className="dark:bg-gray-600 dark:hover:bg-gray-700">
+          <Button
+            color="gray"
+            onClick={() => setOpenModal(false)}
+            className="dark:bg-gray-600 dark:hover:bg-gray-700"
+          >
             Decline
           </Button>
         </Modal.Footer>
       </Modal>
     </>
   );
-}
+};
 
 export default ExportProduct;
