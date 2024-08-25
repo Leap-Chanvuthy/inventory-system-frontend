@@ -5,6 +5,7 @@ import { combineReducers } from 'redux';
 
 import themeReducer from './slices/themeSlice';
 import authReducer from './slices/authSlice';
+import userReducer from './slices/userSlice';
 
 
 const persistConfig = {
@@ -15,7 +16,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     theme : themeReducer,
-    auth : authReducer
+    auth : authReducer,
+    user : userReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
