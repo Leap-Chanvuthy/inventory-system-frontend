@@ -1,131 +1,270 @@
-import { Button, FileInput, Label, TextInput, Select } from "flowbite-react";
+import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
-import { MdOutlineMarkEmailUnread, MdLockOpen } from "react-icons/md";
 import { SuccessToast } from "../../../../components/ToastNotification";
+import { MdCancel } from "react-icons/md";
+
 
 const CreateForm = () => {
   const [values, setValues] = useState({
-    product_image: null,
-    product_name: "",
-    color: "",
-    category: "",
-    price: "",
+    raw_materials: [
+      {
+        product_images: [],
+        name: "",
+        quantity: "",
+        unit_price: "",
+        total_value: "",
+        minimum_stock_level: "",
+        unit: "",
+        package_size: "",
+        supplier_id: "",
+      },
+    ],
   });
+  console.log(values);
 
-  const [imagePreview, setImagePreview] = useState(null);
   const [openSuccess, setOpenSuccess] = useState(false);
 
-  const handleChange = e => {
+  const handleChange = (index, e) => {
     const { id, value } = e.target;
-    setValues(prevValues => ({ ...prevValues, [id]: value }));
+    const updatedMaterials = [...values.raw_materials];
+    updatedMaterials[index][id] = value;
+    setValues({ raw_materials: updatedMaterials });
   };
 
-  const handleFileChange = e => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setValues(prevValues => ({ ...prevValues, product_image: file }));
-      setImagePreview(URL.createObjectURL(file));
+  const handleFileChange = (index, e) => {
+    const files = Array.from(e.target.files);
+    const validImages = files.filter((file) => file.type.startsWith("image/"));
+
+    if (validImages.length) {
+      const newImagePreviews = validImages.map((file) =>
+        URL.createObjectURL(file)
+      );
+
+      const updatedMaterials = [...values.raw_materials];
+      updatedMaterials[index].product_images = [
+        ...updatedMaterials[index].product_images,
+        ...validImages,
+      ];
+      setValues({ raw_materials: updatedMaterials });
     } else {
-      alert("Please upload a valid image file.");
+      alert("Please upload valid image files.");
     }
   };
 
-  const handleSubmit = e => {
+  const handleAddProduct = () => {
+    setValues((prevValues) => ({
+      raw_materials: [
+        ...prevValues.raw_materials,
+        {
+          product_images: [],
+          name: "",
+          quantity: "",
+          unit_price: "",
+          total_value: "",
+          minimum_stock_level: "",
+          unit: "",
+          package_size: "",
+          supplier_id: "",
+        },
+      ],
+    }));
+  };
+
+  const handleRemoveProduct = (index) => {
+    const updatedMaterials = [...values.raw_materials];
+    updatedMaterials.splice(index, 1);
+    setValues({ raw_materials: updatedMaterials });
+  };
+
+  const handleRemoveImage = (productIndex, imageIndex) => {
+    const updatedMaterials = [...values.raw_materials];
+    updatedMaterials[productIndex].product_images.splice(imageIndex, 1);
+    setValues({ raw_materials: updatedMaterials });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
     setOpenSuccess(true);
   };
 
   return (
-    <div className="my-5 ">
+    <div className="my-5">
       <SuccessToast
         open={openSuccess}
         onClose={() => setOpenSuccess(false)}
-        message="Product Created Successfully"
+        message="Products Created Successfully"
       />
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="relative flex items-center justify-center">
-          <Label
-            htmlFor="product_image"
-            className={`flex items-center justify-center cursor-pointer rounded-full border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 ${
-              imagePreview ? "p-0" : "p-10"
-            }`}
-            style={{ width: "200px", height: "200px" }}
-          >
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full h-full object-cover rounded-full"
-              />
-            ) : (
-              <svg
-                className="h-[100%] text-gray-500"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                />
-              </svg>
-            )}
-            <FileInput
-              id="product_image"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </Label>
-        </div>
+        {values.raw_materials.map((material, index) => (
+          <div key={index} className="border border-dashed border-slate-600 p-4 rounded-md mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold">Raw Material {index + 1}</h3>
+              {values.raw_materials.length > 1 && (
+                <button
+                  type="button"
+                  className="text-red-500"
+                  onClick={() => handleRemoveProduct(index)}
+                >
+                  <MdCancel className="text-red text-xl" />
+                </button>
+              )}
+            </div>
 
-        <div>
-          <Label htmlFor="product_name" value="Product Name" />
-          <TextInput
-            id="product_name"
-            placeholder="Enter product name"
-            required
-            onChange={handleChange}
-          />
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <Label htmlFor="name" value="Material Name" />
+    <TextInput
+      id="name"
+      placeholder="Enter material name"
+      required
+      value={material.name}
+      onChange={(e) => handleChange(index, e)}
+    />
+  </div>
 
-        <div className="w-full flex flex-col lg:md:flex-row gap-3 ">
-          <div className="w-full">
-            <Label htmlFor="color" value="Color" />
-            <TextInput
-              id="color"
-              placeholder="Enter color"
-              required
-              onChange={handleChange}
-            />
+  <div>
+    <Label htmlFor="quantity" value="Quantity" />
+    <TextInput
+      id="quantity"
+      type="number"
+      placeholder="Enter quantity"
+      required
+      value={material.quantity}
+      onChange={(e) => handleChange(index, e)}
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="unit_price" value="Unit Price" />
+    <TextInput
+      id="unit_price"
+      type="text"
+      placeholder="Enter unit price"
+      required
+      value={material.unit_price}
+      onChange={(e) => handleChange(index, e)}
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="total_value" value="Total Value" />
+    <TextInput
+      id="total_value"
+      type="text"
+      placeholder="Enter total value"
+      required
+      value={material.total_value}
+      onChange={(e) => handleChange(index, e)}
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="minimum_stock_level" value="Minimum Stock Level" />
+    <TextInput
+      id="minimum_stock_level"
+      type="number"
+      placeholder="Enter minimum stock level"
+      required
+      value={material.minimum_stock_level}
+      onChange={(e) => handleChange(index, e)}
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="unit" value="Unit" />
+    <TextInput
+      id="unit"
+      type="text"
+      placeholder="Enter unit (e.g., kg)"
+      required
+      value={material.unit}
+      onChange={(e) => handleChange(index, e)}
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="package_size" value="Package Size" />
+    <TextInput
+      id="package_size"
+      type="text"
+      placeholder="Enter package size (e.g., 10kg)"
+      required
+      value={material.package_size}
+      onChange={(e) => handleChange(index, e)}
+    />
+  </div>
+
+  <div>
+    <Label htmlFor="supplier_id" value="Supplier ID" />
+    <TextInput
+      id="supplier_id"
+      type="number"
+      placeholder="Enter supplier ID"
+      required
+      value={material.supplier_id}
+      onChange={(e) => handleChange(index, e)}
+    />
+  </div>
+</div>
+
+<div className="flex items-center justify-center mt-4 mb-4">
+  <Label
+    htmlFor={`image_${index}`}
+    className="flex items-center justify-center cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 p-4 w-full"
+  >
+    <div className="flex flex-col items-center justify-center">
+      <svg
+        className="h-8 w-8 text-gray-500 mb-2"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth="1.5"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+        />
+      </svg>
+      <span>Upload Image</span>
+    </div>
+    <FileInput
+      id={`image_${index}`}
+      className="hidden"
+      onChange={(e) => handleFileChange(index, e)}
+    />
+  </Label>
+</div>
+
+
+            <div className="grid grid-cols-4 gap-4">
+              {material.product_images.map((file, imgIndex) => (
+                <div key={imgIndex} className="relative">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Preview ${imgIndex}`}
+                    className="w-full h-[8rem] object-cover rounded-md border-2 border-slate-800 dark:bg-slate-300"
+                  />
+                  <button
+                    type="button"
+                    className="absolute top-1 right-1 bg-red-600 h-8 w-8 rounded-full bg-slate-800 text-white p-1"
+                    onClick={() => handleRemoveImage(index, imgIndex)}
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="w-full  flex flex-col ">
-            <Label htmlFor="category" value="Category" />
-            <TextInput
-              id="category"
-              placeholder="Enter category"
-              required
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+        ))}
 
-        <div>
-          <Label htmlFor="price" value="Price" />
-          <TextInput
-            id="price"
-            type="text"
-            placeholder="Enter price"
-            required
-            onChange={handleChange}
-          />
+        <div className="flex justify-between items-center">
+          <Button type="button" onClick={handleAddProduct}>
+            Add Another Product
+          </Button>
+          <Button type="submit">Submit</Button>
         </div>
-
-        <Button type="submit">Submit</Button>
       </form>
     </div>
   );
