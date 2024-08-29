@@ -105,23 +105,12 @@ const CreateForm = () => {
           </div>
           <div className="w-full  flex flex-col ">
             <Label htmlFor="category" value="Category" />
-            <select
-              name=""
-              id="category"
-              className="border-[1px] rounded-[8px] "
-              onChange={handleChange}
-            >
-              <option value="Raw Materials">Raw Materials</option>
-              <option value="Work InWork In Progress ">Work In Progress</option>
-              <option value="Packaging">Packaging</option>
-              <option value="Finished Goods">Finished Goods</option>
-            </select>
-            {/* <TextInput
+            <TextInput
               id="category"
               placeholder="Enter category"
               required
               onChange={handleChange}
-            /> */}
+            />
           </div>
         </div>
 
