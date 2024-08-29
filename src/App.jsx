@@ -11,6 +11,7 @@ import Create from "./pages/users/Create";
 import Profile from "./pages/profile/Profile";
 import Customer from "./pages/sale/customer/Customer";
 import CreateProduct from "./pages/inventory/product/Create";
+import CreateCustomer from "./pages/sale/customer/Create";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -28,7 +29,7 @@ function App() {
             <Route path="/products/create" element={<CreateProduct />} />
             <Route path="/orders" element={<Order />} />
             <Route path="/customer" element={<Customer />} />
-            <Route path="/customer/create" element={<Create />} />
+            <Route path="/customer/create" element={<CreateCustomer />} />
           </Routes>
         </Layout>
       ) : (

@@ -1,5 +1,5 @@
-import GlobalPagination from "../../components/Pagination";
-import Partial from "../../components/Partial";
+import GlobalPagination from "../../../components/Pagination";
+import Partial from "../../../components/Partial";
 import CreateForm from "./partials/CreateForm";
 
 const Create = () => {

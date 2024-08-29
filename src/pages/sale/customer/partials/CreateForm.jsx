@@ -1,7 +1,7 @@
 import { Button, FileInput, Label, TextInput, Select } from "flowbite-react";
 import { useState } from "react";
 import { MdOutlineMarkEmailUnread, MdLockOpen } from "react-icons/md";
-import { SuccessToast } from "../../../components/ToastNotification";
+import { SuccessToast } from "../../../../components/ToastNotification";
 
 const CreateForm = () => {
   const [values, setValues] = useState({
