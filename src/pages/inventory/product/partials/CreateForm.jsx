@@ -38,7 +38,7 @@ const CreateForm = () => {
     if (validImages.length) {
       const newImagePreviews = validImages.map((file) =>
         URL.createObjectURL(file)
-      );
+      ); 
 
       const updatedMaterials = [...values.raw_materials];
       updatedMaterials[index].product_images = [
