@@ -68,9 +68,7 @@ const RawMaterialTable = ({ filters }) => {
             <Table.HeadCell>Unit Price</Table.HeadCell>
             <Table.HeadCell>Total Value</Table.HeadCell>
             <Table.HeadCell>Supplier</Table.HeadCell>
-            <Table.HeadCell>
-              <span className="sr-only">Edit</span>
-            </Table.HeadCell>
+            <Table.HeadCell>Supplier</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {rawMaterials.length > 0 ? (
