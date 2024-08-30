@@ -634,7 +634,7 @@ const CreateForm = () => {
           <Button type="button" onClick={handleAddProduct}>
             Add Another Product
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </div>
