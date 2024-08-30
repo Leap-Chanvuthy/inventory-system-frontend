@@ -4,6 +4,9 @@ import { SuccessToast } from "../../../../components/ToastNotification";
 import { MdCancel } from "react-icons/md";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
+import { addRawMaterialStart , addRawMaterialSuccess , addRawMaterialFailure } from "../../../../redux/slices/rawMaterialSlice";
+import { useDispatch , useSelector } from "react-redux";
+import { Spinner } from "flowbite-react";
 
 const CreateForm = () => {
   const [values, setValues] = useState({
@@ -95,14 +98,25 @@ const CreateForm = () => {
   };
 
 
-
+  // init state
+  const dispatch = useDispatch();
+  const {status , error} = useSelector((state) => state.rawMaterials);
+  
   // sending post request
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const response = await axios.post(`${BASE_URL}/raw-materials` , values);
-    console.log(response);
-    // setOpenSuccess(true);
-  };
+    e.preventDefault(); 
+    dispatch(addRawMaterialStart());
+    try {
+        const response = await axios.post(`${BASE_URL}/raw-materials`, values);
+        console.log(response);
+        dispatch(addRawMaterialSuccess(response.data));
+        setOpenSuccess(true); 
+    } catch (error) {
+        console.error("Error submitting the form:", error);
+        dispatch(addRawMaterialFailure(error));
+    }
+};
+
 
   return (
     <div className="my-5">
@@ -359,7 +373,9 @@ const CreateForm = () => {
           <Button type="button" onClick={handleAddProduct}>
             Add Another Product
           </Button>
-          <Button type="submit">Save</Button>
+          <Button type="submit">
+            {status == 'loading' ? <Spinner aria-label="Medium sized spinner example" size="md" /> : 'Save' }
+          </Button>
         </div>
       </form>
     </div>
