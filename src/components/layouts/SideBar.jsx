@@ -41,6 +41,9 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               <Sidebar.Item href="/products" active={pathname === "/products"}>
                 Products
               </Sidebar.Item>
+              <Sidebar.Item href="/raw-materials" active={pathname === "/raw-materials"}>
+                Raw Materials
+              </Sidebar.Item>
               <Sidebar.Item href="#">Purchase</Sidebar.Item>
               <Sidebar.Item href="#">Supplier</Sidebar.Item>
             </Sidebar.Collapse>

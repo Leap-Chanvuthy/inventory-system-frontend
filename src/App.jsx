@@ -12,6 +12,8 @@ import Profile from "./pages/profile/Profile";
 import Customer from "./pages/sale/customer/Customer";
 import CreateProduct from "./pages/inventory/product/Create";
 import CreateCustomer from "./pages/sale/customer/Create";
+import RawMaterial from "./pages/inventory/raw-material/RawMaterial";
+import CreateRawMaterial from "./pages/inventory/raw-material/Create";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -27,6 +29,8 @@ function App() {
             <Route path="/users/create" element={<Create />} />
             <Route path="/products" element={<Product />} />
             <Route path="/products/create" element={<CreateProduct />} />
+            <Route path="/raw-materials" element={<RawMaterial/>} />
+            <Route path="/raw-materials/create" element={<CreateRawMaterial/>} />
             <Route path="/orders" element={<Order />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/customer/create" element={<CreateCustomer />} />
