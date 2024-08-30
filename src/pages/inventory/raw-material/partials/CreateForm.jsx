@@ -277,6 +277,8 @@ import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { SuccessToast } from "../../../../components/ToastNotification";
 import { MdCancel } from "react-icons/md";
+import axios from "axios";
+import { BASE_URL } from "../../../../components/const/constant";
 
 const CreateForm = () => {
   const [values, setValues] = useState({
@@ -367,9 +369,14 @@ const CreateForm = () => {
     setValues({ ...values, raw_materials: updatedMaterials });
   };
 
-  const handleSubmit = (e) => {
+
+
+  // sending post request
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setOpenSuccess(true);
+    const response = await axios.post(`${BASE_URL}/raw-materials` , values);
+    console.log(response);
+    // setOpenSuccess(true);
   };
 
   return (
