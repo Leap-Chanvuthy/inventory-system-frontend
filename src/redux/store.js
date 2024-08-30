@@ -6,6 +6,7 @@ import { combineReducers } from 'redux';
 import themeReducer from './slices/themeSlice';
 import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
+import rawMaterialReducer from './slices/rawMaterialSlice';
 
 
 const persistConfig = {
@@ -17,7 +18,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     theme : themeReducer,
     auth : authReducer,
-    users : userReducer
+    users : userReducer,
+    rawMaterials : rawMaterialReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
