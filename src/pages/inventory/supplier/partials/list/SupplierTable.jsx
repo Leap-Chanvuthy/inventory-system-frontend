@@ -83,7 +83,7 @@ const SupplierTable = ({ filters }) => {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <Avatar />
+                    <Avatar img='https://www.leapchanvuthy.dev/images/Leapchanvuthy.png' />
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {supplier.name}
