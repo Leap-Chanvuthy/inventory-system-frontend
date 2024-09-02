@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TextInput, Button, Select } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import SupplierTable from "./list/SupplierTable";
 
 const SupplierList = () => {
   const [filters, setFilters] = useState({
@@ -50,7 +51,7 @@ const SupplierList = () => {
           </Link>
         </div>
       </div>
-
+      <SupplierTable />
     </div>
   );
 };

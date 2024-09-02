@@ -8,6 +8,7 @@ import { RiMoneyPoundCircleLine } from "react-icons/ri";
 import { PiSignOut } from "react-icons/pi";
 import { HiMenu } from "react-icons/hi";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SideBar = ({ isOpen, toggleSidebar }) => {
   const pathname = useLocation().pathname;
@@ -45,7 +46,9 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
                 Raw Materials
               </Sidebar.Item>
               <Sidebar.Item href="#">Purchase</Sidebar.Item>
-              <Sidebar.Item href="#">Supplier</Sidebar.Item>
+              <Sidebar.Item >
+                <Link to='/suppliers'>Suppliers</Link>
+              </Sidebar.Item>
             </Sidebar.Collapse>
             <Sidebar.Collapse href="#" icon={BsCart3} label="Sale">
               <Sidebar.Item href="#">Sale Order</Sidebar.Item>
