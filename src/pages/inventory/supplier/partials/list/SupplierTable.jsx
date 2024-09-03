@@ -9,6 +9,7 @@ import GlobalPagination from '../../../../../components/Pagination';
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import LoadingState from "./LoadingState";
+import SupplierMap from "../map/SupplierMap";
 
 const SupplierTable = ({ filters }) => {
   const { suppliers, error, status } = useSelector((state) => state.suppliers);
@@ -31,7 +32,8 @@ const SupplierTable = ({ filters }) => {
       setTotalPages(response.data.last_page);
       setTotalItems(response.data.total);
     } catch (err) {
-      dispatch(getSuppliersFailed(err));
+      console.error("Failed to fetch suppliers:", err); // Log the error
+      dispatch(getSuppliersFailed(err.message || "Failed to fetch data from the server."));
     }
   };
 
@@ -57,11 +59,22 @@ const SupplierTable = ({ filters }) => {
     </div>
   );
 
-  if (status === "failed") return <div className="text-center py-5 text-red-500">{error}</div>;
+  if (status === "failed") return <div className="text-center py-5 text-red-500">Opps! {error}</div>;
+
+  const locations = suppliers.map(supplier => ({
+    id: supplier.id,
+    name: supplier.name,
+    latitude: parseFloat(supplier.latitude),
+    longitude: parseFloat(supplier.longitude),
+  }));
+
+  console.log(locations)
+
+
 
   return (
     <div>
-      <div className="overflow-x-auto h-[65vh] overflow-y-auto my-5">
+      <div className="overflow-x-auto h-[65vh] overflow-y-scroll my-5">
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
@@ -136,6 +149,12 @@ const SupplierTable = ({ filters }) => {
           onPageChange={handlePageChange}
         />
       </div>
+
+      <div className="my-5 flex flex-col gap-3">
+        <SupplierMap locations={locations} />
+      </div>
+
+
     </div>
   );
 };
