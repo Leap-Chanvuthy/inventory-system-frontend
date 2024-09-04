@@ -3,6 +3,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import axios from "axios";
 import { Button } from "flowbite-react";
 import { DangerToast, SuccessToast } from "../../../../../components/ToastNotification";
+import { BASE_URL } from "../../../../../components/const/constant";
 
 const SupplierImport = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -29,7 +30,7 @@ const SupplierImport = () => {
     setUploading(true);
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/suppliers/import", formData, {
+      const response = await axios.post(`${BASE_URL}/suppliers/import`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
