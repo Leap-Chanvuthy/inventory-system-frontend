@@ -18,7 +18,7 @@ const SupplierImport = () => {
   };
 
   const handleRemoveFile = () => {
-    setSelectedFile(null);
+    setSelectedFile(null); 
   };
 
   const handleUpload = async () => {
