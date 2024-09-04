@@ -24,7 +24,8 @@ const SupplierTable = ({ filters }) => {
     try {
       const response = await axios.get(`${BASE_URL}/suppliers`, {
         params: {
-          page
+          page,
+          "filter[search]" : filters.search,
         },
       });
       dispatch(getSupplierSuccess(response.data.data));
@@ -85,7 +86,7 @@ const SupplierTable = ({ filters }) => {
             <Table.HeadCell>Business Reg. No.</Table.HeadCell>
             <Table.HeadCell>Bank Account No.</Table.HeadCell>
             <Table.HeadCell>Bank Name</Table.HeadCell>
-            <Table.HeadCell>No. of Material</Table.HeadCell>
+            <Table.HeadCell className="w-5">No. Material</Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
