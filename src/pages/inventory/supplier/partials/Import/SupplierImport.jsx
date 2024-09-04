@@ -14,7 +14,7 @@ const SupplierImport = () => {
   const [successToastOpen, setSuccessToastOpen] = useState(false);
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    setSelectedFile(event.target.files[0]); 
   };
 
   const handleRemoveFile = () => {
