@@ -27,7 +27,7 @@ const SupplierImport = () => {
     const formData = new FormData();
     formData.append("supplier_file", selectedFile);
 
-    setUploading(true);
+    setUploading(true); 
 
     try {
       const response = await axios.post(`${BASE_URL}/suppliers/import`, formData, {
