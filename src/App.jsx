@@ -15,6 +15,7 @@ import CreateCustomer from "./pages/sale/customer/Create";
 import RawMaterial from "./pages/inventory/raw-material/RawMaterial";
 import CreateRawMaterial from "./pages/inventory/raw-material/Create";
 import Supplier from "./pages/inventory/supplier/Supplier";
+import CreateSupplier from "./pages/inventory/supplier/Create";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -33,6 +34,7 @@ function App() {
             <Route path="/raw-materials" element={<RawMaterial/>} />
             <Route path="/raw-materials/create" element={<CreateRawMaterial/>} />
             <Route path="/suppliers"  element={<Supplier />} />
+            <Route path="/suppliers/create" element={<CreateSupplier/>}/>
             <Route path="/orders" element={<Order />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/customer/create" element={<CreateCustomer />} />
