@@ -22,7 +22,7 @@ const SupplierImport = () => {
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) return;
+    if (!selectedFile) return; 
 
     const formData = new FormData();
     formData.append("supplier_file", selectedFile);
