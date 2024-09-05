@@ -27,12 +27,28 @@ const supplierSlice = createSlice({
             state.laoding = false,
             state.status = 'succeeded',
             state.suppliers = action.payload
-        } 
+        },
+        createSupplierStart : (state) => {
+            state.error = null,
+            state.laoding = true,
+            state.status = 'loading'
+        },
+        createSupplierFailed : (state , action) => {
+            state.error = action.payload,
+            state.laoding = false,
+            state.status = 'failed'
+        },
+        createSupplierSuccess : (state , action) =>{
+            state.error = null ,
+            state.laoding = false,
+            state.status = 'succeeded',
+            state.suppliers = action.payload
+        }   
     }
 });
 
 
 
-export const {getSuppliersStart , getSuppliersFailed , getSupplierSuccess} = supplierSlice.actions;
+export const {getSuppliersStart , getSuppliersFailed , getSupplierSuccess , createSupplierStart , createSupplierFailed , createSupplierSuccess} = supplierSlice.actions;
 
 export default supplierSlice.reducer;
