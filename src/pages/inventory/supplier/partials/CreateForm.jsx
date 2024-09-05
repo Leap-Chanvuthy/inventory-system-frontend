@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
-import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Button, Label, TextInput } from "flowbite-react";
 
 const mapContainerStyle = {
   width: "100%",
@@ -19,6 +18,14 @@ const center = {
 };
 
 const CreateForm = () => {
+  
+  const [values , setValues] = useState({
+    latitute : "",
+    longitude : ""
+  });
+
+  console.log(values);
+
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyAd4rEAQqf58fCJGABqW99teDP9BcuyN08",
   });
@@ -29,6 +36,13 @@ const CreateForm = () => {
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
     setSelectedLocation({ lat, lng });
+
+        setValues({
+          ...values,       
+          latitute: lat,   
+          longitude: lng, 
+        });
+      
   };
 
   if (loadError) return <div>Error loading maps</div>;
@@ -235,30 +249,31 @@ const CreateForm = () => {
           </div>
         </div>
 
+        {/* Map Picker */}
+        <div>
+          <div className="mb-2 block">
+            <Label htmlFor="repeat-password" value="Pick Location" />
+          </div>
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            zoom={10}
+            center={center}
+            options={options}
+            onClick={handleMapClick}
+          >
+            {selectedLocation && <Marker position={selectedLocation} />}
+          </GoogleMap>
+          {selectedLocation && (
+            <div className="mt-4">
+              <p>Latitude: {selectedLocation.lat}</p>
+              <p>Longitude: {selectedLocation.lng}</p>
+            </div>
+          )}
+        </div>
+
         {/* Submit Button */}
         <Button type="submit">Submit Supplier Info</Button>
       </form>
-
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="repeat-password" value="Pick Location" />
-        </div>
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          zoom={10}
-          center={center}
-          options={options}
-          onClick={handleMapClick}
-        >
-          {selectedLocation && <Marker position={selectedLocation} />}
-        </GoogleMap>
-        {selectedLocation && (
-          <div className="mt-4">
-            <p>Latitude: {selectedLocation.lat}</p>
-            <p>Longitude: {selectedLocation.lng}</p>
-          </div>
-        )}
-      </div>
     </div>
   );
 };
