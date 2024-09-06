@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
-import { Button, Label, TextInput, FileInput, Textarea } from "flowbite-react";
+import { Button, Label, TextInput, FileInput, Textarea, Spinner } from "flowbite-react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  createSupplierStart,
+  createSupplierFailed,
+  createSupplierSuccess,
+} from "../../../../redux/slices/supplierSlice";
+import axios from "axios";
+import { BASE_URL } from "../../../../components/const/constant";
+import {
+  SuccessToast,
+} from "../../../../components/ToastNotification";
 
 const mapContainerStyle = {
   width: "100%",
@@ -53,8 +64,8 @@ const CreateForm = () => {
 
     setValues((prevValues) => ({
       ...prevValues,
-      latitude: lat,
-      longitude: lng,
+      latitude: JSON.stringify(lat),
+      longitude: JSON.stringify(lng),
     }));
   };
 
@@ -79,13 +90,61 @@ const CreateForm = () => {
     }
   };
 
+  // diapatch redux action
+  const dispatch = useDispatch();
+  const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const { error, status} = useSelector(
+    (state) => state.suppliers
+  );
+
+  // handle submit post request
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(createSupplierStart());
+    try {
+      const response = await axios.post(`${BASE_URL}/supplier`, values , {
+        headers: {
+            "Content-Type": "multipart/form-data",
+          },
+      });
+      console.log(response);
+      dispatch(createSupplierSuccess(response));
+      setValues({
+        image: "",
+        name: "",
+        phone_number: "",
+        location: "",
+        longitude: "",
+        latitude: "",
+        address: "",
+        city: "",
+        email: "",
+        contact_person: "",
+        business_registration_number: "",
+        vat_number: "",
+        bank_account_number: "",
+        bank_account_name: "",
+        bank_name: "",
+        note: "",
+      })
+      setSuccessToastOpen(true); 
+    } catch (error) {
+      console.log(error);
+      dispatch(createSupplierFailed(error?.response?.data?.errors));
+    }
+  };
+
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading Maps...</div>;
 
   return (
     <div>
-      <h1>Create Supplier Infos</h1>
-      <form className="w-full flex flex-col gap-4 my-5">
+        <SuccessToast
+          open={successToastOpen}
+          onClose={() => setSuccessToastOpen(false)}
+          message="Supplier Created Successfully!"
+        />
+      <form className="w-full flex flex-col gap-4 my-5" onSubmit={handleSubmit}>
         <div className="relative flex items-center justify-center">
           <Label
             htmlFor="image"
@@ -118,53 +177,98 @@ const CreateForm = () => {
                 </svg>
               </>
             )}
-            <FileInput id="image" className="hidden" onChange={handleFileChange} />
+            <FileInput
+              id="image"
+              className="hidden"
+              onChange={handleFileChange}
+            />
           </Label>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-3">
           <div className="w-full">
             <div className="mb-2 block">
-              <Label htmlFor="name" value="Supplier Name" />
+              <Label
+                htmlFor="name"
+                value="Supplier Name / Company"
+                color={error?.name ? "failure" : ""}
+                className={`${error?.name ? "text-red" : ""}`}
+              />
             </div>
             <TextInput
               id="name"
               type="text"
               placeholder="Supplier Name"
+              className={`${
+                error?.name ? "border-[1.5px] border-red rounded-md" : ""
+              } `}
               value={values.name}
               onChange={handleChange}
-              required
-              shadow
+              helperText={
+                error?.name && (
+                  <>
+                    <span className="font-medium text-red">{error.name}</span>
+                  </>
+                )
+              }
             />
           </div>
 
           <div className="w-full">
-            <div className="mb-2 block">
-              <Label htmlFor="phone_number" value="Phone Number" />
-            </div>
+            <Label
+              htmlFor="phone_number"
+              value="Phone Number"
+              color={error?.phone_number ? "failure" : ""}
+              className={`${error?.phone_number ? "text-red" : ""}`}
+            />
             <TextInput
               id="phone_number"
               type="text"
-              placeholder="Phone Number"
+              placeholder="phone_number"
+              className={`${
+                error?.phone_number
+                  ? "border-[1.5px] border-red rounded-md"
+                  : ""
+              } `}
               value={values.phone_number}
               onChange={handleChange}
-              required
-              shadow
+              helperText={
+                error?.phone_number && (
+                  <>
+                    <span className="font-medium text-red">
+                      {error.phone_number}
+                    </span>
+                  </>
+                )
+              }
             />
           </div>
 
           <div className="w-full">
-            <div className="mb-2 block">
-              <Label htmlFor="location" value="Location" />
-            </div>
+            <Label
+              htmlFor="location"
+              value="Vendor / Company Loaction"
+              color={error?.location ? "failure" : ""}
+              className={`${error?.location ? "text-red" : ""}`}
+            />
             <TextInput
               id="location"
               type="text"
               placeholder="Location"
+              className={`${
+                error?.location ? "border-[1.5px] border-red rounded-md" : ""
+              } `}
               value={values.location}
               onChange={handleChange}
-              required
-              shadow
+              helperText={
+                error?.location && (
+                  <>
+                    <span className="font-medium text-red">
+                      {error.location}
+                    </span>
+                  </>
+                )
+              }
             />
           </div>
         </div>
@@ -180,7 +284,7 @@ const CreateForm = () => {
               placeholder="Longitude"
               value={values.longitude}
               onChange={handleChange}
-              shadow
+              disabled
             />
           </div>
 
@@ -194,7 +298,7 @@ const CreateForm = () => {
               placeholder="Latitude"
               value={values.latitude}
               onChange={handleChange}
-              shadow
+              disabled
             />
           </div>
 
@@ -208,7 +312,6 @@ const CreateForm = () => {
               placeholder="Address"
               value={values.address}
               onChange={handleChange}
-              shadow
             />
           </div>
         </div>
@@ -224,37 +327,62 @@ const CreateForm = () => {
               placeholder="City"
               value={values.city}
               onChange={handleChange}
-              shadow
             />
           </div>
 
           <div className="w-full">
-            <div className="mb-2 block">
-              <Label htmlFor="email" value="Email" />
-            </div>
+            <Label
+              htmlFor="email"
+              value="Email"
+              color={error?.email ? "failure" : ""}
+              className={`${error?.email ? "text-red" : ""}`}
+            />
             <TextInput
               id="email"
-              type="email"
+              type="text"
               placeholder="Email"
+              className={`${
+                error?.email ? "border-[1.5px] border-red rounded-md" : ""
+              } `}
               value={values.email}
               onChange={handleChange}
-              required
-              shadow
+              helperText={
+                error?.email && (
+                  <>
+                    <span className="font-medium text-red">{error.email}</span>
+                  </>
+                )
+              }
             />
           </div>
 
           <div className="w-full">
-            <div className="mb-2 block">
-              <Label htmlFor="contact_person" value="Contact Person" />
-            </div>
+            <Label
+              htmlFor="conatact_person"
+              value="Contact Person"
+              color={error?.contact_person ? "failure" : ""}
+              className={`${error?.contact_person ? "text-red" : ""}`}
+            />
             <TextInput
               id="contact_person"
               type="text"
               placeholder="Contact Person"
+              className={`${
+                error?.contact_person
+                  ? "border-[1.5px] border-red rounded-md"
+                  : ""
+              } `}
               value={values.contact_person}
               onChange={handleChange}
-              required
-              shadow
+              helperText={
+                error?.contact_person && (
+                  <>
+                    <span className="font-medium text-red">
+                      {error.contact_person}
+                    </span>
+                  </>
+                )
+              }
             />
           </div>
         </div>
@@ -262,7 +390,10 @@ const CreateForm = () => {
         <div className="flex flex-col lg:flex-row gap-3">
           <div className="w-full">
             <div className="mb-2 block">
-              <Label htmlFor="business_registration_number" value="Business Registration Number" />
+              <Label
+                htmlFor="business_registration_number"
+                value="Business Registration Number"
+              />
             </div>
             <TextInput
               id="business_registration_number"
@@ -270,7 +401,6 @@ const CreateForm = () => {
               placeholder="Business Registration Number"
               value={values.business_registration_number}
               onChange={handleChange}
-              shadow
             />
           </div>
 
@@ -284,13 +414,15 @@ const CreateForm = () => {
               placeholder="VAT Number"
               value={values.vat_number}
               onChange={handleChange}
-              shadow
             />
           </div>
 
           <div className="w-full">
             <div className="mb-2 block">
-              <Label htmlFor="bank_account_number" value="Bank Account Number" />
+              <Label
+                htmlFor="bank_account_number"
+                value="Bank Account Number"
+              />
             </div>
             <TextInput
               id="bank_account_number"
@@ -298,7 +430,6 @@ const CreateForm = () => {
               placeholder="Bank Account Number"
               value={values.bank_account_number}
               onChange={handleChange}
-              shadow
             />
           </div>
         </div>
@@ -314,7 +445,6 @@ const CreateForm = () => {
               placeholder="Bank Account Name"
               value={values.bank_account_name}
               onChange={handleChange}
-              shadow
             />
           </div>
 
@@ -328,7 +458,6 @@ const CreateForm = () => {
               placeholder="Bank Name"
               value={values.bank_name}
               onChange={handleChange}
-              shadow
             />
           </div>
         </div>
@@ -344,7 +473,6 @@ const CreateForm = () => {
             placeholder="Note"
             value={values.note}
             onChange={handleChange}
-            shadow
           />
         </div>
 
@@ -356,14 +484,12 @@ const CreateForm = () => {
             options={options}
             onClick={handleMapClick}
           >
-            {selectedLocation && (
-              <Marker position={selectedLocation} />
-            )}
+            {selectedLocation && <Marker position={selectedLocation} />}
           </GoogleMap>
         </div>
 
         <Button type="submit">
-          Save
+            {status == 'loading' ? <Spinner/> : "Save"}
         </Button>
       </form>
     </div>
