@@ -11,6 +11,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import {
   SuccessToast,
+  DangerToast
 } from "../../../../components/ToastNotification";
 
 const mapContainerStyle = {
@@ -93,6 +94,7 @@ const CreateForm = () => {
   // diapatch redux action
   const dispatch = useDispatch();
   const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [failToastOpen, setFailToastOpen] = useState(false);
   const { error, status} = useSelector(
     (state) => state.suppliers
   );
@@ -131,6 +133,7 @@ const CreateForm = () => {
     } catch (error) {
       console.log(error);
       dispatch(createSupplierFailed(error?.response?.data?.errors));
+      setFailToastOpen(true);
     }
   };
 
@@ -143,6 +146,11 @@ const CreateForm = () => {
           open={successToastOpen}
           onClose={() => setSuccessToastOpen(false)}
           message="Supplier Created Successfully!"
+        />
+        <DangerToast
+          open={failToastOpen}
+          onClose={() => setFailToastOpen(false)}
+          message="Something Went Wrong!"
         />
       <form className="w-full flex flex-col gap-4 my-5" onSubmit={handleSubmit}>
         <div className="relative flex items-center justify-center">
