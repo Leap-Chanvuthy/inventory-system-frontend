@@ -53,7 +53,7 @@ const SupplierImport = () => {
 
   return (
     <div className="">
-      <h1 className="text-xl  mb-6">Bulk Upload with Excel File</h1>
+      <h2 className="text-lg font-semibold my-5">Upload with Excel File</h2>
       <div className="space-y-6">
         <div className="flex items-center justify-center mt-4 mb-4">
           <label
