@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
-import { Button, Label, TextInput, FileInput, Textarea, Spinner } from "flowbite-react";
+import {
+  Button,
+  Label,
+  TextInput,
+  FileInput,
+  Textarea,
+  Spinner,
+} from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   createSupplierStart,
@@ -11,7 +18,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import {
   SuccessToast,
-  DangerToast
+  DangerToast,
 } from "../../../../components/ToastNotification";
 
 const mapContainerStyle = {
@@ -95,19 +102,18 @@ const CreateForm = () => {
   const dispatch = useDispatch();
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
-  const { error, status} = useSelector(
-    (state) => state.suppliers
-  );
+  const { error, status } = useSelector((state) => state.suppliers);
+  console.log(error);
 
   // handle submit post request
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(createSupplierStart());
     try {
-      const response = await axios.post(`${BASE_URL}/supplier`, values , {
+      const response = await axios.post(`${BASE_URL}/supplier`, values, {
         headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          "Content-Type": "multipart/form-data",
+        },
       });
       console.log(response);
       dispatch(createSupplierSuccess(response));
@@ -128,8 +134,8 @@ const CreateForm = () => {
         bank_account_name: "",
         bank_name: "",
         note: "",
-      })
-      setSuccessToastOpen(true); 
+      });
+      setSuccessToastOpen(true);
     } catch (error) {
       console.log(error);
       dispatch(createSupplierFailed(error?.response?.data?.errors));
@@ -142,16 +148,16 @@ const CreateForm = () => {
 
   return (
     <div>
-        <SuccessToast
-          open={successToastOpen}
-          onClose={() => setSuccessToastOpen(false)}
-          message="Supplier Created Successfully!"
-        />
-        <DangerToast
-          open={failToastOpen}
-          onClose={() => setFailToastOpen(false)}
-          message="Something Went Wrong!"
-        />
+      <SuccessToast
+        open={successToastOpen}
+        onClose={() => setSuccessToastOpen(false)}
+        message="Supplier Created Successfully!"
+      />
+      <DangerToast
+        open={failToastOpen}
+        onClose={() => setFailToastOpen(false)}
+        message="Something Went Wrong!"
+      />
       <form className="w-full flex flex-col gap-4 my-5" onSubmit={handleSubmit}>
         <div className="relative flex items-center justify-center">
           <Label
@@ -193,295 +199,256 @@ const CreateForm = () => {
           </Label>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-3">
-          <div className="w-full">
-            <div className="mb-2 block">
-              <Label
-                htmlFor="name"
-                value="Supplier Name / Company"
-                color={error?.name ? "failure" : ""}
-                className={`${error?.name ? "text-red" : ""}`}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold my-5">General Info</h2>
+          <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+            <div className="w-full">
+              <Label htmlFor="name" value="Supplier Name / Company" />
+              <TextInput
+                id="name"
+                type="text"
+                placeholder="Supplier Name"
+                className={`${
+                  error?.name ? "border-[1.5px] border-red rounded-md" : ""
+                } `}
+                value={values.name}
+                onChange={handleChange}
+                helperText={
+                  error?.name && (
+                    <>
+                      <span className="font-medium text-red">{error.name}</span>
+                    </>
+                  )
+                }
               />
             </div>
-            <TextInput
-              id="name"
-              type="text"
-              placeholder="Supplier Name"
-              className={`${
-                error?.name ? "border-[1.5px] border-red rounded-md" : ""
-              } `}
-              value={values.name}
-              onChange={handleChange}
-              helperText={
-                error?.name && (
-                  <>
-                    <span className="font-medium text-red">{error.name}</span>
-                  </>
-                )
-              }
-            />
-          </div>
 
-          <div className="w-full">
-            <Label
-              htmlFor="phone_number"
-              value="Phone Number"
-              color={error?.phone_number ? "failure" : ""}
-              className={`${error?.phone_number ? "text-red" : ""}`}
-            />
-            <TextInput
-              id="phone_number"
-              type="text"
-              placeholder="phone_number"
-              className={`${
-                error?.phone_number
-                  ? "border-[1.5px] border-red rounded-md"
-                  : ""
-              } `}
-              value={values.phone_number}
-              onChange={handleChange}
-              helperText={
-                error?.phone_number && (
-                  <>
-                    <span className="font-medium text-red">
-                      {error.phone_number}
-                    </span>
-                  </>
-                )
-              }
-            />
-          </div>
+            <div className="w-full">
+              <Label htmlFor="phone_number" value="Phone Number" />
+              <TextInput
+                id="phone_number"
+                type="text"
+                placeholder="phone_number"
+                className={`${
+                  error?.phone_number
+                    ? "border-[1.5px] border-red rounded-md"
+                    : ""
+                } `}
+                value={values.phone_number}
+                onChange={handleChange}
+                helperText={
+                  error?.phone_number && (
+                    <>
+                      <span className="font-medium text-red">
+                        {error.phone_number}
+                      </span>
+                    </>
+                  )
+                }
+              />
+            </div>
 
-          <div className="w-full">
-            <Label
-              htmlFor="location"
-              value="Vendor / Company Loaction"
-              color={error?.location ? "failure" : ""}
-              className={`${error?.location ? "text-red" : ""}`}
-            />
-            <TextInput
-              id="location"
-              type="text"
-              placeholder="Location"
-              className={`${
-                error?.location ? "border-[1.5px] border-red rounded-md" : ""
-              } `}
-              value={values.location}
-              onChange={handleChange}
-              helperText={
-                error?.location && (
-                  <>
-                    <span className="font-medium text-red">
-                      {error.location}
-                    </span>
-                  </>
-                )
-              }
-            />
+            <div className="w-full">
+              <Label htmlFor="email" value="Email" />
+              <TextInput
+                id="email"
+                type="text"
+                placeholder="Email"
+                className={`${
+                  error?.email ? "border-[1.5px] border-red rounded-md" : ""
+                } `}
+                value={values.email}
+                onChange={handleChange}
+                helperText={
+                  error?.email && (
+                    <>
+                      <span className="font-medium text-red">
+                        {error.email}
+                      </span>
+                    </>
+                  )
+                }
+              />
+            </div>
+            <div className="w-full">
+              <Label htmlFor="contact_person" value="Contact Person" />
+              <TextInput
+                id="contact_person"
+                type="text"
+                placeholder="Contact Person"
+                className={`${
+                  error?.contact_person
+                    ? "border-[1.5px] border-red rounded-md"
+                    : ""
+                } `}
+                value={values.contact_person}
+                onChange={handleChange}
+                helperText={
+                  error?.contact_person && (
+                    <>
+                      <span className="font-medium text-red">
+                        {error.contact_person}
+                      </span>
+                    </>
+                  )
+                }
+              />
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-3">
-          <div className="w-full">
-            <div className="mb-2 block">
-              <Label htmlFor="longitude" value="Longitude" />
+        {/* Location Info Section */}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold my-5">Location Info</h2>
+          <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+            <div className="w-full">
+              <Label htmlFor="location" value="Location" />
+              <TextInput
+                id="location"
+                type="text"
+                placeholder="Location"
+                className={`${
+                  error?.location ? "border-[1.5px] border-red rounded-md" : ""
+                } `}
+                value={values.location}
+                onChange={handleChange}
+                helperText={
+                  error?.location && (
+                    <>
+                      <span className="font-medium text-red">
+                        {error.location}
+                      </span>
+                    </>
+                  )
+                }
+              />
             </div>
-            <TextInput
-              id="longitude"
-              type="text"
-              placeholder="Longitude"
-              value={values.longitude}
-              onChange={handleChange}
-              disabled
-            />
-          </div>
 
-          <div className="w-full">
-            <div className="mb-2 block">
-              <Label htmlFor="latitude" value="Latitude" />
-            </div>
-            <TextInput
-              id="latitude"
-              type="text"
-              placeholder="Latitude"
-              value={values.latitude}
-              onChange={handleChange}
-              disabled
-            />
-          </div>
-
-          <div className="w-full">
-            <div className="mb-2 block">
+            <div className="w-full">
               <Label htmlFor="address" value="Address" />
+              <TextInput
+                id="address"
+                type="text"
+                placeholder="Address"
+                value={values.address}
+                onChange={handleChange}
+              />
             </div>
-            <TextInput
-              id="address"
-              type="text"
-              placeholder="Address"
-              value={values.address}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
 
-        <div className="flex flex-col lg:flex-row gap-3">
-          <div className="w-full">
-            <div className="mb-2 block">
+            <div className="w-full">
               <Label htmlFor="city" value="City" />
+              <TextInput
+                id="city"
+                type="text"
+                placeholder="City"
+                value={values.city}
+                onChange={handleChange}
+              />
             </div>
-            <TextInput
-              id="city"
-              type="text"
-              placeholder="City"
-              value={values.city}
-              onChange={handleChange}
-            />
-          </div>
 
-          <div className="w-full">
-            <Label
-              htmlFor="email"
-              value="Email"
-              color={error?.email ? "failure" : ""}
-              className={`${error?.email ? "text-red" : ""}`}
-            />
-            <TextInput
-              id="email"
-              type="text"
-              placeholder="Email"
-              className={`${
-                error?.email ? "border-[1.5px] border-red rounded-md" : ""
-              } `}
-              value={values.email}
-              onChange={handleChange}
-              helperText={
-                error?.email && (
-                  <>
-                    <span className="font-medium text-red">{error.email}</span>
-                  </>
-                )
-              }
-            />
-          </div>
+            <div className="w-full">
+              <Label htmlFor="longitude" value="Longitude" />
+              <TextInput
+                id="longitude"
+                type="text"
+                placeholder="Longitude"
+                value={values.longitude}
+                disabled
+              />
+            </div>
 
-          <div className="w-full">
-            <Label
-              htmlFor="conatact_person"
-              value="Contact Person"
-              color={error?.contact_person ? "failure" : ""}
-              className={`${error?.contact_person ? "text-red" : ""}`}
-            />
-            <TextInput
-              id="contact_person"
-              type="text"
-              placeholder="Contact Person"
-              className={`${
-                error?.contact_person
-                  ? "border-[1.5px] border-red rounded-md"
-                  : ""
-              } `}
-              value={values.contact_person}
-              onChange={handleChange}
-              helperText={
-                error?.contact_person && (
-                  <>
-                    <span className="font-medium text-red">
-                      {error.contact_person}
-                    </span>
-                  </>
-                )
-              }
-            />
+            <div className="w-full">
+              <Label htmlFor="latitude" value="Latitude" />
+              <TextInput
+                id="latitude"
+                type="text"
+                placeholder="Latitude"
+                value={values.latitude}
+                disabled
+              />
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-3">
-          <div className="w-full">
-            <div className="mb-2 block">
+        {/* Business Info Section */}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold my-5">Business Information</h2>
+          <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+            <div className="w-full">
               <Label
                 htmlFor="business_registration_number"
                 value="Business Registration Number"
               />
+              <TextInput
+                id="business_registration_number"
+                type="text"
+                placeholder="Business Registration Number"
+                value={values.business_registration_number}
+                onChange={handleChange}
+              />
             </div>
-            <TextInput
-              id="business_registration_number"
-              type="text"
-              placeholder="Business Registration Number"
-              value={values.business_registration_number}
-              onChange={handleChange}
-            />
-          </div>
 
-          <div className="w-full">
-            <div className="mb-2 block">
+            <div className="w-full">
               <Label htmlFor="vat_number" value="VAT Number" />
+              <TextInput
+                id="vat_number"
+                type="text"
+                placeholder="VAT Number"
+                value={values.vat_number}
+                onChange={handleChange}
+              />
             </div>
-            <TextInput
-              id="vat_number"
-              type="text"
-              placeholder="VAT Number"
-              value={values.vat_number}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="w-full">
-            <div className="mb-2 block">
+            <div className="w-full">
               <Label
                 htmlFor="bank_account_number"
                 value="Bank Account Number"
               />
+              <TextInput
+                id="bank_account_number"
+                type="text"
+                placeholder="Bank Account Number"
+                value={values.bank_account_number}
+                onChange={handleChange}
+              />
             </div>
-            <TextInput
-              id="bank_account_number"
-              type="text"
-              placeholder="Bank Account Number"
-              value={values.bank_account_number}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
 
-        <div className="flex flex-col lg:flex-row gap-3">
-          <div className="w-full">
-            <div className="mb-2 block">
+            <div className="w-full">
               <Label htmlFor="bank_account_name" value="Bank Account Name" />
+              <TextInput
+                id="bank_account_name"
+                type="text"
+                placeholder="Bank Account Name"
+                value={values.bank_account_name}
+                onChange={handleChange}
+              />
             </div>
-            <TextInput
-              id="bank_account_name"
-              type="text"
-              placeholder="Bank Account Name"
-              value={values.bank_account_name}
-              onChange={handleChange}
-            />
-          </div>
 
-          <div className="w-full">
-            <div className="mb-2 block">
+            <div className="w-full">
               <Label htmlFor="bank_name" value="Bank Name" />
+              <TextInput
+                id="bank_name"
+                type="text"
+                placeholder="Bank Name"
+                value={values.bank_name}
+                onChange={handleChange}
+              />
             </div>
-            <TextInput
-              id="bank_name"
-              type="text"
-              placeholder="Bank Name"
-              value={values.bank_name}
-              onChange={handleChange}
-            />
           </div>
         </div>
 
+        {/* Notes Section */}
         <div className="w-full">
-          <div className="mb-2 block">
+          <h2 className="text-lg font-semibold my-5">Additional</h2>
+          <div className="">
             <Label htmlFor="note" value="Note" />
+            <Textarea
+              id="note"
+              placeholder="Note"
+              value={values.note}
+              onChange={handleChange}
+              cols={3}
+            />
           </div>
-          <Textarea
-            cols={3}
-            id="note"
-            type="text"
-            placeholder="Note"
-            value={values.note}
-            onChange={handleChange}
-          />
         </div>
 
         <div className="w-full mb-4" style={{ height: "400px" }}>
@@ -497,7 +464,7 @@ const CreateForm = () => {
         </div>
 
         <Button type="submit">
-            {status == 'loading' ? <Spinner/> : "Save"}
+          {status == "loading" ? <Spinner /> : "Save"}
         </Button>
       </form>
     </div>
