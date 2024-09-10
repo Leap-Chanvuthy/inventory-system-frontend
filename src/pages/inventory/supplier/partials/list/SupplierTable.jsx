@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Avatar, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL } from "../../../../../components/const/constant";
+import { BASE_URL , BASE_IMAGE_URL } from "../../../../../components/const/constant";
 import { useSelector, useDispatch } from "react-redux";
 import { getSuppliersStart, getSuppliersFailed, getSupplierSuccess } from "../../../../../redux/slices/supplierSlice";
 import GlobalPagination from '../../../../../components/Pagination';
@@ -33,7 +33,7 @@ const SupplierTable = ({ filters }) => {
       setTotalPages(response.data.last_page);
       setTotalItems(response.data.total);
     } catch (err) {
-      console.error("Failed to fetch suppliers:", err); // Log the error
+      console.error("Failed to fetch suppliers:", err); 
       dispatch(getSuppliersFailed(err.message || "Failed to fetch data from the server."));
     }
   };
@@ -69,7 +69,7 @@ const SupplierTable = ({ filters }) => {
     longitude: parseFloat(supplier.longitude),
   }));
 
-  console.log(locations)
+  console.log(suppliers)
 
 
 
@@ -97,7 +97,7 @@ const SupplierTable = ({ filters }) => {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <Avatar img='https://www.leapchanvuthy.dev/images/Leapchanvuthy.png' />
+                  <Avatar img={supplier.image ? `${BASE_IMAGE_URL}/${supplier.image}` : ''} />
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {supplier.name}
