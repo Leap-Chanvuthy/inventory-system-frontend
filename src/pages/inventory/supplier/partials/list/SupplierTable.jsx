@@ -203,12 +203,11 @@ const SupplierTable = ({ filters }) => {
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {supplier.products.length}{" "}
-                    {/* Assuming products array exists */}
                   </Table.Cell>
                   <Table.Cell className="flex items-center gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <FiEdit />
                     <MdDelete
-                      className="text-red text-lg"
+                      className="text-red text-lg cursor-pointer"
                       onClick={() => {
                         setOpenModal(true);
                         setSelectedId(supplier.id);

@@ -8,7 +8,7 @@ export const SuccessToast = ({ open, onClose, message }) => {
     <Snackbar
       open={open}
       onClose={onClose}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Positioning
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
     >
       <Alert
         onClose={onClose}
