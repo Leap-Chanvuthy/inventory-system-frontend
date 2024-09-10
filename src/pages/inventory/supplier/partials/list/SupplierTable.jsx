@@ -1,20 +1,91 @@
 import { useEffect, useState } from "react";
-import { Avatar, Table } from "flowbite-react";
+import { Avatar, Spinner, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL , BASE_IMAGE_URL } from "../../../../../components/const/constant";
+import {
+  BASE_URL,
+  BASE_IMAGE_URL,
+} from "../../../../../components/const/constant";
 import { useSelector, useDispatch } from "react-redux";
-import { getSuppliersStart, getSuppliersFailed, getSupplierSuccess } from "../../../../../redux/slices/supplierSlice";
-import GlobalPagination from '../../../../../components/Pagination';
+import {
+  getSuppliersStart,
+  getSuppliersFailed,
+  getSupplierSuccess,
+} from "../../../../../redux/slices/supplierSlice";
+import GlobalPagination from "../../../../../components/Pagination";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import LoadingState from "./LoadingState";
 import SupplierMap from "../map/SupplierMap";
+import {
+  deleteSupplierStart,
+  deleteSupplierSuccess,
+  deleteSupplierFailed,
+} from "../../../../../redux/slices/supplierSlice";
+import { Button, Modal } from "flowbite-react";
+import { LuAlertTriangle } from "react-icons/lu";
+import { SuccessToast } from "../../../../../components/ToastNotification";
 
 const SupplierTable = ({ filters }) => {
+
   const { suppliers, error, status } = useSelector((state) => state.suppliers);
   const dispatch = useDispatch();
 
+  // handle delte function
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [successToastOpen, setSuccessToastOpen] = useState(false);
+
+
+  // const handleDelete = async () => {
+  //   if (!selectedId) {
+  //     console.log("No supplier selected for deletion");
+  //     return;
+  //   }
+  //   dispatch(deleteSupplierStart());
+  //   try {
+  //     const response = await axios.delete(`${BASE_URL}/supplier/${selectedId}`);
+  //     console.log(response);
+  //     if (response.status === 200) {
+  //       dispatch(deleteSupplierSuccess(selectedId));
+  //       setOpenModal(false);
+  //     }
+  //   } catch (err) {
+  //     console.log("Delete error:", err.message);
+  //     dispatch(
+  //       deleteSupplierFailed(
+  //         err.message || "Error deleting data from the server."
+  //       )
+  //     );
+  //   }
+  // };
+
+  const handleDelete = async () => {
+    if (!selectedId) {
+      console.log("No supplier selected for deletion");
+      return;
+    }
+    dispatch(deleteSupplierStart());
+    try {
+      const response = await axios.delete(`${BASE_URL}/supplier/${selectedId}`);
+      console.log(response);
+      if (response.status === 200) {
+        dispatch(deleteSupplierSuccess(selectedId));
+        setOpenModal(false);
+        setSuccessToastOpen(true);
+      }
+    } catch (err) {
+      console.log("Delete error:", err.message);
+      dispatch(
+        deleteSupplierFailed(
+          err.message || "Error deleting data from the server."
+        )
+      );
+    }
+  };
+  
+
+  // Fetch data & pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -25,7 +96,7 @@ const SupplierTable = ({ filters }) => {
       const response = await axios.get(`${BASE_URL}/suppliers`, {
         params: {
           page,
-          "filter[search]" : filters.search,
+          "filter[search]": filters.search,
         },
       });
       dispatch(getSupplierSuccess(response.data.data));
@@ -33,8 +104,12 @@ const SupplierTable = ({ filters }) => {
       setTotalPages(response.data.last_page);
       setTotalItems(response.data.total);
     } catch (err) {
-      console.error("Failed to fetch suppliers:", err); 
-      dispatch(getSuppliersFailed(err.message || "Failed to fetch data from the server."));
+      console.error("Failed to fetch suppliers:", err);
+      dispatch(
+        getSuppliersFailed(
+          err.message || "Failed to fetch data from the server."
+        )
+      );
     }
   };
 
@@ -46,32 +121,32 @@ const SupplierTable = ({ filters }) => {
     setCurrentPage(newPage);
   };
 
-  if (status === "loading") return (
-    <div>
-      <LoadingState />
-      <GlobalPagination
-        current_page={currentPage}
-        last_page={totalPages}
-        from={(currentPage - 1) * 10 + 1}
-        to={Math.min(currentPage * 10, totalItems)}
-        total={totalItems}
-        onPageChange={handlePageChange}
-      />
-    </div>
-  );
+  if (status === "loading")
+    return (
+      <div>
+        <LoadingState />
+        <GlobalPagination
+          current_page={currentPage}
+          last_page={totalPages}
+          from={(currentPage - 1) * 10 + 1}
+          to={Math.min(currentPage * 10, totalItems)}
+          total={totalItems}
+          onPageChange={handlePageChange}
+        />
+      </div>
+    );
 
-  if (status === "failed") return <div className="text-center py-5 text-red-500">Opps! {error}</div>;
-
-  const locations = suppliers.map(supplier => ({
+  const locations = suppliers.map((supplier) => ({
     id: supplier.id,
     name: supplier.name,
     latitude: parseFloat(supplier.latitude),
     longitude: parseFloat(supplier.longitude),
   }));
 
-  console.log(suppliers)
+  console.log("deleted supplier message :" , suppliers);
 
-
+  if (status === "failed")
+    return <div className="text-center py-5 text-red-500">Opps! {error}</div>;
 
   return (
     <div>
@@ -97,7 +172,13 @@ const SupplierTable = ({ filters }) => {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  <Avatar img={supplier.image ? `${BASE_IMAGE_URL}/${supplier.image}` : ''} />
+                    <Avatar
+                      img={
+                        supplier.image
+                          ? `${BASE_IMAGE_URL}/${supplier.image}`
+                          : ""
+                      }
+                    />
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {supplier.name}
@@ -121,11 +202,18 @@ const SupplierTable = ({ filters }) => {
                     {supplier.bank_name}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {supplier.products.length} {/* Assuming products array exists */}
+                    {supplier.products.length}{" "}
+                    {/* Assuming products array exists */}
                   </Table.Cell>
                   <Table.Cell className="flex items-center gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <FiEdit />
-                    <MdDelete className="text-red text-lg" />
+                    <MdDelete
+                      className="text-red text-lg"
+                      onClick={() => {
+                        setOpenModal(true);
+                        setSelectedId(supplier.id);
+                      }}
+                    />
                   </Table.Cell>
                 </Table.Row>
               ))
@@ -154,8 +242,39 @@ const SupplierTable = ({ filters }) => {
       <div className="my-5 flex flex-col gap-3">
         <SupplierMap locations={locations} />
       </div>
+      <>
+        <Button onClick={() => setOpenModal(true)}>Toggle modal</Button>
+        <Modal show={openModal} onClose={() => setOpenModal(false)}>
+          <Modal.Header>Delete Supplier Information</Modal.Header>
+          <Modal.Body>
+            <div className="text-xl p-6 flex items-center gap-5 text-red">
+              <LuAlertTriangle />
+              <p>Are You Sure Want to Delete ?</p>
+            </div>
+            <div className="space-y-6 p-6">
+              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                Please note that after deleting this item, it can still be
+                recovered. If you need to restore the data, you can access the
+                recovery option within contact support for assistance.
+              </p>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={handleDelete}>
+              {status == "loading" ? <Spinner /> : "Delete"}
+            </Button>
+            <Button color="gray" onClick={() => setOpenModal(false)}>
+              Decline
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
 
-
+      <SuccessToast
+        open={successToastOpen}
+        onClose={() => setSuccessToastOpen(false)}
+        message="Supplier deleted successfully!"
+      />
     </div>
   );
 };
