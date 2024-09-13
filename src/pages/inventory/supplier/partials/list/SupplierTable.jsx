@@ -31,34 +31,10 @@ const SupplierTable = ({ filters }) => {
   const { suppliers, error, status } = useSelector((state) => state.suppliers);
   const dispatch = useDispatch();
 
-  // handle delte function
+  // handle delete function
   const [openModal, setOpenModal] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
-
-
-  // const handleDelete = async () => {
-  //   if (!selectedId) {
-  //     console.log("No supplier selected for deletion");
-  //     return;
-  //   }
-  //   dispatch(deleteSupplierStart());
-  //   try {
-  //     const response = await axios.delete(`${BASE_URL}/supplier/${selectedId}`);
-  //     console.log(response);
-  //     if (response.status === 200) {
-  //       dispatch(deleteSupplierSuccess(selectedId));
-  //       setOpenModal(false);
-  //     }
-  //   } catch (err) {
-  //     console.log("Delete error:", err.message);
-  //     dispatch(
-  //       deleteSupplierFailed(
-  //         err.message || "Error deleting data from the server."
-  //       )
-  //     );
-  //   }
-  // };
 
   const handleDelete = async () => {
     if (!selectedId) {
@@ -136,6 +112,10 @@ const SupplierTable = ({ filters }) => {
       </div>
     );
 
+  if (!Array.isArray(suppliers)) {
+    return <div className="text-center py-5 text-red-500">Suppliers data is invalid.</div>;
+  }
+
   const locations = suppliers.map((supplier) => ({
     id: supplier.id,
     name: supplier.name,
@@ -143,7 +123,7 @@ const SupplierTable = ({ filters }) => {
     longitude: parseFloat(supplier.longitude),
   }));
 
-  console.log("deleted supplier message :" , suppliers);
+  console.log(suppliers);
 
   if (status === "failed")
     return <div className="text-center py-5 text-red-500">Opps! {error}</div>;
@@ -204,8 +184,8 @@ const SupplierTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {supplier.products.length}{" "}
                   </Table.Cell>
-                  <Table.Cell className="flex items-center gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <FiEdit />
+                  <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Link to={`/supplier/update/${supplier.id}`} ><FiEdit /></Link>
                     <MdDelete
                       className="text-red text-lg cursor-pointer"
                       onClick={() => {

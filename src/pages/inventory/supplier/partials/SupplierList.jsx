@@ -36,7 +36,7 @@ const SupplierList = () => {
             <Link to='/suppliers/create'><Button>Import</Button></Link>
             <Button>Export</Button>
           </div>
-          <Link to="/raw-materials/create">
+          <Link to="/suppliers/create">
             <Button color="info">Create New</Button>
           </Link>
         </div>
