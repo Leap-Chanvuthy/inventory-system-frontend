@@ -47,7 +47,7 @@ const SupplierImport = () => {
       setUploading(false);
       setError(err.response?.data?.error || 'An error occurred');
       setToastOpen(true); 
-      console.error("Error uploading file:", err?.response?.data?.error);
+      console.error("Error uploading file:", err?.response);
     }
   };
 
