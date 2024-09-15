@@ -56,8 +56,6 @@ const CreateForm = () => {
     note: "",
   });
 
-  console.log(values);
-
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -103,7 +101,6 @@ const CreateForm = () => {
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
   const { error, status } = useSelector((state) => state.suppliers);
-  console.log(error);
 
   // handle submit post request
   const handleSubmit = async (e) => {
