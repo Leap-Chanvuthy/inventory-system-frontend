@@ -53,7 +53,12 @@ const SupplierImport = () => {
 
   return (
     <div className="">
-      <h2 className="text-lg font-semibold my-5">Upload with Excel File</h2>
+      <div className="flex flex-col gap-2 my-5">
+        <h2 className="text-lg font-semibold">Bulk Upload Suppliers Data</h2>
+        <p>
+        This functionality allows you to upload and integrate data files seamlessly. Whether you're updating existing records or adding new information, our import tool ensures that your data is accurately processed and incorporated into the system. 
+        </p>
+      </div>
       <div className="space-y-6">
         <div className="flex items-center justify-center mt-4 mb-4">
           <label
