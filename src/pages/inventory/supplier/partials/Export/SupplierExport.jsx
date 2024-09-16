@@ -55,7 +55,7 @@ const SupplierExport = () => {
       setSuccessToastOpen(true);
       dispatch(getSupplierSuccess("Suppliers exported successfully"));
     } catch (err) {
-      console.log(error);
+      console.log(err);
       dispatch(getSuppliersFailed(err?.response?.data));
     }
   };
