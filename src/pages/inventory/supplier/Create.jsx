@@ -20,7 +20,7 @@ const Create = () => {
         <Tabs.Item title="Import Excel" icon={RiFileExcel2Line}>
             <SupplierImport />
         </Tabs.Item>
-        <Tabs.Item title="Download Supplier Data" icon={BsDownload}>
+        <Tabs.Item title="Download" icon={BsDownload}>
           <SupplierExport />
         </Tabs.Item>
       </Tabs>

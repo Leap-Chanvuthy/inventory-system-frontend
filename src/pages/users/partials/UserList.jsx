@@ -3,6 +3,8 @@ import { TextInput, Button, Select } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import UserTable from "./list/UserTable";
+import {data} from '../../../components/charts/chartData';
+import PieChart from "../../../components/charts/PieChart";
 
 function UserList() {
 
@@ -45,6 +47,8 @@ function UserList() {
       </div>
 
       <UserTable filters={filters} />
+
+      <PieChart title="User Role" data={data} />
 
     </div>
   );
