@@ -107,7 +107,7 @@ const UpdateForm = () => {
         note: suppliers.note || "",
       });
     }
-  }, [suppliers , ]);
+  }, [suppliers]);
 
   console.log("fetched suppliers: " , suppliers , "form values :" , values );
 
