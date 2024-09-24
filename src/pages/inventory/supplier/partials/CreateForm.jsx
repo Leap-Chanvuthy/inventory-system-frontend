@@ -7,6 +7,7 @@ import {
   FileInput,
   Textarea,
   Spinner,
+  Select,
 } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -45,9 +46,15 @@ const CreateForm = () => {
     longitude: "",
     latitude: "",
     address: "",
-    city: "",
     email: "",
     contact_person: "",
+    website: "",                
+    social_media: "",           
+    supplier_category: "",      
+    supplier_status: "",        
+    contract_length: "",        
+    discount_term: "",          
+    payment_term: "",           
     business_registration_number: "",
     vat_number: "",
     bank_account_number: "",
@@ -55,6 +62,7 @@ const CreateForm = () => {
     bank_name: "",
     note: "",
   });
+  
 
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -122,9 +130,15 @@ const CreateForm = () => {
         longitude: "",
         latitude: "",
         address: "",
-        city: "",
         email: "",
         contact_person: "",
+        website: "",                
+        social_media: "",          
+        supplier_category: "",      
+        supplier_status: "",        
+        contract_length: "",        
+        discount_term: "",          
+        payment_term: "",           
         business_registration_number: "",
         vat_number: "",
         bank_account_number: "",
@@ -267,6 +281,7 @@ const CreateForm = () => {
                 }
               />
             </div>
+
             <div className="w-full">
               <Label htmlFor="contact_person" value="Contact Person" />
               <TextInput
@@ -290,6 +305,59 @@ const CreateForm = () => {
                   )
                 }
               />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="website" value="Website" />
+              <TextInput
+                id="website"
+                type="text"
+                placeholder="Website"
+                value={values.website}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="social_media" value="Socail Media" />
+              <TextInput
+                id="social_media"
+                type="text"
+                placeholder="Website"
+                value={values.social_media}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="supplier_category" value="Supplier Category" />
+              <Select
+                id="supplier_category"
+                type="text"
+                placeholder="Website"
+                value={values.supplier_category}
+                onChange={handleChange}
+              >
+                <option value=''>Select an option</option>
+                <option value='PRODUCT'>Product</option>
+                <option value='SERVICE'>Service</option>
+              </Select>
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="supplier_status" value="Supplier Status" />
+              <Select
+                id="supplier_status"
+                type="text"
+                placeholder="Website"
+                value={values.supplier_status}
+                onChange={handleChange}
+              >
+                <option value=''>Select an option</option>
+                <option value='ACTIVE'>Active</option>
+                <option value='INACTIVE'>Inactive</option>
+                <option value='SUSPENDED'>Suspended</option>
+              </Select>
             </div>
           </div>
         </div>
@@ -333,17 +401,6 @@ const CreateForm = () => {
             </div>
 
             <div className="w-full">
-              <Label htmlFor="city" value="City" />
-              <TextInput
-                id="city"
-                type="text"
-                placeholder="City"
-                value={values.city}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="w-full">
               <Label htmlFor="longitude" value="Longitude" />
               <TextInput
                 id="longitude"
@@ -371,6 +428,41 @@ const CreateForm = () => {
         <div className="mb-6">
           <h2 className="text-lg font-semibold my-5">Business Information</h2>
           <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+
+            <div className="w-full">
+              <Label htmlFor="contract_length" value="Contract Length" />
+              <TextInput
+                id="contract_length"
+                type="text"
+                placeholder="Contract Length"
+                value={values.contract_length}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="discount_term" value="Discount Term" />
+              <TextInput
+                id="discount_term"
+                type="text"
+                placeholder="Discount Term"
+                value={values.discount_term}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="payment_term" value="Payment Term" />
+              <TextInput
+                id="payment_term"
+                type="text"
+                placeholder="Payment Term"
+                value={values.payment_term}
+                onChange={handleChange}
+              />
+            </div>
+            
+
             <div className="w-full">
               <Label
                 htmlFor="business_registration_number"
