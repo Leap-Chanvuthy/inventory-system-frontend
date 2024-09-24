@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Avatar, Spinner, Table } from "flowbite-react";
+import { Avatar, Badge, Spinner, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import {
@@ -25,6 +25,7 @@ import {
 import { Button, Modal } from "flowbite-react";
 import { LuAlertTriangle } from "react-icons/lu";
 import { SuccessToast } from "../../../../../components/ToastNotification";
+import { HiCheck } from "react-icons/hi";
 
 const SupplierTable = ({ filters }) => {
 
@@ -71,7 +72,7 @@ const SupplierTable = ({ filters }) => {
       const response = await axios.get(`${BASE_URL}/suppliers`, {
         params: {
           page,
-          "filter[search]": filters.search,
+          "filter[search]": filters?.search,
         },
       });
       dispatch(getSupplierSuccess(response.data.data));
@@ -131,18 +132,24 @@ const SupplierTable = ({ filters }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto h-[65vh] overflow-y-scroll my-5">
+      <div className="overflow-x-auto lg:max-w-6xl h-[65vh] overflow-y-scroll my-5">
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>Name / Company</Table.HeadCell>
             <Table.HeadCell>Phone Number</Table.HeadCell>
+            <Table.HeadCell>Category</Table.HeadCell>
+            <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Location</Table.HeadCell>
             <Table.HeadCell>Contact Person</Table.HeadCell>
             <Table.HeadCell>Business Reg. No.</Table.HeadCell>
             <Table.HeadCell>Bank Account No.</Table.HeadCell>
             <Table.HeadCell>Bank Name</Table.HeadCell>
-            <Table.HeadCell className="w-5">No. Material</Table.HeadCell>
+            <Table.HeadCell>Supplier Code</Table.HeadCell>
+            <Table.HeadCell>Address</Table.HeadCell>
+            <Table.HeadCell>Email</Table.HeadCell>
+            <Table.HeadCell>Website</Table.HeadCell>
+            <Table.HeadCell>Social Media</Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -167,6 +174,25 @@ const SupplierTable = ({ filters }) => {
                   {supplier.phone_number}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                {supplier.supplier_category === 'PRODUCT' && (
+                    <Badge color="success">{supplier.supplier_category}</Badge>
+                  )}
+                  {supplier.supplier_category === 'SERVICE' && (
+                    <Badge color="warning">{supplier.supplier_category}</Badge>
+                  )}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {supplier.supplier_status === 'ACTIVE' && (
+                    <Badge color="success">{supplier.supplier_status}</Badge>
+                  )}
+                  {supplier.supplier_status === 'INACTIVE' && (
+                    <Badge color="warning">{supplier.supplier_status}</Badge>
+                  )}
+                  {supplier.supplier_status === 'SUSPENDED' && (
+                    <Badge color="danger">{supplier.supplier_status}</Badge>
+                  )}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {supplier.location}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -182,12 +208,28 @@ const SupplierTable = ({ filters }) => {
                   {supplier.bank_name}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.products.length} 
+                  {supplier.supplier_code}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {supplier.address}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {supplier.email}
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <a href={supplier.website} target="_blank" rel="noopener noreferrer">
+                    {supplier.website}
+                  </a>
+                </Table.Cell>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <a href={supplier.social_media} target="_blank" rel="noopener noreferrer">
+                    {supplier.social_media}
+                  </a>
                 </Table.Cell>
                 <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  <Link to={`/supplier/update/${supplier.id}`} ><FiEdit /></Link>
+                  <Link to={`/supplier/update/${supplier.id}`}><FiEdit /></Link>
                   <MdDelete
-                    className="text-red text-lg cursor-pointer"
+                    className="text-red-600 text-lg cursor-pointer"
                     onClick={() => {
                       setOpenModal(true);
                       setSelectedId(supplier.id);
@@ -215,7 +257,6 @@ const SupplierTable = ({ filters }) => {
         <SupplierMap locations={locations} />
       </div>
       <>
-        <Button onClick={() => setOpenModal(true)}>Toggle modal</Button>
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
           <Modal.Header>Delete Supplier Information</Modal.Header>
           <Modal.Body>

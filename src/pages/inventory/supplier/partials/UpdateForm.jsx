@@ -5,6 +5,7 @@ import {
   Label,
   TextInput,
   FileInput,
+  Select,
   Textarea,
   Spinner,
 } from "flowbite-react";
@@ -67,44 +68,56 @@ const UpdateForm = () => {
       getSupplierById();
     },[id , dispatch]);
   
-  const [values, setValues] = useState({
-    image: "",
-    name: "",
-    phone_number: "",
-    location: "",
-    longitude: "",
-    latitude: "",
-    address: "",
-    city: "",
-    email: "",
-    contact_person: "",
-    business_registration_number: "",
-    vat_number: "",
-    bank_account_number: "",
-    bank_account_name: "",
-    bank_name: "",
-    note: "",
-  });
+    const [values, setValues] = useState({
+      image: "",
+      name: "",
+      phone_number: "",
+      location: "",
+      longitude: "",
+      latitude: "",
+      address: "",
+      email: "",
+      contact_person: "",
+      website: "",                
+      social_media: "",           
+      supplier_category: "",      
+      supplier_status: "",        
+      contract_length: "",        
+      discount_term: "",          
+      payment_term: "",           
+      business_registration_number: "",
+      vat_number: "",
+      bank_account_number: "",
+      bank_account_name: "",
+      bank_name: "",
+      note: "",
+    });
 
   useEffect(() => {
     if (suppliers) {
       setValues({
-        image: suppliers.image || "",
-        name: suppliers.name || "",
-        phone_number: suppliers.phone_number || "",
-        location: suppliers.location || "",
-        longitude: suppliers.longitude || "",
-        latitude: suppliers.latitude || "",
-        address: suppliers.address || "",
-        city: suppliers.city || "",
-        email: suppliers.email || "",
-        contact_person: suppliers.contact_person || "",
-        business_registration_number: suppliers.business_registration_number || "",
-        vat_number: suppliers.vat_number || "",
-        bank_account_number: suppliers.bank_account_number || "",
-        bank_account_name: suppliers.bank_account_name || "",
-        bank_name: suppliers.bank_name || "",
-        note: suppliers.note || "",
+        image: suppliers?.image || '',
+        name: suppliers?.name,
+        phone_number: suppliers?.phone_number || '',
+        location: suppliers?.location || '',
+        longitude: suppliers?.longitude || '',
+        latitude: suppliers?.latitude || '',
+        address: suppliers?.address || '',
+        email: suppliers?.email || '',
+        contact_person: suppliers?.contact_person || '',
+        website: suppliers?.website || '',                
+        social_media: suppliers?.social_media || '',           
+        supplier_category: suppliers?.supplier_category || '',      
+        supplier_status: suppliers?.supplier_status || '',        
+        contract_length: suppliers?.contract_length || '',        
+        discount_term: suppliers?.discount_term || '',          
+        payment_term: suppliers?.payment_term || '',           
+        business_registration_number: suppliers?.business_registration_number || '',
+        vat_number: suppliers?.vat_number || '',
+        bank_account_number: suppliers?.bank_account_number || '',
+        bank_account_name: suppliers?.bank_account_name || '',
+        bank_name: suppliers?.bank_name || '',
+        note: suppliers?.note || '',
       });
     }
   }, [suppliers]);
@@ -294,6 +307,7 @@ const UpdateForm = () => {
                 }
               />
             </div>
+
             <div className="w-full">
               <Label htmlFor="contact_person" value="Contact Person" />
               <TextInput
@@ -317,6 +331,59 @@ const UpdateForm = () => {
                   )
                 }
               />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="website" value="Website" />
+              <TextInput
+                id="website"
+                type="text"
+                placeholder="Website"
+                value={values.website}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="social_media" value="Socail Media" />
+              <TextInput
+                id="social_media"
+                type="text"
+                placeholder="Website"
+                value={values.social_media}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="supplier_category" value="Supplier Category" />
+              <Select
+                id="supplier_category"
+                type="text"
+                placeholder="Website"
+                value={values.supplier_category}
+                onChange={handleChange}
+              >
+                <option value=''>Select an option</option>
+                <option value='PRODUCT'>Product</option>
+                <option value='SERVICE'>Service</option>
+              </Select>
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="supplier_status" value="Supplier Status" />
+              <Select
+                id="supplier_status"
+                type="text"
+                placeholder="Website"
+                value={values.supplier_status}
+                onChange={handleChange}
+              >
+                <option value=''>Select an option</option>
+                <option value='ACTIVE'>Active</option>
+                <option value='INACTIVE'>Inactive</option>
+                <option value='SUSPENDED'>Suspended</option>
+              </Select>
             </div>
           </div>
         </div>
@@ -360,17 +427,6 @@ const UpdateForm = () => {
             </div>
 
             <div className="w-full">
-              <Label htmlFor="city" value="City" />
-              <TextInput
-                id="city"
-                type="text"
-                placeholder="City"
-                value={values.city}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="w-full">
               <Label htmlFor="longitude" value="Longitude" />
               <TextInput
                 id="longitude"
@@ -398,6 +454,41 @@ const UpdateForm = () => {
         <div className="mb-6">
           <h2 className="text-lg font-semibold my-5">Business Information</h2>
           <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+
+            <div className="w-full">
+              <Label htmlFor="contract_length" value="Contract Length" />
+              <TextInput
+                id="contract_length"
+                type="text"
+                placeholder="Contract Length"
+                value={values.contract_length}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="discount_term" value="Discount Term" />
+              <TextInput
+                id="discount_term"
+                type="text"
+                placeholder="Discount Term"
+                value={values.discount_term}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="w-full">
+              <Label htmlFor="payment_term" value="Payment Term" />
+              <TextInput
+                id="payment_term"
+                type="text"
+                placeholder="Payment Term"
+                value={values.payment_term}
+                onChange={handleChange}
+              />
+            </div>
+            
+
             <div className="w-full">
               <Label
                 htmlFor="business_registration_number"
