@@ -25,6 +25,7 @@ import {
   DangerToast,
 } from "../../../../components/ToastNotification";
 import { useParams } from "react-router-dom";
+import RawMaterialRelationship from "./relationship/RawMaterialRelationship";
 
 const mapContainerStyle = {
   width: "100%",
@@ -91,7 +92,10 @@ const UpdateForm = () => {
       bank_account_name: "",
       bank_name: "",
       note: "",
+      raw_materials : []
     });
+
+    console.log('inital values :' , values)
 
   useEffect(() => {
     if (suppliers) {
@@ -118,11 +122,11 @@ const UpdateForm = () => {
         bank_account_name: suppliers?.bank_account_name || '',
         bank_name: suppliers?.bank_name || '',
         note: suppliers?.note || '',
+        raw_materials  : suppliers?.raw_materials?.map((raw_material) => raw_material.id)
       });
     }
   }, [suppliers]);
 
-  console.log("fetched suppliers: " , suppliers , "form values :" , values );
 
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -189,6 +193,18 @@ const UpdateForm = () => {
     }
   };
 
+
+  // relationship with raw materials
+
+  const handleRawMaterialsChange = (selectedMaterials) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      raw_materials: selectedMaterials,
+    }));
+  };
+
+
+  // map loading state
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading Maps...</div>;
 
@@ -564,6 +580,12 @@ const UpdateForm = () => {
               cols={3}
             />
           </div>
+        </div>
+
+        {/* Raw Materials Relationship */}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold my-5">Raw Materials</h2>
+          <RawMaterialRelationship raw_material_ids={values?.raw_materials} handleRawMaleRawMaterialsChange={handleRawMaterialsChange}  />
         </div>
 
         <div className="w-full mb-4" style={{ height: "400px" }}>
