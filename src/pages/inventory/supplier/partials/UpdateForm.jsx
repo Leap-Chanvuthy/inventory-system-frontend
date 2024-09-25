@@ -100,7 +100,8 @@ const UpdateForm = () => {
   useEffect(() => {
     if (suppliers) {
       setValues({
-        image: suppliers?.image || '',
+        image: "",
+        // image : suppliers?.image,
         name: suppliers?.name,
         phone_number: suppliers?.phone_number || '',
         location: suppliers?.location || '',
@@ -166,7 +167,7 @@ const UpdateForm = () => {
     } else {
       alert("Please upload a valid image file.");
     }
-  };
+  };  
 
 
   // handle submit patch request
@@ -238,7 +239,7 @@ const UpdateForm = () => {
             ) : (
               <>
               <img
-                src={`${BASE_IMAGE_URL}/${suppliers.image}`}
+                // src={`${BASE_IMAGE_URL}/${suppliers.image}`}
                 alt="Preview"
                 className="w-[500px] h-full object-cover rounded-full"
               />

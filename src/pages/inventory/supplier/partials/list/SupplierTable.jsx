@@ -132,7 +132,7 @@ const SupplierTable = ({ filters }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto lg:max-w-6xl h-[65vh] overflow-y-scroll my-5">
+      <div className="overflow-x-auto lg:max-w-6xl  my-5">
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
