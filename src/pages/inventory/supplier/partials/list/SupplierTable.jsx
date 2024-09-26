@@ -73,6 +73,8 @@ const SupplierTable = ({ filters }) => {
         params: {
           page,
           "filter[search]": filters?.search,
+          "filter[supplier_category]" : filters?.category , 
+          "sort" : filters?.sort
         },
       });
       dispatch(getSupplierSuccess(response.data.data));
