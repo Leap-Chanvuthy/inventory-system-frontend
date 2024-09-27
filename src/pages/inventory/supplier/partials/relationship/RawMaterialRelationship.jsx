@@ -131,8 +131,8 @@ const RawMaterialRelationship = ({
                   >
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       <Checkbox
-                        checked={raw_material_ids.includes(material.id)} // Check if the id is in raw_material_ids
-                        onChange={() => handleCheckboxChange(material.id)} // Handle checkbox toggle
+                        checked={raw_material_ids.includes(material.id)} 
+                        onChange={() => handleCheckboxChange(material.id)} 
                       />
                     </Table.Cell>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">

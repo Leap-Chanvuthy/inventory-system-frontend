@@ -36,6 +36,7 @@ const PieChart = ({ data, title }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '50%', 
     plugins: {
       legend: {
         display: true,

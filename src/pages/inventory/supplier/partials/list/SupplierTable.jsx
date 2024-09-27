@@ -191,7 +191,7 @@ const SupplierTable = ({ filters }) => {
                     <Badge color="warning">{supplier.supplier_status}</Badge>
                   )}
                   {supplier.supplier_status === 'SUSPENDED' && (
-                    <Badge color="danger">{supplier.supplier_status}</Badge>
+                    <Badge color="failure">{supplier.supplier_status}</Badge>
                   )}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
