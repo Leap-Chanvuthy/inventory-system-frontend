@@ -109,6 +109,7 @@ const CreateForm = () => {
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
   const { error, status } = useSelector((state) => state.suppliers);
+  console.log(error);
 
   // handle submit post request
   const handleSubmit = async (e) => {
@@ -220,18 +221,19 @@ const CreateForm = () => {
                 type="text"
                 placeholder="Supplier Name"
                 className={`${
-                  error?.name ? "border-[1.5px] border-red rounded-md" : ""
+                  error?.name ? "border-[1.5px] border-red-400 rounded-md" : ""
                 } `}
                 value={values.name}
                 onChange={handleChange}
                 helperText={
                   error?.name && (
                     <>
-                      <span className="font-medium text-red">{error.name}</span>
+                      <span className="font-medium text-red-400">{error.name}</span>
                     </>
                   )
                 }
               />
+
             </div>
 
             <div className="w-full">
@@ -242,7 +244,7 @@ const CreateForm = () => {
                 placeholder="phone_number"
                 className={`${
                   error?.phone_number
-                    ? "border-[1.5px] border-red rounded-md"
+                    ? "border-[1.5px] border-red-400 rounded-md"
                     : ""
                 } `}
                 value={values.phone_number}
@@ -250,7 +252,7 @@ const CreateForm = () => {
                 helperText={
                   error?.phone_number && (
                     <>
-                      <span className="font-medium text-red">
+                      <span className="font-medium text-red-400">
                         {error.phone_number}
                       </span>
                     </>
@@ -266,14 +268,14 @@ const CreateForm = () => {
                 type="text"
                 placeholder="Email"
                 className={`${
-                  error?.email ? "border-[1.5px] border-red rounded-md" : ""
+                  error?.email ? "border-[1.5px] border-red-400 rounded-md" : ""
                 } `}
                 value={values.email}
                 onChange={handleChange}
                 helperText={
                   error?.email && (
                     <>
-                      <span className="font-medium text-red">
+                      <span className="font-medium text-red-400">
                         {error.email}
                       </span>
                     </>
@@ -290,7 +292,7 @@ const CreateForm = () => {
                 placeholder="Contact Person"
                 className={`${
                   error?.contact_person
-                    ? "border-[1.5px] border-red rounded-md"
+                    ? "border-[1.5px] border-red-400 rounded-md"
                     : ""
                 } `}
                 value={values.contact_person}
@@ -298,7 +300,7 @@ const CreateForm = () => {
                 helperText={
                   error?.contact_person && (
                     <>
-                      <span className="font-medium text-red">
+                      <span className="font-medium text-red-400">
                         {error.contact_person}
                       </span>
                     </>
@@ -373,14 +375,14 @@ const CreateForm = () => {
                 type="text"
                 placeholder="Location"
                 className={`${
-                  error?.location ? "border-[1.5px] border-red rounded-md" : ""
+                  error?.location ? "border-[1.5px] border-red-400 rounded-md" : ""
                 } `}
                 value={values.location}
                 onChange={handleChange}
                 helperText={
                   error?.location && (
                     <>
-                      <span className="font-medium text-red">
+                      <span className="font-medium text-red-400">
                         {error.location}
                       </span>
                     </>

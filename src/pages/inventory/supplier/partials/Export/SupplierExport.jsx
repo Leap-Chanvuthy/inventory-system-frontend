@@ -1,4 +1,4 @@
-import { TextInput, Label, Button, Spinner } from "flowbite-react";
+import { TextInput, Label, Button, Spinner, Select } from "flowbite-react";
 import { useState } from "react";
 import {
   getSuppliersStart,
@@ -8,7 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../../../../components/const/constant";
-import { SuccessToast } from "../../../../../components/ToastNotification";
+import { DangerToast, SuccessToast } from "../../../../../components/ToastNotification";
 
 const SupplierExport = () => {
   const dispatch = useDispatch();
@@ -16,11 +16,16 @@ const SupplierExport = () => {
   // Toast Notification
   const [success, setSuccess] = useState(null);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [failToastOpen, setFailToastOpen] = useState(false);
 
   const [values, setValues] = useState({
     location: "",
-    city: "",
     bank_name: "",
+    supplier_status: "",
+    supplier_category: "",
+    contract_length: "",
+    discount_term: "",
+    payment_term: "",
   });
 
   console.log(values);
@@ -42,14 +47,18 @@ const SupplierExport = () => {
       const response = await axios.get(`${BASE_URL}/suppliers/export`, {
         params: {
           "filter[location]": values.location,
-          "filter[city]": values.city,
           "filter[bank_name]": values.bank_name,
+          "filter[supplier_status]": values.supplier_status,
+          "filter[supplier_category]": values.supplier_category,
+          "filter[contract_length]" : values.contract_length,
+          "filter[discount_term]" : values.discount_term,
+          "filter[payment_term]" : values.payment_term
         },
       });
       console.log(response);
 
       if (response.status === 200) {
-        window.location.href = `${BASE_URL}/suppliers/export?filter[location]=${values.location}&filter[city]=${values.city}&filter[bank_name]=${values.bank_name}`;
+        window.location.href = `${BASE_URL}/suppliers/export?filter[location]=${values.location}&filter[bank_name]=${values.bank_name}&filter[supplier_status]=${values.supplier_status}&filter[supplier_category]=${values.supplier_category}&filter[contract_length]=${values.contract_length}&filter[discount_term]=${values.discount_term}&filter[payment_term]=${values.payment_term}`;
       }
       setSuccess("Suppliers Data Downloaded Successfully!");
       setSuccessToastOpen(true);
@@ -57,6 +66,7 @@ const SupplierExport = () => {
     } catch (err) {
       console.log(err);
       dispatch(getSuppliersFailed(err?.response?.data));
+      setFailToastOpen(true);
     }
   };
 
@@ -83,17 +93,7 @@ const SupplierExport = () => {
               onChange={handleChange}
             />
           </div>
-          <div>
-            <div className="mb-2 block">
-              <Label value="City" />
-            </div>
-            <TextInput
-              id="city"
-              type="text"
-              value={values.city}
-              onChange={handleChange}
-            />
-          </div>
+
           <div>
             <div className="mb-2 block">
               <Label value="Bank Name" />
@@ -102,6 +102,73 @@ const SupplierExport = () => {
               id="bank_name"
               type="text"
               value={values.bank_name}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="w-full">
+            <Label htmlFor="supplier_status" value="Supplier Status" />
+            <Select
+              id="supplier_status"
+              type="text"
+              placeholder="Website"
+              value={values.supplier_status}
+              onChange={handleChange}
+            >
+              <option value="">Select an option</option>
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+              <option value="SUSPENDED">Suspended</option>
+            </Select>
+          </div>
+
+          <div className="w-full">
+            <Label htmlFor="supplier_category" value="Supplier Category" />
+            <Select
+              id="supplier_category"
+              type="text"
+              placeholder="Website"
+              value={values.supplier_category}
+              onChange={handleChange}
+            >
+              <option value="">Select an option</option>
+              <option value="PRODUCT">Product</option>
+              <option value="SERVICE">Service</option>
+            </Select>
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label value="Contract Length" />
+            </div>
+            <TextInput
+              id="contract_length"
+              type="text"
+              value={values.contract_length}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label value="Discount Term" />
+            </div>
+            <TextInput
+              id="discount_term"
+              type="text"
+              value={values.discount_term}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <div className="mb-2 block">
+              <Label value="Payment Term" />
+            </div>
+            <TextInput
+              id="payment_term"
+              type="text"
+              value={values.payment_term}
               onChange={handleChange}
             />
           </div>
@@ -121,6 +188,12 @@ const SupplierExport = () => {
         open={successToastOpen}
         onClose={() => setSuccessToastOpen(false)}
         message={success}
+      />
+
+      <DangerToast
+        open={failToastOpen}
+        onClose={() => setFailToastOpen(false)}
+        message="Something Went Wrong!"
       />
     </div>
   );
