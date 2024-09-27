@@ -18,7 +18,6 @@ import LoadingState from "../../../inventory/supplier/partials/list/LoadingState
 function UserTable({ filters }) {
   const dispatch = useDispatch();
   const { users, status, error } = useSelector((state) => state.users);
-  console.log(users);
 
   // Fetch data & pagination
   const [currentPage, setCurrentPage] = useState(1);

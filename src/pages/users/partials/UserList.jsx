@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import UserTable from "./list/UserTable";
 import {data} from '../../../components/charts/chartData';
 import PieChart from "../../../components/charts/PieChart";
+import UserRoleStat from "./stats/UserRoleStat";
 
 function UserList() {
 
@@ -48,7 +49,9 @@ function UserList() {
 
       <UserTable filters={filters} />
 
-      <PieChart title="User Role" data={data} />
+      {/* <PieChart title="User Role" data={data} /> */}
+
+      <UserRoleStat />
 
     </div>
   );
