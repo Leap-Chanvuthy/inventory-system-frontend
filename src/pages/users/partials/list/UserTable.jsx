@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table } from "flowbite-react";
+import { Badge, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import GlobalPagination from "../../../../components/Pagination";
 import { useSelector, useDispatch } from "react-redux";
@@ -139,7 +139,25 @@ function UserTable({ filters }) {
                   </Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
                   <Table.Cell>{user.phone_number}</Table.Cell>
-                  <Table.Cell>{user.role}</Table.Cell>
+                  <Table.Cell>
+                    {user.role === 'ADMIN' && (
+                      <Badge color="success">{user.role}</Badge>
+                    )}
+                    {user.role === 'STOCK_CONTROLLER' && (
+                      <Badge color="warning">{user.role}</Badge>
+                    )}
+                    {user.role === 'VENDER' && (
+                      <Badge color="purple">{user.role}</Badge>
+                    )}
+                    {user.role === 'USER' && (
+                      <Badge color="indigo" >{user.role}</Badge>
+                    )}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {user.user_status === 'ACTIVE' && (
+                      <Badge color="success">{user.supplier_status}</Badge>
+                    )}
+                  </Table.Cell>
                   <Table.Cell>{user.email_verified_at || "N/A"}</Table.Cell>
                   <Table.Cell>
                     <Link
