@@ -20,11 +20,9 @@ import CreateSupplier from "./pages/inventory/supplier/Create";
 import UpdateSupplier from "./pages/inventory/supplier/Update";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
     <BrowserRouter>
-      {isAuthenticated ? (
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -42,14 +40,14 @@ function App() {
             <Route path="/orders" element={<Order />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/customer/create" element={<CreateCustomer />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/test" element={<Test />} />
           </Routes>
         </Layout>
-      ) : (
-        <Routes>
+        {/* <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/test" element={<Test />} />
-        </Routes>
-      )}
+        </Routes> */}
     </BrowserRouter>
   );
 }
