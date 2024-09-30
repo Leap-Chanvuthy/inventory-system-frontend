@@ -44,10 +44,6 @@ function App() {
             <Route path="/test" element={<Test />} />
           </Routes>
         </Layout>
-        {/* <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/test" element={<Test />} />
-        </Routes> */}
     </BrowserRouter>
   );
 }
