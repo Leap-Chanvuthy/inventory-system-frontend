@@ -74,6 +74,7 @@ const SupplierTable = ({ filters }) => {
           page,
           "filter[search]": filters?.search,
           "filter[supplier_category]" : filters?.category , 
+          "filter[supplier_status]" : filters?.status , 
           "sort" : filters?.sort
         },
       });

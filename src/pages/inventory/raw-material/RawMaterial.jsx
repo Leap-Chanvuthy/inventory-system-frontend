@@ -1,4 +1,3 @@
-
 import Partial from "../../../components/Partial";
 import PieChart from "../../../components/charts/PieChart";
 import { data } from "../../../components/charts/chartData";

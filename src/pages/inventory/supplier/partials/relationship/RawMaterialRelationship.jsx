@@ -41,7 +41,7 @@ const RawMaterialRelationship = ({
       const response = await axios.get(`${BASE_URL}/raw-materials`, {
         params: {
           page,
-          "filter[name]": filters.query,
+          "filter[search]": filters.query,
         },
       });
       setRawMaterials(response.data.data);
