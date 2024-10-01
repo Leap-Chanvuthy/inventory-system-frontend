@@ -34,7 +34,6 @@ const Login = () => {
       const response = await axios.post(`${BASE_URL}/login`, values);
       console.log(response.data);
       dispatch(signInSuccess(response.data));
-      window.location.href = '/';
     } catch (error) {
       console.log(error.response);
       setFailToastOpen(true);

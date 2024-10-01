@@ -1,5 +1,8 @@
-import { Button, TextInput } from "flowbite-react";
+import { Button, TextInput , Spinner } from "flowbite-react";
 
+
+
+// update personal info
 export const UpdateProfileForm = () => {
   return (
     <div className="sm:col-span-6">
@@ -34,6 +37,9 @@ export const UpdateProfileForm = () => {
   );
 };
 
+
+// update password
+
 export const ChangePasswordForm = () => {
   return (
     <div className="sm:col-span-6">
@@ -67,6 +73,9 @@ export const ChangePasswordForm = () => {
     </div>
   );
 };
+
+
+// update contact
 
 export const UpdateContactForm = () => {
   return (
