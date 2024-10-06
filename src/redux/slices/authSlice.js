@@ -32,6 +32,26 @@ const authSlice = createSlice({
       state.error = null;
       state.loading = false;
     },
+
+    // update profile state
+
+    updateUserProfileStart(state) {
+      state.loading = true;
+      state.error = null;
+      state.status = 'loading';
+    },
+    updateUserProfileSuccess(state, action) {
+      state.loading = false;
+      // state.currentUser = { ...state.currentUser, ...action.payload };
+      state.currentUser = { ...state.currentUser.authorisation, ...action.payload };
+      state.error = null;
+      state.status = 'succeeded';
+    },
+    updateUserProfileFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+      state.status = 'failed';
+    },
   },
 });
 
@@ -41,5 +61,7 @@ export const {
   signInSuccess,
   signInFailure,
   logout,
-  updateUserProfile,
+  updateUserProfileStart,
+  updateUserProfileSuccess,
+  updateUserProfileFailure,
 } = authSlice.actions;
