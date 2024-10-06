@@ -34,7 +34,6 @@ const authSlice = createSlice({
     },
 
     // update profile state
-
     updateUserProfileStart(state) {
       state.loading = true;
       state.error = null;
@@ -42,7 +41,6 @@ const authSlice = createSlice({
     },
     updateUserProfileSuccess(state, action) {
       state.loading = false;
-      // state.currentUser = { ...state.currentUser, ...action.payload };
       state.currentUser = { ...state.currentUser.authorisation, ...action.payload };
       state.error = null;
       state.status = 'succeeded';

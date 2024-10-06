@@ -6,8 +6,8 @@ import axios from "axios";
 import { BASE_URL } from "../../../components/const/constant";
 import { DangerToast, SuccessToast } from "../../../components/ToastNotification";
 
-// Update personal info
-export const UpdateProfileForm = () => {
+
+const UpdateProfile = () => {
   const dispatch = useDispatch();
   const { currentUser, status, error } = useSelector((state) => state.auth);
   const [openSuccess, setOpenSuccess] = useState(false);
@@ -95,61 +95,25 @@ export const UpdateProfileForm = () => {
   );
 };
 
+export default UpdateProfile;
 
 
-// update password
+// // update contact
 
-export const ChangePasswordForm = () => {
-  return (
-    <div className="sm:col-span-6">
-      <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Change Password</h2>
-      <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">Use this section to change your current password.</p>
+// export const UpdateContactForm = () => {
+//   return (
+//     <div className="sm:col-span-6">
+//       <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Contact Information</h2>
+//       <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">Update your contact information.</p>
 
-      <form className="mt-10 space-y-8">
-        <div>
-          <label htmlFor="current-password" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Current Password</label>
-          <div className="mt-2">
-            <TextInput type="password" name="current-password" id="current-password" autoComplete="current-password" />
-          </div>
-        </div>
-
-        <div className="flex flex-col lg:md:flex-row items-center gap-3">
-            <div className="w-full">
-              <label htmlFor="new-password" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">New Password</label>
-              <div className="mt-2">
-                <TextInput type="password" name="new-password" id="new-password" autoComplete="new-password"  />
-              </div>
-            </div>
-            <div className="w-full">
-              <label htmlFor="confirm-password" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Confirm New Password</label>
-              <div className="mt-2">
-                <TextInput type="password" name="confirm-password" id="confirm-password" autoComplete="new-password"  />
-              </div>
-            </div>
-        </div>
-        <Button>Save</Button>
-      </form>
-    </div>
-  );
-};
-
-
-// update contact
-
-export const UpdateContactForm = () => {
-  return (
-    <div className="sm:col-span-6">
-      <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Contact Information</h2>
-      <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-400">Update your contact information.</p>
-
-      <div className="mt-10 space-y-8">
-        <div>
-          <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Address</label>
-          <div className="mt-2">
-            <TextInput type="text" name="address" id="address" autoComplete="street-address" placeholder="123 Main St" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+//       <div className="mt-10 space-y-8">
+//         <div>
+//           <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">Address</label>
+//           <div className="mt-2">
+//             <TextInput type="text" name="address" id="address" autoComplete="street-address" placeholder="123 Main St" />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

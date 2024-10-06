@@ -8,6 +8,7 @@ import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
 import rawMaterialReducer from './slices/rawMaterialSlice';
 import supplierReducer from './slices/supplierSlice';
+import passwordReducer from './slices/passwordSlice';
 
 
 const persistConfig = {
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
     auth : authReducer,
     users : userReducer,
     rawMaterials : rawMaterialReducer,
-    suppliers : supplierReducer
+    suppliers : supplierReducer,
+    password : passwordReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
