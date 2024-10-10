@@ -32,11 +32,10 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               Dashboard
             </Sidebar.Item>
             <Sidebar.Item
-              href="/users"
               active={pathname === "/users"}
               icon={FiUsers}
             >
-              Users
+              <Link to='/users'>Users</Link>
             </Sidebar.Item>
             <Sidebar.Collapse icon={MdOutlineInventory2} label="Inventory">
               <Sidebar.Item href="/products" active={pathname === "/products"}>
