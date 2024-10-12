@@ -197,7 +197,7 @@ function UserTable({ filters }) {
                     <Badge color="indigo">{user.role}</Badge>
                   )}
                 </Table.Cell>
-                <Table.Cell>{user.email_verified_at || "N/A"}</Table.Cell>
+                <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">{user.email_verified_at || "N/A"}</Table.Cell>
                 <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   <FiEdit />
                   <MdDelete
