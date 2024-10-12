@@ -31,7 +31,8 @@ function UserTable({ filters }) {
         params: {
           page,
           "filter[search]" : filters.search,
-          "filter[role]" : filters.role
+          "filter[role]" : filters.role,
+          "sort" : filters.sort
         },
       });
       dispatch(fetchUsersSuccess(response.data.data));
@@ -88,9 +89,10 @@ function UserTable({ filters }) {
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>Name</Table.HeadCell>
             <Table.HeadCell>Email</Table.HeadCell>
-            <Table.HeadCell>Phone Number</Table.HeadCell>
+            <Table.HeadCell >Phone Number</Table.HeadCell>
             <Table.HeadCell>Role</Table.HeadCell>
             <Table.HeadCell>Email Verified At</Table.HeadCell>
+            <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="devide-y">
             <Table.Row>
@@ -113,9 +115,9 @@ function UserTable({ filters }) {
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>Name</Table.HeadCell>
             <Table.HeadCell>Email</Table.HeadCell>
-            <Table.HeadCell>Phone Number</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap text-gray-900 dark:text-white">Phone Number</Table.HeadCell>
             <Table.HeadCell>Role</Table.HeadCell>
-            <Table.HeadCell>Email Verified At</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap text-gray-900 dark:text-white">Email Verified At</Table.HeadCell>
             <Table.HeadCell>
               <span className="sr-only">Edit</span>
             </Table.HeadCell>
@@ -153,16 +155,10 @@ function UserTable({ filters }) {
                       <Badge color="indigo" >{user.role}</Badge>
                     )}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {user.user_status === 'ACTIVE' && (
-                      <Badge color="success">{user.supplier_status}</Badge>
-                    )}
-                  </Table.Cell>
                   <Table.Cell>{user.email_verified_at || "N/A"}</Table.Cell>
                   <Table.Cell>
                     <Link
                       to={`/users/edit/${user.id}`}
-                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                     >
                       Edit
                     </Link>
