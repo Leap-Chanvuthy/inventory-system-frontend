@@ -260,30 +260,26 @@ const SupplierTable = ({ filters }) => {
         <SupplierMap locations={locations} />
       </div>
       <>
-        <Modal show={openModal} onClose={() => setOpenModal(false)}>
-          <Modal.Header>Delete Supplier Information</Modal.Header>
-          <Modal.Body>
-            <div className="text-xl p-6 flex items-center gap-5 text-red">
+      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Body>
+          <p className="text-center font-bold text-lg">Are you sure want to delete this supplier ?</p>
+          <div className="flex flex-col p-4 my-4 border-l-4 border-red-600 bg-red-100 rounded-md">
+            <div className="flex items-center gap-2 mx-4 font-bold text-red-900">
               <LuAlertTriangle />
-              <p>Are You Sure Want to Delete ?</p>
+              <p>Warning</p>
             </div>
-            <div className="space-y-6 p-6">
-              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                Please note that after deleting this item, it can still be
-                recovered. If you need to restore the data, you can access the
-                recovery option within contact support for assistance.
-              </p>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={handleDelete}>
-              {status == "loading" ? <Spinner /> : "Delete"}
-            </Button>
-            <Button color="gray" onClick={() => setOpenModal(false)}>
-              Decline
-            </Button>
-          </Modal.Footer>
-        </Modal>
+            <p className="mx-4 text-red-400">Once you deleted this supplier, Data will not be recovered!</p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleDelete} color='failure'>
+            {status == "loading" ? <Spinner /> : "Delete"}
+          </Button>
+          <Button onClick={() => setOpenModal(false)}>
+            Decline
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </>
 
       <SuccessToast
