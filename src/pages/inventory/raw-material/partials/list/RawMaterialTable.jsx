@@ -12,7 +12,7 @@
 //   const [error, setError] = useState(null);
 //   const [currentPage, setCurrentPage] = useState(1);
 //   const [totalPages, setTotalPages] = useState(1);
-//   const [totalItems, setTotalItems] = useState(0); 
+//   const [totalItems, setTotalItems] = useState(0);
 
 //   const fetchRawMaterials = async (page = 1) => {
 //     setStatus("loading");
@@ -124,16 +124,17 @@
 
 // export default RawMaterialTable;
 
-
-
 import { useEffect, useState } from "react";
 import { Avatar, Badge, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import GlobalPagination from "../../../../../components/Pagination";
-import { BASE_URL , BASE_IMAGE_URL } from "../../../../../components/const/constant";
+import {
+  BASE_URL,
+  BASE_IMAGE_URL,
+} from "../../../../../components/const/constant";
 import LoadingState from "./LoadingState";
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 const RawMaterialTable = ({ filters }) => {
   const [rawMaterials, setRawMaterials] = useState([]);
@@ -141,7 +142,7 @@ const RawMaterialTable = ({ filters }) => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0); 
+  const [totalItems, setTotalItems] = useState(0);
 
   const fetchRawMaterials = async (page = 1) => {
     setStatus("loading");
@@ -150,9 +151,9 @@ const RawMaterialTable = ({ filters }) => {
         params: {
           page,
           "filter[search]": filters.query,
-          "filter[status]" : filters.status,
-          "filter[raw_material_category]" : filters.category ,
-          "sort" : filters.sort
+          "filter[status]": filters.status,
+          "filter[raw_material_category]": filters.category,
+          sort: filters.sort,
         },
       });
       setRawMaterials(response.data.data);
@@ -175,20 +176,22 @@ const RawMaterialTable = ({ filters }) => {
     setCurrentPage(newPage);
   };
 
-  if (status === "loading") return (
-    <div>
-      <LoadingState />
-      <GlobalPagination
+  if (status === "loading")
+    return (
+      <div>
+        <LoadingState />
+        <GlobalPagination
           current_page={currentPage}
           last_page={totalPages}
           from={(currentPage - 1) * 10 + 1} // Assuming 10 items per page
           to={Math.min(currentPage * 10, totalItems)}
           total={totalItems}
           onPageChange={handlePageChange}
-       />
-    </div>
-  );
-  if (status === "failed") return <div className="text-center py-5 text-red-500">{error}</div>;
+        />
+      </div>
+    );
+  if (status === "failed")
+    return <div className="text-center py-5 text-red-500">{error}</div>;
 
   return (
     <div>
@@ -232,22 +235,24 @@ const RawMaterialTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.name}
                   </Table.Cell>
-                  <Table.Cell>
-                    {material.status === 'IN_STOCK' && (
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.status === "IN_STOCK" && (
                       <Badge color="success">{material.status}</Badge>
                     )}
-                    {material.status === 'OUT_OF_STOCK' && (
-                      <Badge color="warning">{material.status}</Badge>
+                    {material.status === "OUT_OF_STOCK" && (
+                      <Badge color="failure">{material.status}</Badge>
                     )}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.quantity} {material.unit}
                   </Table.Cell>
-                  <Table.Cell>{material.unit_price}</Table.Cell>
-                  <Table.Cell>{material.total_value}</Table.Cell>
-                  <Table.Cell>{material.minimum_stock_level}</Table.Cell>
-                  <Table.Cell>{material.location}</Table.Cell>
-                  <Table.Cell>{formatDistanceToNow(new Date(material.created_at))}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.unit_price}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.total_value}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.minimum_stock_level}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.location}</Table.Cell>
+                  <Table.Cell>
+                    {formatDistanceToNow(new Date(material.created_at))}
+                  </Table.Cell>
                   <Table.Cell>
                     <Link
                       to={`/raw-materials/edit/${material.id}`}
