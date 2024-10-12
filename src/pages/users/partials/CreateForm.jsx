@@ -146,12 +146,12 @@ const CreateForm = () => {
             rightIcon={MdOutlineMarkEmailUnread}
             onChange={handleChange}
             className={`${
-              error?.email ? "border-[1.5px] border-red rounded-md" : ""
+              error?.email ? "border-[1.5px] border-red-400 rounded-md" : ""
             } `}
             helperText={
               error?.email && (
                 <>
-                  <span className="font-medium text-red">{error.email}</span>
+                  <span className="font-medium text-red-400">{error.email}</span>
                 </>
               )
             }
@@ -170,12 +170,12 @@ const CreateForm = () => {
             rightIcon={MdOutlineMarkEmailUnread}
             onChange={handleChange}
             className={`${
-              error?.name ? "border-[1.5px] border-red rounded-md" : ""
+              error?.name ? "border-[1.5px] border-red-400 rounded-md" : ""
             } `}
             helperText={
               error?.name && (
                 <>
-                  <span className="font-medium text-red">{error.name}</span>
+                  <span className="font-medium text-red-400">{error.name}</span>
                 </>
               )
             }
@@ -194,12 +194,12 @@ const CreateForm = () => {
               rightIcon={MdLockOpen}
               onChange={handleChange}
               className={`${
-                error?.password ? "border-[1.5px] border-red rounded-md" : ""
+                error?.password ? "border-[1.5px] border-red-400 rounded-md" : ""
               } `}
               helperText={
                 error?.password && (
                   <>
-                    <span className="font-medium text-red">
+                    <span className="font-medium text-red-400">
                       {error.password}
                     </span>
                   </>
@@ -219,13 +219,13 @@ const CreateForm = () => {
               onChange={handleChange}
               className={`${
                 error?.password_confirmation
-                  ? "border-[1.5px] border-red rounded-md"
+                  ? "border-[1.5px] border-red-400 rounded-md"
                   : ""
               } `}
               helperText={
                 error?.password_confirmation && (
                   <>
-                    <span className="font-medium text-red">
+                    <span className="font-medium text-red-400">
                       {error.password_confirmation}
                     </span>
                   </>
@@ -242,15 +242,14 @@ const CreateForm = () => {
           <Select
             id="role"
             value={values.role}
-            required
             onChange={handleChange}
             className={`${
-              error?.role ? "border-[1.5px] border-red rounded-md" : ""
+              error?.role ? "rounded-md" : ""
             } `}
             helperText={
               error?.role && (
                 <>
-                  <span className="font-medium text-red">{error.role}</span>
+                  <span className="font-medium text-red-400">{error.role}</span>
                 </>
               )
             }
