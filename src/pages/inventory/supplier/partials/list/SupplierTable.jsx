@@ -140,19 +140,19 @@ const SupplierTable = ({ filters }) => {
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>Name / Company</Table.HeadCell>
-            <Table.HeadCell>Phone Number</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Phone Number</Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Location</Table.HeadCell>
-            <Table.HeadCell>Contact Person</Table.HeadCell>
-            <Table.HeadCell>Business Reg. No.</Table.HeadCell>
-            <Table.HeadCell>Bank Account No.</Table.HeadCell>
-            <Table.HeadCell>Bank Name</Table.HeadCell>
-            <Table.HeadCell>Supplier Code</Table.HeadCell>
-            <Table.HeadCell>Address</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Contact Person</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Business Reg. No.</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Bank Account No.</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Bank Name</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Supplier Code</Table.HeadCell>
+            <Table.HeadCell >Address</Table.HeadCell>
             <Table.HeadCell>Email</Table.HeadCell>
             <Table.HeadCell>Website</Table.HeadCell>
-            <Table.HeadCell>Social Media</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Social Media</Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
