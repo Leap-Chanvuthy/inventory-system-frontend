@@ -67,6 +67,7 @@ import CreateProduct from "./pages/inventory/product/Create";
 import CreateCustomer from "./pages/sale/customer/Create";
 import RawMaterial from "./pages/inventory/raw-material/RawMaterial";
 import CreateRawMaterial from "./pages/inventory/raw-material/Create";
+import UpdateRawMaterial from "./pages/inventory/raw-material/Update";
 import Supplier from "./pages/inventory/supplier/Supplier";
 import CreateSupplier from "./pages/inventory/supplier/Create";
 import UpdateSupplier from "./pages/inventory/supplier/Update";
@@ -92,6 +93,7 @@ function App() {
           <Route path="/products/create" element={<Layout><CreateProduct /></Layout>} />
           <Route path="/raw-materials" element={<Layout><RawMaterial /></Layout>} />
           <Route path="/raw-materials/create" element={<Layout><CreateRawMaterial /></Layout>} />
+          <Route path="/raw-material/update/:id" element={<Layout><UpdateRawMaterial/></Layout>} />
           <Route path="/suppliers" element={<Layout><Supplier /></Layout>} />
           <Route path="/suppliers/create" element={<Layout><CreateSupplier /></Layout>} />
           <Route path="/supplier/update/:id" element={<Layout><UpdateSupplier /></Layout>} />

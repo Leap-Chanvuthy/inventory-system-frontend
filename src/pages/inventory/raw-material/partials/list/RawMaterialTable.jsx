@@ -132,7 +132,7 @@ const RawMaterialTable = ({ filters }) => {
                   </Table.Cell>
                   <Table.Cell>
                     <Link
-                      to={`/raw-materials/edit/${material.id}`}
+                      to={`/raw-material/update/${material.id}`}
                       className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                     >
                       Edit
