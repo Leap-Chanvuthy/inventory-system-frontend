@@ -45,7 +45,7 @@ const SupplierImport = () => {
       setSuccessToastOpen(true); 
     } catch (err) {
       setUploading(false);
-      setError(err.response?.data?.error || 'An error occurred');
+      setError(err.response?.data?.errors || 'An error occurred');
       setToastOpen(true); 
       console.error("Error uploading file:", err?.response);
     }
@@ -104,7 +104,7 @@ const SupplierImport = () => {
         <DangerToast
           open={toastOpen}
           onClose={() => setToastOpen(false)}
-          message={error}
+          message="Somethings went wrong!"
         />
 
         <SuccessToast
