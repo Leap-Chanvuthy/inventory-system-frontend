@@ -53,7 +53,6 @@ const UpdateForm = () => {
     // fetch specific supplier
     const {id} = useParams();
 
-    console.log(`${BASE_URL}/supplier/${id}`);
     useEffect(() =>{
       const getSupplierById = async () =>{
         dispatch(getSuppliersStart());

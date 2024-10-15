@@ -52,11 +52,7 @@ const rawMaterialSlice = createSlice({
             state.error = null;
         },
         updateRawMaterialSuccess(state, action) {
-            const { id, updatedRawMaterial } = action.payload;
-            const index = state.rawMaterials.findIndex(rawMaterial => rawMaterial.id === id);
-            if (index !== -1) {
-                state.rawMaterials[index] = { ...state.rawMaterials[index], ...updatedRawMaterial };
-            }
+            state.rawMaterials =  action.payload;
             state.status = 'succeeded';
             state.loading = false;
         },
