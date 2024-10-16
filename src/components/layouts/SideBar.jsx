@@ -61,9 +61,7 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               icon={RiMoneyPoundCircleLine}
               label="Accounting"
             >
-              <Sidebar.Item href="#">Sale Order</Sidebar.Item>
-              <Sidebar.Item href="#">Invoice</Sidebar.Item>
-              <Sidebar.Item href="#">Customer</Sidebar.Item>
+              <Sidebar.Item href="#">Currency</Sidebar.Item>
             </Sidebar.Collapse>
             <Sidebar.Collapse
               href="#"

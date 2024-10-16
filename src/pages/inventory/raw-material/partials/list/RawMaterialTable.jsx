@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Avatar, Badge, Table } from "flowbite-react";
+import { Avatar, Badge, Button, Modal, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import GlobalPagination from "../../../../../components/Pagination";
@@ -9,17 +9,24 @@ import {
 } from "../../../../../components/const/constant";
 import LoadingState from "./LoadingState";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { MdDelete } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteRawMaterialFailure, deleteRawMaterialStart, deleteRawMaterialSuccess, fetchRawMaterialsFailure, fetchRawMaterialsStart, fetchRawMaterialsSuccess } from "../../../../../redux/slices/rawMaterialSlice";
+import { SuccessToast } from "../../../../../components/ToastNotification";
+import { LuTriangle } from "react-icons/lu";
 
 const RawMaterialTable = ({ filters }) => {
-  const [rawMaterials, setRawMaterials] = useState([]);
-  const [status, setStatus] = useState("idle");
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const {rawMaterials , error , status} =  useSelector((state) => state.rawMaterials);
+  const [selectedId, setSelectedId] = useState(null);
+  const [successToastOpen , setSuccessToastOpen] = useState(false);
+  const [openModal , setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
   const fetchRawMaterials = async (page = 1) => {
-    setStatus("loading");
+    dispatch(fetchRawMaterialsStart());
     try {
       const response = await axios.get(`${BASE_URL}/raw-materials`, {
         params: {
@@ -30,14 +37,13 @@ const RawMaterialTable = ({ filters }) => {
           sort: filters.sort,
         },
       });
-      setRawMaterials(response.data.data);
+      dispatch(fetchRawMaterialsSuccess(response.data.data));
       setCurrentPage(response.data.current_page);
       setTotalPages(response.data.last_page);
       setTotalItems(response.data.total);
-      setStatus("succeeded");
     } catch (err) {
-      setError("Failed to fetch raw materials: " + err.message);
-      setStatus("failed");
+      dispatch(fetchRawMaterialsFailure(err?.message))
+      console.log("Failed to fetch raw materials: " + err.message);
     }
   };
 
@@ -50,6 +56,31 @@ const RawMaterialTable = ({ filters }) => {
     setCurrentPage(newPage);
   };
 
+
+  // delete raw material function
+  const handleDelete = async () => {
+    if (!selectedId) {
+      console.log("No user selected for deletion");
+      return;
+    }
+    dispatch(deleteRawMaterialStart());
+    try {
+      const response = await axios.delete(`${BASE_URL}/raw-material/${selectedId}`);
+      console.log(response);
+      if (response.status === 200) {
+        dispatch(deleteRawMaterialSuccess(selectedId));
+        setOpenModal(false);
+        setSuccessToastOpen(true);
+      }
+    } catch (err) {
+      console.log("Delete error:", err.message);
+      dispatch(
+        deleteRawMaterialFailure(err.message || "Error deleting data from the server.")
+      );
+    }
+  };
+
+
   if (status === "loading")
     return (
       <div>
@@ -57,7 +88,7 @@ const RawMaterialTable = ({ filters }) => {
         <GlobalPagination
           current_page={currentPage}
           last_page={totalPages}
-          from={(currentPage - 1) * 10 + 1} // Assuming 10 items per page
+          from={(currentPage - 1) * 10 + 1}
           to={Math.min(currentPage * 10, totalItems)}
           total={totalItems}
           onPageChange={handlePageChange}
@@ -130,13 +161,20 @@ const RawMaterialTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap">
                     {formatDistanceToNow(new Date(material.updated_at))} ago
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Link
                       to={`/raw-material/update/${material.id}`}
                       className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                     >
                       Edit
                     </Link>
+                    <MdDelete
+                      className="text-red-600 text-lg cursor-pointer"
+                      onClick={() => {
+                        setOpenModal(true);
+                        setSelectedId(material.id);
+                      }}
+                    />
                   </Table.Cell>
                 </Table.Row>
               ))
@@ -156,12 +194,39 @@ const RawMaterialTable = ({ filters }) => {
         <GlobalPagination
           current_page={currentPage}
           last_page={totalPages}
-          from={(currentPage - 1) * 10 + 1} // Assuming 10 items per page
+          from={(currentPage - 1) * 10 + 1}
           to={Math.min(currentPage * 10, totalItems)}
           total={totalItems}
           onPageChange={handlePageChange}
         />
       </div>
+
+      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Body>
+          <p className="text-center font-bold text-lg">Are you sure want to delete this user ?</p>
+          <div className="flex flex-col p-4 my-4 border-l-4 border-red-600 bg-red-100 rounded-md">
+            <div className="flex items-center gap-2 mx-4 font-bold text-red-900">
+              <LuTriangle />
+              <p>Warning</p>
+            </div>
+            <p className="mx-4 text-red-400">Once you deleted this raw material, Data will not be recovered!</p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleDelete} color='failure'>
+            {status == "loading" ? <Spinner /> : "Delete"}
+          </Button>
+          <Button onClick={() => setOpenModal(false)}>
+            Decline
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <SuccessToast
+        open={successToastOpen}
+        onClose={() => setSuccessToastOpen(false)}
+        message="Raw material deleted successfully!"
+      />
     </div>
   );
 };

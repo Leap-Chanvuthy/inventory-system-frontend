@@ -1,10 +1,15 @@
-// RawMaterialList.js
 import { useState } from "react";
-import { TextInput, Button, Select, Dropdown, Checkbox, Label } from "flowbite-react";
+import {
+  TextInput,
+  Button,
+  Select,
+  Dropdown,
+  Checkbox,
+  Label,
+} from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import ExportRawMaterial from "./ExportRawMaterial";
-import LoadingState from "../../../users/partials/LoadingState";
 import RawMaterialTable from "./list/RawMaterialTable";
 
 const RawMaterialList = () => {
@@ -81,49 +86,52 @@ const RawMaterialList = () => {
               </div>
             </Dropdown>
 
+            {/* Filter        */}
+            <Dropdown label="Filter">
+              <p
+                className="absolute left-[70%] text-red-500 cursor-pointer"
+                onClick={resetFilters}
+              >
+                Clear
+              </p>
+              <div className="p-5">
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <Label
+                      htmlFor="status"
+                      value="Status"
+                      className="mb-2 block"
+                    />
+                    <Select
+                      id="status"
+                      value={filters.status}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">Select Status</option>
+                      <option value="IN_STOCK">In stock</option>
+                      <option value="OUT_OF_STOCK">Out of stock</option>
+                    </Select>
+                  </div>
 
-                          {/* Filter        */}
-                          <Dropdown label="Filter">
-                <p className="absolute left-[70%] text-red-500 cursor-pointer" onClick={resetFilters}>Clear</p>
-                <div className="p-5">
-                  <div className="flex flex-col gap-3">
-                    <div>
-                      <Label
-                        htmlFor="status"
-                        value="Status"
-                        className="mb-2 block"
-                      />
-                      <Select
-                        id="status"
-                        value={filters.status}
-                        onChange={handleFilterChange}
-                      >
-                        <option value="">Select Status</option>
-                        <option value="IN_STOCK">In stock</option>
-                        <option value="OUT_OF_STOCK">Out of stock</option>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label
-                        htmlFor="category"
-                        value="Category"
-                        className="mb-2 block"
-                      />
-                      <Select
-                        id="category"
-                        value={filters.category}
-                        onChange={handleFilterChange}
-                      >
-                        <option value="">Select Category</option>
-                        <option value="SERVICE">Service</option>
-                        <option value="PRODUCT">Product</option>
-                      </Select>
-                    </div>
+                  <div>
+                    <Label
+                      htmlFor="category"
+                      value="Category"
+                      className="mb-2 block"
+                    />
+                    <Select
+                      id="category"
+                      value={filters.category}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">Select Category</option>
+                      <option value="SERVICE">Service</option>
+                      <option value="PRODUCT">Product</option>
+                    </Select>
                   </div>
                 </div>
-              </Dropdown>
-
+              </div>
+            </Dropdown>
           </form>
           <Link to="/raw-materials/create">
             <Button color="info">Create New</Button>
