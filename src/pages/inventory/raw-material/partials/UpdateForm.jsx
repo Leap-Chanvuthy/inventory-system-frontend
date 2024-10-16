@@ -18,6 +18,7 @@ import {
   fetchRawMaterialsSuccess,
   fetchRawMaterialsFailure,
 } from "../../../../redux/slices/rawMaterialSlice";
+import { getCurrencyFailure, getCurrencyStart, getCurrencySuccess } from "../../../../redux/slices/currencySlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
 import { useParams } from "react-router-dom";
@@ -26,9 +27,8 @@ const UpdateForm = () => {
   const [openSuccess, setOpenSuccess] = useState(false);
   const [failedToastOpen, setFailToastOpen] = useState(false);
   const dispatch = useDispatch();
-  const { status, error, rawMaterials } = useSelector(
-    (state) => state.rawMaterials
-  );
+  const { status, error, rawMaterials } = useSelector((state) => state.rawMaterials);
+  const {currencies} = useSelector((state) => state.currencies);
   const { id } = useParams();
 
   // get specific material by id
@@ -77,6 +77,7 @@ const UpdateForm = () => {
     description: "",
     expiry_date: "",
     supplier_id: "",
+    currency_id : ""
   });
 
   console.log(values);
@@ -99,6 +100,7 @@ const UpdateForm = () => {
         description: rawMaterials?.description || "",
         expiry_date: rawMaterials?.expiry_date || "",
         supplier_id: rawMaterials?.supplier_id || "",
+        currency_id : rawMaterials?.currency?.id || "",
       });
 
       setOldImages(rawMaterials?.raw_material_images || []);
@@ -160,6 +162,25 @@ const UpdateForm = () => {
       dispatch(updateRawMaterialFailure(error?.response?.data?.errors));
     }
   };
+
+
+
+    // get currency 
+
+    useEffect(() => {
+      const getCurrency = async (e) => {
+        dispatch(getCurrencyStart());
+        try {
+          const response = await axios.get(`${BASE_URL}/currencies`);
+          console.log(response);
+          dispatch(getCurrencySuccess(response.data));
+        }catch (err){
+          console.log('error' , err);
+          dispatch(getCurrencyFailure(err?.response?.data));
+        }
+      } 
+      getCurrency();
+    } , [])
 
   return (
     <div className="my-5">
@@ -343,6 +364,32 @@ const UpdateForm = () => {
                     )
                   }
                 />
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="currency_id"
+                  value="Choose currency"
+                />
+                <Select
+                  id="currency_id"
+                  value={values.currency_id}
+                  onChange={handleChange}
+                  helperText={
+                    error?.currency_id && (
+                      <>
+                        <span className="font-medium text-red-400">
+                          {error.currency_id}
+                        </span>
+                      </>
+                    )
+                  }
+                >
+                <option value="">Select an option</option>
+                {currencies && currencies.map((currency) => (
+                  <option value={currency.id}>{currency.base_currency_name} - {currency.symbol} </option>
+                ))}
+                </Select>
               </div>
             </div>
 

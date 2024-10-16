@@ -1,6 +1,6 @@
 import { Button, Label, Select, Textarea, TextInput } from "flowbite-react";
 import { useState, useEffect } from "react";
-import { SuccessToast } from "../../../../components/ToastNotification";
+import { DangerToast, SuccessToast } from "../../../../components/ToastNotification";
 import { MdCancel } from "react-icons/md";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
@@ -9,13 +9,9 @@ import {
   addRawMaterialSuccess,
   addRawMaterialFailure,
 } from "../../../../redux/slices/rawMaterialSlice";
-import {
-  getSuppliersStart,
-  getSupplierSuccess,
-  getSuppliersFailed,
-} from "../../../../redux/slices/supplierSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
+import { getCurrencyFailure, getCurrencyStart, getCurrencySuccess } from "../../../../redux/slices/currencySlice";
 
 const CreateForm = () => {
   const [values, setValues] = useState({
@@ -34,15 +30,16 @@ const CreateForm = () => {
     description: "",
     expiry_date: "",
     supplier_id: "",
+    currency_id : ""
   });
 
+  console.log(values);
+
   const [openSuccess, setOpenSuccess] = useState(false);
+  const [failedToastOpen, setFailToastOpen] = useState(false);
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.rawMaterials);
-  const { suppliers, loading } = useSelector((state) => state.suppliers);
-  const [filter, setFilter] = useState({ search: "" });
-
-  console.log(values);
+  const {currencies} = useSelector((state) => state.currencies);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -109,27 +106,29 @@ const CreateForm = () => {
       })
     } catch (error) {
       console.error("Error submitting the form:", error);
+      setFailToastOpen(true);
       dispatch(addRawMaterialFailure(error?.response?.data?.errors));
     }
   };
 
-  // useEffect(() => {
-  //   const getSuppliers = async () => {
-  //     dispatch(getSuppliersStart());
-  //     try {
-  //       const response = await axios.get(`${BASE_URL}/suppliers`, {
-  //         params: { "filter[search]": filter.search },
-  //       });
-  //       dispatch(getSupplierSuccess(response.data));
-  //     } catch (err) {
-  //       dispatch(getSuppliersFailed(err));
-  //     }
-  //   };
 
-  //   if (filter.search) {
-  //     getSuppliers();
-  //   }
-  // }, [filter.search, dispatch]);
+  // get currency 
+
+  useEffect(() => {
+    const getCurrency = async (e) => {
+      dispatch(getCurrencyStart());
+      try {
+        const response = await axios.get(`${BASE_URL}/currencies`);
+        console.log(response);
+        dispatch(getCurrencySuccess(response.data));
+      }catch (err){
+        console.log('error' , err);
+        dispatch(getCurrencyFailure(err?.response?.data));
+      }
+    } 
+    getCurrency();
+  } , [])
+
 
   return (
     <div className="my-5">
@@ -138,6 +137,15 @@ const CreateForm = () => {
         onClose={() => setOpenSuccess(false)}
         message="Product Created Successfully"
       />
+
+      <DangerToast
+        open={failedToastOpen}
+        onClose={() => setFailToastOpen(false)}
+        message="Something went wrong."
+      />
+
+
+
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div>
           <div className="flex flex-col gap-5">
@@ -307,6 +315,34 @@ const CreateForm = () => {
                   }
                 />
               </div>
+
+              <div>
+                <Label
+                  htmlFor="currency_id"
+                  value="Choose currency"
+                />
+                <Select
+                  id="currency_id"
+                  value={values.currency_id}
+                  onChange={handleChange}
+                  helperText={
+                    error?.currency_id && (
+                      <>
+                        <span className="font-medium text-red-400">
+                          {error.currency_id}
+                        </span>
+                      </>
+                    )
+                  }
+                >
+                <option value="">Select an option</option>
+                {currencies && currencies.map((currency) => (
+                  <option value={currency.id}>{currency.base_currency_name} - {currency.symbol} </option>
+                ))}
+                </Select>
+              </div>
+
+
             </div>
 
             <h2 className="text-md font-semibold">Additional</h2>          
@@ -338,16 +374,6 @@ const CreateForm = () => {
 
                 </Select>
               </div>
-
-              {/* <div>
-                <Label htmlFor="status" value="Status" />
-                <TextInput
-                  id="status"
-                  placeholder="Enter status"
-                  value={values.status}
-                  onChange={handleChange}
-                />
-              </div> */}
 
               <div>
                 <Label

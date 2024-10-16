@@ -35,7 +35,7 @@ const rawMaterialSlice = createSlice({
             state.error = null;
         },
         addRawMaterialSuccess(state, action) {
-            state.rawMaterials.push(action.payload);
+            state.rawMaterials = (action.payload);
             state.status = 'succeeded';
             state.loading = false;
         },
