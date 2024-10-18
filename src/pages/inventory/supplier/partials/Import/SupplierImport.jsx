@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai"; 
 import axios from "axios";
-import { Button } from "flowbite-react";
+import { Alert, Button } from "flowbite-react";
 import { DangerToast, SuccessToast } from "../../../../../components/ToastNotification";
 import { BASE_URL } from "../../../../../components/const/constant";
+import { HiInformationCircle } from "react-icons/hi";
 
 const SupplierImport = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+  console.log(error);
   const [success, setSuccess] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
@@ -112,6 +114,14 @@ const SupplierImport = () => {
           onClose={() => setSuccessToastOpen(false)}
           message={success}
         />
+
+        {error && error.map((err) => (
+                <Alert key={err.row} color="failure" icon={HiInformationCircle}>
+                    <span className="font-medium">
+                        Row {err.row}: {err.attribute} - {err.errors.join(', ')}
+                    </span>
+                </Alert>
+            ))}
 
         <Button
           onClick={handleUpload}
