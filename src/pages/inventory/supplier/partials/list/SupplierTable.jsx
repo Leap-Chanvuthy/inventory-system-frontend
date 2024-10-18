@@ -125,6 +125,7 @@ const SupplierTable = ({ filters }) => {
 
   const locations = suppliers.map((supplier) => ({
     id: supplier.id,
+    image : supplier.image,
     name: supplier.name,
     latitude: parseFloat(supplier.latitude),
     longitude: parseFloat(supplier.longitude),

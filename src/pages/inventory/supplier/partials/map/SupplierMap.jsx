@@ -81,11 +81,14 @@
 
 import { useState, useEffect } from "react";
 import { useLoadScript, GoogleMap, Marker, InfoWindow } from "@react-google-maps/api";
+import { BASE_IMAGE_URL } from "../../../../../components/const/constant";
 
 const SupplierMap = ({ locations }) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyAd4rEAQqf58fCJGABqW99teDP9BcuyN08',
   });
+
+  console.log(locations)
 
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -136,8 +139,8 @@ const SupplierMap = ({ locations }) => {
                   rel="noopener noreferrer"
                 >
                   <img
-                    src="https://www.leapchanvuthy.dev/images/Leapchanvuthy.png"
-                    alt="Image"
+                    src={selectedLocation.image ? `${BASE_IMAGE_URL}/${selectedLocation.image}` : "https://via.placeholder.com/150"}
+                    alt={selectedLocation.name}
                     className="w-24 h-24 object-cover rounded-lg cursor-pointer"
                   />
                 </a>
