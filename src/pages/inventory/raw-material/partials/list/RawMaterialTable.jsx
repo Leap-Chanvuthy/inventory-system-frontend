@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteRawMaterialFailure, deleteRawMaterialStart, deleteRawMaterialSuccess, fetchRawMaterialsFailure, fetchRawMaterialsStart, fetchRawMaterialsSuccess } from "../../../../../redux/slices/rawMaterialSlice";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { LuTriangle } from "react-icons/lu";
+import {FiEdit} from 'react-icons/fi';
 
 const RawMaterialTable = ({ filters }) => {
   const dispatch = useDispatch();
@@ -80,6 +81,10 @@ const RawMaterialTable = ({ filters }) => {
     }
   };
 
+  if (!Array.isArray(rawMaterials)) {
+    return <LoadingState />;
+  }
+
 
   if (status === "loading")
     return (
@@ -108,8 +113,11 @@ const RawMaterialTable = ({ filters }) => {
             <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Quantity</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Unit Price</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Total Value</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Remaining Quantity</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Unit Price in USD</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Total Value in USD</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Unit Price in Riel</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Total Value in Riel</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Minimum Stock</Table.HeadCell>
             <Table.HeadCell>location</Table.HeadCell>
             <Table.HeadCell>Created</Table.HeadCell>
@@ -149,10 +157,15 @@ const RawMaterialTable = ({ filters }) => {
                     )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.quantity} {material.unit}
+                    {material.quantity}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.unit_price}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.total_value}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.remaining_quantity}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.unit_price_in_usd}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.total_value_in_usd}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.unit_price_in_riel} ​៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.total_value_in_riel} ​៛</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.minimum_stock_level}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.location}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
@@ -162,12 +175,7 @@ const RawMaterialTable = ({ filters }) => {
                     {formatDistanceToNow(new Date(material.updated_at))} ago
                   </Table.Cell>
                   <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <Link
-                      to={`/raw-material/update/${material.id}`}
-                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                    >
-                      Edit
-                    </Link>
+                    <Link to={`/raw-material/update/${material.id}`}><FiEdit /></Link>
                     <MdDelete
                       className="text-red-600 text-lg cursor-pointer"
                       onClick={() => {

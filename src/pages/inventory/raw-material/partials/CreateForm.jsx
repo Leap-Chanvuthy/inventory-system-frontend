@@ -1,6 +1,9 @@
 import { Button, Label, Select, Textarea, TextInput } from "flowbite-react";
 import { useState, useEffect } from "react";
-import { DangerToast, SuccessToast } from "../../../../components/ToastNotification";
+import {
+  DangerToast,
+  SuccessToast,
+} from "../../../../components/ToastNotification";
 import { MdCancel } from "react-icons/md";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
@@ -11,7 +14,6 @@ import {
 } from "../../../../redux/slices/rawMaterialSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
-import { getCurrencyFailure, getCurrencyStart, getCurrencySuccess } from "../../../../redux/slices/currencySlice";
 
 const CreateForm = () => {
   const [values, setValues] = useState({
@@ -19,8 +21,11 @@ const CreateForm = () => {
     name: "",
     material_code: "",
     quantity: "",
-    unit_price: "",
-    total_value: "",
+    remaining_quantity: "",
+    unit_price_in_usd: "",
+    total_value_in_usd: "",
+    unit_price_in_riel: "",
+    total_value_in_riel: "",
     minimum_stock_level: "",
     raw_material_category: "",
     unit_of_measurement: "",
@@ -30,7 +35,6 @@ const CreateForm = () => {
     description: "",
     expiry_date: "",
     supplier_id: "",
-    currency_id : ""
   });
 
   console.log(values);
@@ -39,7 +43,6 @@ const CreateForm = () => {
   const [failedToastOpen, setFailToastOpen] = useState(false);
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.rawMaterials);
-  const {currencies} = useSelector((state) => state.currencies);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -95,32 +98,13 @@ const CreateForm = () => {
         description: "",
         expiry_date: "",
         supplier_id: "",
-      })
+      });
     } catch (error) {
       console.error("Error submitting the form:", error);
       setFailToastOpen(true);
       dispatch(addRawMaterialFailure(error?.response?.data?.errors));
     }
   };
-
-
-  // get currency 
-
-  useEffect(() => {
-    const getCurrency = async (e) => {
-      dispatch(getCurrencyStart());
-      try {
-        const response = await axios.get(`${BASE_URL}/currencies`);
-        console.log(response);
-        dispatch(getCurrencySuccess(response.data));
-      }catch (err){
-        console.log('error' , err);
-        dispatch(getCurrencyFailure(err?.response?.data));
-      }
-    } 
-    getCurrency();
-  } , [])
-
 
   return (
     <div className="my-5">
@@ -136,12 +120,9 @@ const CreateForm = () => {
         message="Something went wrong."
       />
 
-
-
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div>
           <div className="flex flex-col gap-5">
-
             <h2 className="text-md font-semibold">General Info</h2>
             <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
@@ -168,7 +149,10 @@ const CreateForm = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="material_code" value="Material Code (Auto Generated)" />
+                <Label
+                  htmlFor="material_code"
+                  value="Material Code (Auto Generated)"
+                />
                 <TextInput
                   id="material_code"
                   placeholder="Enter material code"
@@ -203,7 +187,7 @@ const CreateForm = () => {
               </div>
             </div>
 
-            <h2 className="text-md font-semibold">Stock Info</h2>      
+            <h2 className="text-md font-semibold">Stock Info</h2>
             <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
                 <Label htmlFor="quantity" value="Quantity" />
@@ -223,6 +207,31 @@ const CreateForm = () => {
                       <>
                         <span className="font-medium text-red-400">
                           {error.quantity}
+                        </span>
+                      </>
+                    )
+                  }
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="remaing_quantity" value="Remainig Quantity" />
+                <TextInput
+                  id="remaining_quantity"
+                  type="number"
+                  placeholder="Enter remaining quantity"
+                  value={values.remaining_quantity}
+                  onChange={handleChange}
+                  className={`${
+                    error?.remaining_quantity
+                      ? "border-[1.5px] border-red-400 rounded-md"
+                      : ""
+                  } `}
+                  helperText={
+                    error?.remaining_quantity && (
+                      <>
+                        <span className="font-medium text-red-400">
+                          {error.remaining_quantity}
                         </span>
                       </>
                     )
@@ -257,87 +266,119 @@ const CreateForm = () => {
                   }
                 />
               </div>
-
-              <div>
-                <Label htmlFor="unit_price" value="Unit Price" />
-                <TextInput
-                  id="unit_price"
-                  type="text"
-                  placeholder="Enter unit price"
-                  value={values.unit_price}
-                  onChange={handleChange}
-                  className={`${
-                    error?.unit_price
-                      ? "border-[1.5px] border-red-400 rounded-md"
-                      : ""
-                  } `}
-                  helperText={
-                    error?.unit_price && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.unit_price}
-                        </span>
-                      </>
-                    )
-                  }
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="total_value" value="Total Value" />
-                <TextInput
-                  id="total_value"
-                  type="text"
-                  placeholder="Enter total value"
-                  value={values.total_value}
-                  onChange={handleChange}
-                  className={`${
-                    error?.total_value
-                      ? "border-[1.5px] border-red-400 rounded-md"
-                      : ""
-                  } `}
-                  helperText={
-                    error?.total_value && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.total_value}
-                        </span>
-                      </>
-                    )
-                  }
-                />
-              </div>
-
-              <div>
-                <Label
-                  htmlFor="currency_id"
-                  value="Choose currency"
-                />
-                <Select
-                  id="currency_id"
-                  value={values.currency_id}
-                  onChange={handleChange}
-                  helperText={
-                    error?.currency_id && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.currency_id}
-                        </span>
-                      </>
-                    )
-                  }
-                >
-                <option value="">Select an option</option>
-                {currencies && currencies.map((currency) => (
-                  <option value={currency.id}>{currency.base_currency_name} - {currency.symbol} </option>
-                ))}
-                </Select>
-              </div>
-
-
             </div>
 
-            <h2 className="text-md font-semibold">Additional</h2>          
+            <h2 className="text-md font-semibold">Currency Info</h2>
+            <div className="flex flex-col gap-3">
+              <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+                <div>
+                  <Label htmlFor="unit_price_in_usd" value="Unit Price in USD" />
+                  <TextInput
+                    id="unit_price_in_usd"
+                    type="number"
+                    placeholder="Unit price in USD"
+                    value={values.unit_price_in_usd}
+                    onChange={handleChange}
+                    className={`${
+                      error?.unit_price_in_usd
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.unit_price_in_usd && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.unit_price_in_usd}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="total_value_in_usd" value="Total Value" />
+                  <TextInput
+                    id="total_value_in_usd"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.total_value_in_usd}
+                    onChange={handleChange}
+                    className={`${
+                      error?.total_value_in_usd
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.total_value_in_usd && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.total_value_in_usd}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+              <div>
+                  <Label
+                    htmlFor="unit_price_in_riel"
+                    value="Total Value in Riel"
+                  />
+                  <TextInput
+                    id="unit_price_in_riel"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.unit_price_in_riel}
+                    onChange={handleChange}
+                    className={`${
+                      error?.unit_price_in_riel
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.unit_price_in_riel && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.unit_price_in_riel}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <Label
+                    htmlFor="total_value_in_riel"
+                    value="Total Value in Riel"
+                  />
+                  <TextInput
+                    id="total_value_in_riel"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.total_value_in_riel}
+                    onChange={handleChange}
+                    className={`${
+                      error?.total_value_in_riel
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.total_value_in_riel && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.total_value_in_riel}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            <h2 className="text-md font-semibold">Additional</h2>
             <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
                 <Label
@@ -359,19 +400,15 @@ const CreateForm = () => {
                     )
                   }
                 >
-                <option value="">Select an option</option>
-                <option value='CATEGORY_1'>Category 1</option>
-                <option value='CATEGORY_2'>Category 2</option>
-                <option value='CATEGORY_3'>Category 3</option>
-
+                  <option value="">Select an option</option>
+                  <option value="CATEGORY_1">Category 1</option>
+                  <option value="CATEGORY_2">Category 2</option>
+                  <option value="CATEGORY_3">Category 3</option>
                 </Select>
               </div>
 
               <div>
-                <Label
-                  htmlFor="status"
-                  value="Status"
-                />
+                <Label htmlFor="status" value="Status" />
                 <Select
                   id="status"
                   placeholder="Enter status"
@@ -387,9 +424,9 @@ const CreateForm = () => {
                     )
                   }
                 >
-                  <option value=''>Select an option</option>
-                  <option value='IN_STOCK'>In stock</option>
-                  <option value='OUT_OF_STOCK'>Out of stock</option>
+                  <option value="">Select an option</option>
+                  <option value="IN_STOCK">In stock</option>
+                  <option value="OUT_OF_STOCK">Out of stock</option>
                 </Select>
               </div>
 
@@ -444,7 +481,6 @@ const CreateForm = () => {
             </div>
           </div>
 
-          
           <div className="my-5">
             <Label htmlFor="description" value="Description" />
             <Textarea
@@ -513,7 +549,7 @@ const CreateForm = () => {
         </div>
 
         <Button type="submit" className="w-full">
-          {status === 'loading' ? <Spinner /> : 'Save'}
+          {status === "loading" ? <Spinner /> : "Save"}
         </Button>
       </form>
     </div>

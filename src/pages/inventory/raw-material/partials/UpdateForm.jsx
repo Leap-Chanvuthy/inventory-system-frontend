@@ -66,8 +66,11 @@ const UpdateForm = () => {
     name: "",
     material_code: "",
     quantity: "",
-    unit_price: "",
-    total_value: "",
+    remaining_quantity: "",
+    unit_price_in_usd: "",
+    total_value_in_usd: "",
+    unit_price_in_riel: "",
+    total_value_in_riel: "",
     minimum_stock_level: "",
     raw_material_category: "",
     unit_of_measurement: "",
@@ -77,7 +80,6 @@ const UpdateForm = () => {
     description: "",
     expiry_date: "",
     supplier_id: "",
-    currency_id : ""
   });
 
   console.log(values);
@@ -89,8 +91,11 @@ const UpdateForm = () => {
         name: rawMaterials?.name || "",
         material_code: rawMaterials?.material_code || "",
         quantity: rawMaterials?.quantity || "",
-        unit_price: rawMaterials?.unit_price || "",
-        total_value: rawMaterials?.total_value || "",
+        remaining_quantity : rawMaterials?.remaining_quantity || "",
+        unit_price_in_usd: rawMaterials?.unit_price_in_usd || "",
+        total_value_in_usd: rawMaterials?.total_value_in_usd || "",
+        unit_price_in_riel: rawMaterials?.unit_price_in_riel || "",
+        total_value_in_riel: rawMaterials?.total_value_in_riel || "",
         minimum_stock_level: rawMaterials?.minimum_stock_level || "",
         raw_material_category: rawMaterials?.raw_material_category || "",
         unit_of_measurement: rawMaterials?.unit_of_measurement || "",
@@ -100,7 +105,6 @@ const UpdateForm = () => {
         description: rawMaterials?.description || "",
         expiry_date: rawMaterials?.expiry_date || "",
         supplier_id: rawMaterials?.supplier_id || "",
-        currency_id : rawMaterials?.currency?.id || "",
       });
 
       setOldImages(rawMaterials?.raw_material_images || []);
@@ -164,24 +168,6 @@ const UpdateForm = () => {
   };
 
 
-
-    // get currency 
-
-    useEffect(() => {
-      const getCurrency = async (e) => {
-        dispatch(getCurrencyStart());
-        try {
-          const response = await axios.get(`${BASE_URL}/currencies`);
-          console.log(response);
-          dispatch(getCurrencySuccess(response.data));
-        }catch (err){
-          console.log('error' , err);
-          dispatch(getCurrencyFailure(err?.response?.data));
-        }
-      } 
-      getCurrency();
-    } , [])
-
   return (
     <div className="my-5">
       <SuccessToast
@@ -196,7 +182,7 @@ const UpdateForm = () => {
       />
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div>
-          <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5">
             <h2 className="text-md font-semibold">General Info</h2>
             <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
@@ -289,6 +275,31 @@ const UpdateForm = () => {
               </div>
 
               <div>
+                <Label htmlFor="remaing_quantity" value="Remainig Quantity" />
+                <TextInput
+                  id="remaining_quantity"
+                  type="number"
+                  placeholder="Enter remaining quantity"
+                  value={values.remaining_quantity}
+                  onChange={handleChange}
+                  className={`${
+                    error?.remaining_quantity
+                      ? "border-[1.5px] border-red-400 rounded-md"
+                      : ""
+                  } `}
+                  helperText={
+                    error?.remaining_quantity && (
+                      <>
+                        <span className="font-medium text-red-400">
+                          {error.remaining_quantity}
+                        </span>
+                      </>
+                    )
+                  }
+                />
+              </div>
+
+              <div>
                 <Label
                   htmlFor="minimum_stock_level"
                   value="Minimum Stock Level"
@@ -315,81 +326,115 @@ const UpdateForm = () => {
                   }
                 />
               </div>
+            </div>
 
-              <div>
-                <Label htmlFor="unit_price" value="Unit Price" />
-                <TextInput
-                  id="unit_price"
-                  type="text"
-                  placeholder="Enter unit price"
-                  value={values.unit_price}
-                  onChange={handleChange}
-                  className={`${
-                    error?.unit_price
-                      ? "border-[1.5px] border-red-400 rounded-md"
-                      : ""
-                  } `}
-                  helperText={
-                    error?.unit_price && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.unit_price}
-                        </span>
-                      </>
-                    )
-                  }
-                />
+            <h2 className="text-md font-semibold">Currency Info</h2>
+            <div className="flex flex-col gap-3">
+              <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+                <div>
+                  <Label htmlFor="unit_price_in_usd" value="Unit Price in USD" />
+                  <TextInput
+                    id="unit_price_in_usd"
+                    type="number"
+                    placeholder="Unit price in USD"
+                    value={values.unit_price_in_usd}
+                    onChange={handleChange}
+                    className={`${
+                      error?.unit_price_in_usd
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.unit_price_in_usd && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.unit_price_in_usd}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="total_value_in_usd" value="Total Value" />
+                  <TextInput
+                    id="total_value_in_usd"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.total_value_in_usd}
+                    onChange={handleChange}
+                    className={`${
+                      error?.total_value_in_usd
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.total_value_in_usd && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.total_value_in_usd}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
               </div>
-
+              <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
-                <Label htmlFor="total_value" value="Total Value" />
-                <TextInput
-                  id="total_value"
-                  type="text"
-                  placeholder="Enter total value"
-                  value={values.total_value}
-                  onChange={handleChange}
-                  className={`${
-                    error?.total_value
-                      ? "border-[1.5px] border-red-400 rounded-md"
-                      : ""
-                  } `}
-                  helperText={
-                    error?.total_value && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.total_value}
-                        </span>
-                      </>
-                    )
-                  }
-                />
-              </div>
-
-              <div>
-                <Label
-                  htmlFor="currency_id"
-                  value="Choose currency"
-                />
-                <Select
-                  id="currency_id"
-                  value={values.currency_id}
-                  onChange={handleChange}
-                  helperText={
-                    error?.currency_id && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.currency_id}
-                        </span>
-                      </>
-                    )
-                  }
-                >
-                <option value="">Select an option</option>
-                {currencies && currencies.map((currency) => (
-                  <option value={currency.id}>{currency.base_currency_name} - {currency.symbol} </option>
-                ))}
-                </Select>
+                  <Label
+                    htmlFor="unit_price_in_riel"
+                    value="Total Value in Riel"
+                  />
+                  <TextInput
+                    id="unit_price_in_riel"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.unit_price_in_riel}
+                    onChange={handleChange}
+                    className={`${
+                      error?.unit_price_in_riel
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.unit_price_in_riel && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.unit_price_in_riel}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <Label
+                    htmlFor="total_value_in_riel"
+                    value="Total Value in Riel"
+                  />
+                  <TextInput
+                    id="total_value_in_riel"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.total_value_in_riel}
+                    onChange={handleChange}
+                    className={`${
+                      error?.total_value_in_riel
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.total_value_in_riel && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.total_value_in_riel}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
               </div>
             </div>
 
@@ -421,16 +466,6 @@ const UpdateForm = () => {
                   <option value="CATEGORY_3">Category 3</option>
                 </Select>
               </div>
-
-              {/* <div>
-                <Label htmlFor="status" value="Status" />
-                <TextInput
-                  id="status"
-                  placeholder="Enter status"
-                  value={values.status}
-                  onChange={handleChange}
-                />
-              </div> */}
 
               <div>
                 <Label htmlFor="status" value="Status" />

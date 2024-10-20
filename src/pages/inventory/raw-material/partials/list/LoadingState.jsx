@@ -3,7 +3,7 @@ import { Skeleton } from "@mui/material";
 
 const LoadingState = () => {
   return (
-    <div className="overflow-x-auto h-[65vh] overflow-y-scroll my-5">
+    <div className="overflow-x-auto my-5">
       <Table hoverable>
         <Table.Head>
           <Table.HeadCell>
