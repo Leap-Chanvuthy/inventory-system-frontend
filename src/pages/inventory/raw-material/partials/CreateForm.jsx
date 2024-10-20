@@ -15,7 +15,7 @@ import { getCurrencyFailure, getCurrencyStart, getCurrencySuccess } from "../../
 
 const CreateForm = () => {
   const [values, setValues] = useState({
-    product_images: [],
+    image: [],
     name: "",
     material_code: "",
     quantity: "",
@@ -57,7 +57,7 @@ const CreateForm = () => {
 
       setValues((prevValues) => ({
         ...prevValues,
-        product_images: [...prevValues.product_images, ...validImages],
+        image: [...prevValues.image, ...validImages],
       }));
     } else {
       alert("Please upload valid image files.");
@@ -65,30 +65,22 @@ const CreateForm = () => {
   };
 
   const handleRemoveImage = (imageIndex) => {
-    const updatedImages = [...values.product_images];
+    const updatedImages = [...values.image];
     updatedImages.splice(imageIndex, 1);
-    setValues({ ...values, product_images: updatedImages });
+    setValues({ ...values, image: updatedImages });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(addRawMaterialStart());
     try {
-      const formData = new FormData();
-      for (const key in values) {
-        if (Array.isArray(values[key])) {
-          values[key].forEach((file) => formData.append(key, file));
-        } else {
-          formData.append(key, values[key]);
-        }
-      }
-      const response = await axios.post(`${BASE_URL}/raw-materials`, formData, {
+      const response = await axios.post(`${BASE_URL}/raw-materials`, values, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       dispatch(addRawMaterialSuccess(response.data));
       setOpenSuccess(true);
       setValues({
-        product_images: [],
+        image: [],
         name: "",
         material_code: "",
         quantity: "",
@@ -497,12 +489,12 @@ const CreateForm = () => {
           </div>
 
           <div className="flex flex-col gap-4 mt-2">
-            {values.product_images.length > 0 && (
+            {values.image.length > 0 && (
               <div className="flex flex-wrap">
-                {values.product_images.map((image, index) => (
+                {values.image.map((img, index) => (
                   <div key={index} className="relative mr-2 mb-2">
                     <img
-                      src={URL.createObjectURL(image)}
+                      src={URL.createObjectURL(img)}
                       alt={`Product Preview ${index + 1}`}
                       className="w-[18rem] h-40 object-cover rounded-md"
                     />

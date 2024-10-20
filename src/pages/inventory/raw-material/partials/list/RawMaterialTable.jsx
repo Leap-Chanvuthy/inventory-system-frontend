@@ -131,7 +131,7 @@ const RawMaterialTable = ({ filters }) => {
                         className="w-16 h-16 object-cover"
                       />
                     ) : (
-                      <span>No Image</span>
+                      ""
                     )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
