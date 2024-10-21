@@ -21,6 +21,7 @@ import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { SuccessToast } from "../../../../components/ToastNotification";
 import { LuAlertTriangle } from "react-icons/lu";
+import { ImWarning } from "react-icons/im";
 
 function UserTable({ filters }) {
   const dispatch = useDispatch();
@@ -225,22 +226,17 @@ function UserTable({ filters }) {
       </div>
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to delete this user ?</p></Modal.Header>
         <Modal.Body>
-          <p className="text-center font-bold text-lg">Are you sure want to delete this user ?</p>
-          <div className="flex flex-col p-4 my-4 border-l-4 border-red-600 bg-red-100 rounded-md">
-            <div className="flex items-center gap-2 mx-4 font-bold text-red-900">
-              <LuAlertTriangle />
-              <p>Warning</p>
-            </div>
-            <p className="mx-4 text-red-400">Once you deleted this user, Data will not be recovered!</p>
+          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 rounded-md">
+            <ImWarning className="text-lg text-red-500" />
+            <p className="text-red-500">Once user is deleted, Data will not be recoverd!</p>
           </div>
         </Modal.Body>
+
         <Modal.Footer>
           <Button onClick={handleDelete} color='failure'>
             {status == "loading" ? <Spinner /> : "Delete"}
-          </Button>
-          <Button onClick={() => setOpenModal(false)}>
-            Decline
           </Button>
         </Modal.Footer>
       </Modal>

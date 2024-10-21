@@ -104,6 +104,7 @@ const RecoverRawMaterialTable = ({ filters }) => {
 
   return (
     <div>
+      <h2 className="text-md font-bold">Deleted Items</h2>
       <div className="overflow-x-auto lg:max-w-6xl  my-5">
         <Table striped>
           <Table.Head>
@@ -169,8 +170,8 @@ const RecoverRawMaterialTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap">
                     {formatDistanceToNow(new Date(material.deleted_at))} ago
                   </Table.Cell>
-                  <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <Tooltip content='click to recover'>
+                  <Table.Cell className="flex justify-center items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Tooltip content='Click to recover'>
                         <TbRestore
                           className="text-green-600 text-lg cursor-pointer"
                           onClick={() => {
@@ -206,7 +207,7 @@ const RecoverRawMaterialTable = ({ filters }) => {
       </div>
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>          <p className="text-center font-bold text-lg">Are you sure want to recover this item ?</p></Modal.Header>
+        <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to recover this item ?</p></Modal.Header>
         <Modal.Body>
           <div className="flex items-center gap-3 p-4 border-l-4 border-green-600 bg-green-100 rounded-md">
             <CiCircleCheck className="text-lg text-green-500" />

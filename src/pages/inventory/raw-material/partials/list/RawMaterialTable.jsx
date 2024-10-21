@@ -13,7 +13,7 @@ import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteRawMaterialFailure, deleteRawMaterialStart, deleteRawMaterialSuccess, fetchRawMaterialsFailure, fetchRawMaterialsStart, fetchRawMaterialsSuccess } from "../../../../../redux/slices/rawMaterialSlice";
 import { SuccessToast } from "../../../../../components/ToastNotification";
-import { LuTriangle } from "react-icons/lu";
+import { ImWarning } from "react-icons/im";
 import {FiEdit} from 'react-icons/fi';
 
 const RawMaterialTable = ({ filters }) => {
@@ -210,22 +210,17 @@ const RawMaterialTable = ({ filters }) => {
       </div>
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to delete this item ?</p></Modal.Header>
         <Modal.Body>
-          <p className="text-center font-bold text-lg">Are you sure want to delete this user ?</p>
-          <div className="flex flex-col p-4 my-4 border-l-4 border-red-600 bg-red-100 rounded-md">
-            <div className="flex items-center gap-2 mx-4 font-bold text-red-900">
-              <LuTriangle />
-              <p>Warning</p>
-            </div>
-            <p className="mx-4 text-red-400">Once you deleted this raw material, Data will not be recovered!</p>
+          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 rounded-md">
+            <ImWarning className="text-lg text-red-500" />
+            <p className="text-red-500">After successfully deleted, Item will be shown in active recover list.</p>
           </div>
         </Modal.Body>
+
         <Modal.Footer>
           <Button onClick={handleDelete} color='failure'>
             {status == "loading" ? <Spinner /> : "Delete"}
-          </Button>
-          <Button onClick={() => setOpenModal(false)}>
-            Decline
           </Button>
         </Modal.Footer>
       </Modal>
