@@ -78,6 +78,24 @@ const rawMaterialSlice = createSlice({
             state.error = action.payload;
             state.status = 'failed';
             state.loading = false;
+        },
+
+        // recover state
+        recoverRawMaterialStart(state) {
+            state.status = 'loading';
+            state.loading = true;
+            state.error = null;
+        },
+        recoverRawMaterialSuccess(state, action) {
+            const id = action.payload;
+            state.rawMaterials = state.rawMaterials.filter(rawMaterial => rawMaterial.id !== id);
+            state.status = 'succeeded';
+            state.loading = false;
+        },
+        recoverRawMaterialFailure(state, action) {
+            state.error = action.payload;
+            state.status = 'failed';
+            state.loading = false;
         }
     },
 });
@@ -95,6 +113,9 @@ export const {
     deleteRawMaterialStart,
     deleteRawMaterialSuccess,
     deleteRawMaterialFailure,
+    recoverRawMaterialStart,
+    recoverRawMaterialSuccess,
+    recoverRawMaterialFailure
 } = rawMaterialSlice.actions;
 
 export default rawMaterialSlice.reducer;

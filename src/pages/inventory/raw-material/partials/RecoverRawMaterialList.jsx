@@ -12,9 +12,9 @@ import { IoSearchOutline } from "react-icons/io5";
 import {TbRestore} from 'react-icons/tb';
 import { Link } from "react-router-dom";
 import ExportRawMaterial from "./ExportRawMaterial";
-import RawMaterialTable from "./list/RawMaterialTable";
+import RecoverRawMaterialTable from "./list/RecoverRawMaterialTable";
 
-const RawMaterialList = () => {
+const RecoverRawMaterialList = () => {
   const [filters, setFilters] = useState({
     query: "",
     category: "",
@@ -143,26 +143,12 @@ const RawMaterialList = () => {
               </div>
             </Dropdown>
           </form>
-          <Link to="/raw-materials/create">
-            <Button color="info">Create New</Button>
-          </Link>
-        </div>
-
-        <div className="flex gap-3 items-center">
-          <ExportRawMaterial />
-          <Link to='/raw-materials/recover'>
-            <Tooltip content="Recover">
-              <Button color="success" className="flex justify-center items-center">
-                <TbRestore className="text-xl" />{" "}
-              </Button>
-            </Tooltip>
-          </Link>
         </div>
       </div>
 
-      <RawMaterialTable filters={filters} />
+      <RecoverRawMaterialTable filters={filters} />
     </div>
   );
 };
 
-export default RawMaterialList;
+export default RecoverRawMaterialList;

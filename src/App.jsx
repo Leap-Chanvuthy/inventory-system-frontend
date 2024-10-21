@@ -76,6 +76,7 @@ import AdminRoute from "./components/privilege/AdminRoute";
 
 import { useSelector } from "react-redux";
 import UnauthicatedRoute from "./components/privilege/UnauthenticatedRoute";
+import RecoverRawMaterial from "./pages/inventory/raw-material/RecoverRawMaterial";
 
 function App() {
   const {currentUser} = useSelector((state) => state.auth);
@@ -92,6 +93,7 @@ function App() {
           <Route path="/products" element={<Layout><Product /></Layout>} />
           <Route path="/products/create" element={<Layout><CreateProduct /></Layout>} />
           <Route path="/raw-materials" element={<Layout><RawMaterial /></Layout>} />
+          <Route path="/raw-materials/recover" element={<Layout><RecoverRawMaterial /></Layout>} />
           <Route path="/raw-materials/create" element={<Layout><CreateRawMaterial /></Layout>} />
           <Route path="/raw-material/update/:id" element={<Layout><UpdateRawMaterial/></Layout>} />
           <Route path="/suppliers" element={<Layout><Supplier /></Layout>} />
