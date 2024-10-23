@@ -136,7 +136,7 @@ const RawMaterialTable = ({ filters }) => {
                       <Avatar
                         img={`${BASE_IMAGE_URL}/${material.raw_material_images[0].image}`}
                         alt={material.name}
-                        className="w-16 h-16 object-cover"
+                        className="w-10 h-10 object-cover"
                       />
                     ) : (
                       ""
@@ -169,7 +169,14 @@ const RawMaterialTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.minimum_stock_level}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.location}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                    {formatDistanceToNow(new Date(material.created_at))} ago
+                    {new Date(material.created_at).toLocaleString('en-US', {
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    })}, {formatDistanceToNow(new Date(material.created_at))} ago
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
                     {formatDistanceToNow(new Date(material.updated_at))} ago

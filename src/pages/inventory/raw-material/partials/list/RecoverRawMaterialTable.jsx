@@ -162,13 +162,34 @@ const RecoverRawMaterialTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.minimum_stock_level}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.location}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                    {formatDistanceToNow(new Date(material.created_at))} ago
+                    {new Date(material.created_at).toLocaleString('en-US', {
+                          weekday: 'short',
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                      })}, {formatDistanceToNow(new Date(material.created_at))} ago
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                    {formatDistanceToNow(new Date(material.updated_at))} ago
+                    {new Date(material.created_at).toLocaleString('en-US', {
+                          weekday: 'short',
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                      })}, {formatDistanceToNow(new Date(material.updated_at))} ago
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                    {formatDistanceToNow(new Date(material.deleted_at))} ago
+                    {new Date(material.created_at).toLocaleString('en-US', {
+                          weekday: 'short',
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                      })}, {formatDistanceToNow(new Date(material.deleted_at))} ago
                   </Table.Cell>
                   <Table.Cell className="flex justify-center items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Tooltip content='Click to recover'>

@@ -11,8 +11,8 @@ import {
 import { IoSearchOutline } from "react-icons/io5";
 import {TbRestore} from 'react-icons/tb';
 import { Link } from "react-router-dom";
-import ExportRawMaterial from "./ExportRawMaterial";
 import RawMaterialTable from "./list/RawMaterialTable";
+import RawMaterialExport from "./export/RawMaterialExport";
 
 const RawMaterialList = () => {
   const [filters, setFilters] = useState({
@@ -149,7 +149,7 @@ const RawMaterialList = () => {
         </div>
 
         <div className="flex gap-3 items-center">
-          <ExportRawMaterial />
+          <RawMaterialExport />
           <Link to='/raw-materials/recover'>
             <Tooltip content="Recover">
               <Button color="success" className="flex justify-center items-center">
