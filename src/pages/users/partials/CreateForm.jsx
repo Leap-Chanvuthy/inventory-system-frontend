@@ -257,7 +257,7 @@ const CreateForm = () => {
             <option value="">Select Role</option>
             <option value="ADMIN">Admin</option>
             <option value="STOCK_CONTROLLER">Stock Controller</option>
-            <option value="VENDOR">Vendor</option>
+            <option value="VENDER">Vender</option>
             <option value="USER">User</option>
           </Select>
         </div>
