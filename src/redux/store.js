@@ -10,6 +10,7 @@ import rawMaterialReducer from './slices/rawMaterialSlice';
 import supplierReducer from './slices/supplierSlice';
 import passwordReducer from './slices/passwordSlice';
 import currencyReducer from './slices/currencySlice';
+import invoiceReducer from './slices/invoiceSlice';
 
 
 const persistConfig = {
@@ -25,7 +26,8 @@ const rootReducer = combineReducers({
     rawMaterials : rawMaterialReducer,
     suppliers : supplierReducer,
     password : passwordReducer,
-    currencies : currencyReducer
+    currencies : currencyReducer,
+    invoices : invoiceReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

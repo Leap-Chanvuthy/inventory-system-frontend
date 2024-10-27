@@ -88,6 +88,7 @@ import RecoverRawMaterial from "./pages/inventory/raw-material/RecoverRawMateria
 import ProtectedRoute from "./components/privilege/ProtectedRoute";
 import UnauthenticatedRoute from "./components/privilege/UnauthenticatedRoute";
 import PublicRoute from "./components/privilege/PublicRoute";
+import PurchaseInvoice from "./pages/inventory/purchase-invoice/PurchaseInvoice";
 
 function App() {
 
@@ -117,6 +118,7 @@ function App() {
           <Route path="/suppliers" element={<Layout><Supplier /></Layout>} />
           <Route path="/suppliers/create" element={<Layout><CreateSupplier /></Layout>} />
           <Route path="/supplier/update/:id" element={<Layout><UpdateSupplier /></Layout>} />
+          <Route path="/purchase-invoice" element={<Layout><PurchaseInvoice /></Layout>} />
 
         </Route>
 

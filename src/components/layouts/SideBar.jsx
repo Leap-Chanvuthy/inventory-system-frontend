@@ -41,10 +41,12 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               <Sidebar.Item href="/products" active={pathname === "/products"}>
                 Products
               </Sidebar.Item>
-              <Sidebar.Item href="/raw-materials" active={pathname === "/raw-materials"}>
-                Raw Materials
+              <Sidebar.Item active={pathname === "/raw-materials"}>
+                <Link to='/raw-materials'>Raw Materials</Link>
               </Sidebar.Item>
-              <Sidebar.Item href="#">Purchase</Sidebar.Item>
+              <Sidebar.Item >
+                <Link to='/purchase-invoice'>Purchase Invoice</Link>
+              </Sidebar.Item>
               <Sidebar.Item >
                 <Link to='/suppliers'>Suppliers</Link>
               </Sidebar.Item>
