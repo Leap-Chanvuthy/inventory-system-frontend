@@ -185,18 +185,20 @@ function UserTable({ filters }) {
                 <Table.Cell>{user.email}</Table.Cell>
                 <Table.Cell>{user.phone_number}</Table.Cell>
                 <Table.Cell>
-                  {user.role === "ADMIN" && (
-                    <Badge color="success">{user.role}</Badge>
-                  )}
-                  {user.role === "STOCK_CONTROLLER" && (
-                    <Badge color="warning">{user.role}</Badge>
-                  )}
-                  {user.role === "VENDER" && (
-                    <Badge color="purple">{user.role}</Badge>
-                  )}
-                  {user.role === "USER" && (
-                    <Badge color="indigo">{user.role}</Badge>
-                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {user.role === "ADMIN" && (
+                      <Badge color="success">{user.role}</Badge>
+                    )}
+                    {user.role === "STOCK_CONTROLLER" && (
+                      <Badge color="warning">{user.role}</Badge>
+                    )}
+                    {user.role === "VENDER" && (
+                      <Badge color="purple">{user.role}</Badge>
+                    )}
+                    {user.role === "USER" && (
+                      <Badge color="indigo">{user.role}</Badge>
+                    )}
+                  </div>
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">{user.email_verified_at || "N/A"}</Table.Cell>
                 <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">

@@ -186,15 +186,17 @@ const SupplierTable = ({ filters }) => {
                   )}
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.supplier_status === 'ACTIVE' && (
-                    <Badge color="success">{supplier.supplier_status}</Badge>
-                  )}
-                  {supplier.supplier_status === 'INACTIVE' && (
-                    <Badge color="warning">{supplier.supplier_status}</Badge>
-                  )}
-                  {supplier.supplier_status === 'SUSPENDED' && (
-                    <Badge color="failure">{supplier.supplier_status}</Badge>
-                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {supplier.supplier_status === 'ACTIVE' && (
+                      <Badge color="success">{supplier.supplier_status}</Badge>
+                    )}
+                    {supplier.supplier_status === 'INACTIVE' && (
+                      <Badge color="warning">{supplier.supplier_status}</Badge>
+                    )}
+                    {supplier.supplier_status === 'SUSPENDED' && (
+                      <Badge color="failure">{supplier.supplier_status}</Badge>
+                    )}
+                  </div>
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {supplier.location}

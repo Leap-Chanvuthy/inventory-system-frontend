@@ -16,8 +16,10 @@ import PurchaseInvoiceTable from "./list/PurchaseInvoiceTable";
 const PurchaseInvoiceList = () => {
   const [filters, setFilters] = useState({
     search: "",
-    category: "",
+    payment_method: "",
     status: "",
+    start_date : "",
+    end_date :"",
     sort: [],
   });
 
@@ -42,7 +44,9 @@ const PurchaseInvoiceList = () => {
     setFilters({
       search: "",
       status: "",
-      category: "",
+      payment_method: "",
+      start_date : "",
+      end_date :"",
       sort: [],
     });
   };
@@ -117,30 +121,66 @@ const PurchaseInvoiceList = () => {
                       onChange={handleFilterChange}
                     >
                       <option value="">Select Status</option>
-                      <option value="IN_STOCK">In stock</option>
-                      <option value="OUT_OF_STOCK">Out of stock</option>
+                      <option value="PAID">Paid</option>
+                      <option value="UNPAID">Unpaid</option>
+                      <option value="INDEBTED">Indebted</option>
                     </Select>
                   </div>
 
                   <div>
                     <Label
-                      htmlFor="category"
-                      value="Category"
+                      htmlFor="payment_method"
+                      value="Payment Method"
                       className="mb-2 block"
                     />
                     <Select
-                      id="category"
-                      value={filters.category}
+                      id="payment_method"
+                      value={filters.payment_method}
                       onChange={handleFilterChange}
                     >
-                      <option value="">Select Category</option>
-                      <option value="SERVICE">Service</option>
-                      <option value="PRODUCT">Product</option>
+                      <option value="">Select an option</option>
+                      <option value="CREDIT_CARD">Credit Card</option>
+                      <option value="CASH">Cash</option>
+                      <option value="BANK">Bank Transfer</option>
+                      <option value="OTHER">Other</option>
                     </Select>
                   </div>
                 </div>
               </div>
             </Dropdown>
+
+            {/* Filter by date */}
+            <Dropdown label="Date">
+              <p
+                className="absolute left-[70%] text-red-500 cursor-pointer"
+                onClick={resetFilters}
+              >
+                Clear
+              </p>
+              <div className="p-5">
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <Label
+                      htmlFor="start_date"
+                      value="Start From Date"
+                      className="mb-2 block"
+                    />
+                    <TextInput type="date" id="start_date" value={filters.start_date} onChange={handleFilterChange} />
+                  </div>
+
+                  <div>
+                    <Label
+                      htmlFor="end_date"
+                      value="End Date"
+                      className="mb-2 block"
+                    />
+                    <TextInput type="date" id="end_date" value={filters.end_date} onChange={handleFilterChange} />
+                  </div>
+
+                </div>
+              </div>
+            </Dropdown>
+
           </form>
           <Link to="/raw-materials/create">
             <Button color="info">Create New</Button>

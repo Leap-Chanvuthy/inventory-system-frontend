@@ -22,6 +22,8 @@ import {
   deleteInvoiceSuccess,
 } from "../../../../../redux/slices/invoiceSlice";
 import { SuccessToast } from "../../../../../components/ToastNotification";
+import { IoPrintOutline } from "react-icons/io5";
+
 
 const PurchaseInvoiceTable = ({ filters }) => {
   const dispatch = useDispatch();
@@ -40,7 +42,11 @@ const PurchaseInvoiceTable = ({ filters }) => {
       const response = await axios.get(`${BASE_URL}/purchase-invoices`, {
         params: {
           page,
-          'filter[search]' : filters.search
+          'filter[search]' : filters.search,
+          'filter[status]' : filters.status,
+          'filter[payment_method]' : filters.payment_method,
+          'filter[date_range][start_date]' : filters.start_date,
+          'filter[date_range][end_date]' : filters.end_date
         },
       });
       console.log(response);
@@ -116,6 +122,7 @@ const PurchaseInvoiceTable = ({ filters }) => {
       <div className="overflow-x-auto lg:max-w-6xl  my-5">
         <Table striped>
         <Table.Head>
+            <Table.HeadCell className="whitespace-nowrap">Print</Table.HeadCell>
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Invoice Number</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Payment Method</Table.HeadCell>
@@ -129,11 +136,13 @@ const PurchaseInvoiceTable = ({ filters }) => {
             <Table.HeadCell className="whitespace-nowrap">Grand Total No Tax (USD)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Grand Total With Tax (Riel)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Grand Total With Tax (USD)</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Clear Payable (%)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Discount Amount (Riel)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Discount Amount (USD)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Discount (%)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Tax (%)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Created At</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Actions</Table.HeadCell>
             </Table.Head>
           <Table.Body className="divide-y">
             {invoices.length > 0 ? (
@@ -142,17 +151,37 @@ const PurchaseInvoiceTable = ({ filters }) => {
                   key={invoice.id} // Corrected key here
                   className="bg-white dark:border-gray-700 dark:bg-gray-800 font-medium text-gray-900 dark:text-white"
                 >
+                    <Table.Cell>
+                        <IoPrintOutline className="text-lg text-center font-bold text-yellow-300" />
+                    </Table.Cell>
                     <Table.Cell>{invoice.id}</Table.Cell>
                     <Table.Cell>{invoice.invoice_number}</Table.Cell>
-                    <Table.Cell>{invoice.payment_method}</Table.Cell>
+                    <Table.Cell>
+                        <div className="flex flex-wrap gap-2">
+                          {invoice.payment_method === "BANK" && (
+                          <Badge color="success">{invoice.payment_method}</Badge>
+                          )}
+                          {invoice.payment_method === "CREDIT_CARD" && (
+                          <Badge color="warning">{invoice.payment_method}</Badge>
+                          )}
+                          {invoice.payment_method === "CASH" && (
+                          <Badge color="danger">{invoice.payment_method}</Badge>
+                          )}
+                        </div>
+                    </Table.Cell>
                     <Table.Cell>{invoice.payment_date}</Table.Cell>
                     <Table.Cell >
-                        {invoice.status === "PAID" && (
-                        <Badge color="success">{invoice.status}</Badge>
-                        )}
-                        {invoice.status === "UN_PAID" && (
-                        <Badge color="failure">{invoice.status}</Badge>
-                        )}
+                        <div className="flex flex-wrap gap-2">
+                          {invoice.status === "PAID" && (
+                          <Badge color="success">{invoice.status}</Badge>
+                          )}
+                          {invoice.status === "UNPAID" && (
+                          <Badge color="failure">{invoice.status}</Badge>
+                          )}
+                          {invoice.status === "INDEBTED" && (
+                          <Badge color="warning">{invoice.status}</Badge>
+                          )}
+                        </div>
                   </Table.Cell>
                   <Table.Cell>{invoice.sub_total_in_riel} ៛</Table.Cell>
                   <Table.Cell>{invoice.sub_total_in_usd} $</Table.Cell>
@@ -162,6 +191,7 @@ const PurchaseInvoiceTable = ({ filters }) => {
                   <Table.Cell>{invoice.grand_total_without_tax_in_usd} $</Table.Cell>
                   <Table.Cell>{invoice.grand_total_with_tax_in_riel} ៛</Table.Cell>
                   <Table.Cell>{invoice.grand_total_with_tax_in_usd} $</Table.Cell>
+                  <Table.Cell>{invoice.clearing_payable_percentage} %</Table.Cell>
                   <Table.Cell>{invoice.discount_value_in_riel} ៛</Table.Cell>
                   <Table.Cell>{invoice.discount_value_in_usd} $</Table.Cell>
                   <Table.Cell>{invoice.discount_percentage} %</Table.Cell>
@@ -175,6 +205,12 @@ const PurchaseInvoiceTable = ({ filters }) => {
                         hour: '2-digit',
                         minute: '2-digit',
                     })}, {formatDistanceToNow(new Date(invoice.created_at))} ago
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex items-center gap-2">
+                      <Link to={`/purchase-invoice/update/${invoice.id}`}><FiEdit className="text-green-600 dark:text-green-300 font-bold" /></Link>
+                      <MdDelete className="text-red-600 font-bold text-lg" />
+                    </div>
                   </Table.Cell>
 
                 </Table.Row>

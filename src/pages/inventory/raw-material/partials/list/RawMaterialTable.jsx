@@ -149,12 +149,14 @@ const RawMaterialTable = ({ filters }) => {
                     {material.name}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.status === "IN_STOCK" && (
-                      <Badge color="success">{material.status}</Badge>
-                    )}
-                    {material.status === "OUT_OF_STOCK" && (
-                      <Badge color="failure">{material.status}</Badge>
-                    )}
+                    <div className="flex flex-wrap gap-2">
+                      {material.status === "IN_STOCK" && (
+                        <Badge color="success">{material.status}</Badge>
+                      )}
+                      {material.status === "OUT_OF_STOCK" && (
+                        <Badge color="failure">{material.status}</Badge>
+                      )}
+                    </div>
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.quantity}
