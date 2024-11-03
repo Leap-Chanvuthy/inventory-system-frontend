@@ -1,0 +1,99 @@
+.invoice-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  .invoice-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 10px;
+  }
+  
+  .invoice-info {
+    margin-bottom: 20px;
+    color: #555555;
+  }
+  
+  .invoice-info p {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+  
+  .status {
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  
+  .status.paid {
+    color: #ffffff;
+    background-color: #4caf50;
+  }
+  
+  .status.unpaid {
+    color: #ffffff;
+    background-color: #f44336;
+  }
+  
+  .section-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 4px;
+  }
+  
+/* GenerateInvoice.css */
+.invoice-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
+    gap: 20px; /* Space between grid items */
+    padding: 0; /* Remove default padding */
+    list-style: none; /* Remove bullets */
+  }
+  
+  .invoice-summary li {
+    margin: 0; /* Remove margin for each item */
+  }
+  
+  
+  .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .invoice-table th,
+  .invoice-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #e0e0e0;
+    font-size: 14px;
+    color: #333333;
+  }
+  
+  .invoice-table th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+  }
+  
+  .invoice-table tr:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .thank-you {
+    text-align: center;
+    color: #777777;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  

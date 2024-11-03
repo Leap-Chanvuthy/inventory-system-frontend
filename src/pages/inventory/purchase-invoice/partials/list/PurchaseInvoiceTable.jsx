@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Avatar, Badge, Button, Modal, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -23,18 +23,72 @@ import {
 } from "../../../../../redux/slices/invoiceSlice";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { IoPrintOutline } from "react-icons/io5";
+import { useReactToPrint } from 'react-to-print';
+import ReactToPrint from 'react-to-print';
+import GenerateInvoice from "../print/GenerateInvoice";
+import ReactDOMServer from 'react-dom/server';
 
 
 const PurchaseInvoiceTable = ({ filters }) => {
   const dispatch = useDispatch();
   const { invoices, error, status } = useSelector((state) => state.invoices);
   console.log(invoices);
-//   const [selectedId, setSelectedId] = useState(null);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  
+// Handle print function and states
+const handlePrint = (invoice) => {
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return;
+
+  const invoiceHTML = ReactDOMServer.renderToString(<GenerateInvoice invoice={invoice} />);
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Print Invoice</title>
+        <style>
+          body { font-family: Arial, sans-serif; }
+          h1, h2 { color: #333; }
+          .invoice-container { margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }
+          .invoice-title { font-size: 24px; text-align: center; margin-bottom: 20px; }
+          .invoice-info { margin-bottom: 20px; }
+          .invoice-info p { margin: 4px 0; font-size: 14px; }
+          .status { font-weight: bold; padding: 5px 10px; border-radius: 4px; color: #fff; text-transform: uppercase; }
+          .status.paid { background-color: #4caf50; }
+          .status.unpaid { background-color: #e53935; }
+          .section-title { font-size: 18px; font-weight: bold; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; }
+          .invoice-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
+            gap: 20px; /* Space between grid items */
+            padding: 0; /* Remove default padding */
+            list-style: none; /* Remove bullets */
+          }
+          .invoice-summary li {
+            margin: 0; /* Remove margin for each item */
+          }
+          .invoice-table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+          .invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+          .invoice-table th { background-color: #f1f1f1; }
+          .invoice-table tr:nth-child(even) { background-color: #f9f9f9; }
+          .thank-you { text-align: center; margin-top: 20px; font-style: italic; }
+        </style>
+      </head>
+      <body>${invoiceHTML}</body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.print();
+  printWindow.onafterprint = () => printWindow.close();
+};
+
+
+
 
   const fetchInvoice = async (page = 1) => {
     dispatch(fetchInvoiceStart());
@@ -118,7 +172,7 @@ const PurchaseInvoiceTable = ({ filters }) => {
     return <div className="text-center py-5 text-red-500">{error}</div>;
 
   return (
-    <div>
+    <div>        
       <div className="overflow-x-auto lg:max-w-6xl  my-5">
         <Table striped>
         <Table.Head>
@@ -148,11 +202,14 @@ const PurchaseInvoiceTable = ({ filters }) => {
             {invoices.length > 0 ? (
               invoices.map((invoice) => (
                 <Table.Row
-                  key={invoice.id} // Corrected key here
+                  key={invoice.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800 font-medium text-gray-900 dark:text-white"
                 >
                     <Table.Cell>
-                        <IoPrintOutline className="text-lg text-center font-bold text-yellow-300" />
+                    <IoPrintOutline
+                      onClick={() => handlePrint(invoice)}
+                      className="text-lg text-center font-bold text-yellow-300 cursor-pointer"
+                    />
                     </Table.Cell>
                     <Table.Cell>{invoice.id}</Table.Cell>
                     <Table.Cell>{invoice.invoice_number}</Table.Cell>
