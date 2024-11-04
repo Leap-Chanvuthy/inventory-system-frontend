@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import {
   TextInput,
   Button,
@@ -13,14 +13,36 @@ import {TbRestore} from 'react-icons/tb';
 import { Link } from "react-router-dom";
 import RawMaterialTable from "./list/RawMaterialTable";
 import RawMaterialExport from "./export/RawMaterialExport";
+import axios from "axios";
+import { BASE_URL } from "../../../../components/const/constant";
 
 const RawMaterialList = () => {
   const [filters, setFilters] = useState({
     query: "",
-    category: "",
+    category_id: "",
     status: "",
     sort: [],
   });
+
+
+    // get raw material category
+    const [categories , setCategories] = useState([]);
+    console.log(categories)
+  
+    useEffect(() =>{
+      const getCategory = async (e) =>{
+        try {
+          
+          const response = await axios.get(`${BASE_URL}/non-paginate/raw-material-categories`)
+          console.log(response.data);
+          setCategories(response.data);
+        }catch (err){
+          console.log(err);
+        }
+      }
+      getCategory();
+    } , [])
+
 
   const handleFilterChange = (e) => {
     const { id, value } = e.target;
@@ -43,7 +65,7 @@ const RawMaterialList = () => {
     setFilters({
       search: "",
       status: "",
-      category: "",
+      category_id: "",
       sort: [],
     });
   };
@@ -125,20 +147,25 @@ const RawMaterialList = () => {
 
                   <div>
                     <Label
-                      htmlFor="category"
+                      htmlFor="category_id"
                       value="Category"
-                      className="mb-2 block"
                     />
                     <Select
-                      id="category"
-                      value={filters.category}
+                      id="category_id"
+                      placeholder="Choose category"
+                      value={filters.category_id}
                       onChange={handleFilterChange}
                     >
-                      <option value="">Select Category</option>
-                      <option value="SERVICE">Service</option>
-                      <option value="PRODUCT">Product</option>
+                      <option value="">Select an option</option>
+                      {categories &&
+                        categories.map((category) => (
+                          <option value={category.id}>
+                            {category.category_name}
+                          </option>
+                        ))}
                     </Select>
                   </div>
+
                 </div>
               </div>
             </Dropdown>

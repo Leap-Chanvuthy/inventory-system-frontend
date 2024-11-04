@@ -27,7 +27,7 @@ const CreateForm = () => {
     unit_price_in_riel: "",
     total_value_in_riel: "",
     minimum_stock_level: "",
-    raw_material_category: "",
+    raw_material_category_id: "",
     unit_of_measurement: "",
     package_size: "",
     status: "",
@@ -73,6 +73,26 @@ const CreateForm = () => {
     setValues({ ...values, image: updatedImages });
   };
 
+  // get raw material category
+  const [categories , setCategories] = useState([]);
+  console.log(categories)
+
+  useEffect(() =>{
+    const getCategory = async (e) =>{
+      try {
+        
+        const response = await axios.get(`${BASE_URL}/non-paginate/raw-material-categories`)
+        console.log(response.data);
+        setCategories(response.data);
+      }catch (err){
+        console.log(err);
+      }
+    }
+    getCategory();
+  } , [])
+
+  // Submit post request to backend
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(addRawMaterialStart());
@@ -90,7 +110,7 @@ const CreateForm = () => {
         unit_price: "",
         total_value: "",
         minimum_stock_level: "",
-        raw_material_category: "",
+        raw_material_category_id: "",
         unit_of_measurement: "",
         package_size: "",
         status: "",
@@ -296,7 +316,7 @@ const CreateForm = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="total_value_in_usd" value="Total Value" />
+                  <Label htmlFor="total_value_in_usd" value="Total Value in USD" />
                   <TextInput
                     id="total_value_in_usd"
                     type="text"
@@ -324,7 +344,7 @@ const CreateForm = () => {
               <div>
                   <Label
                     htmlFor="unit_price_in_riel"
-                    value="Total Value in Riel"
+                    value="Unit Price in Riel"
                   />
                   <TextInput
                     id="unit_price_in_riel"
@@ -382,28 +402,28 @@ const CreateForm = () => {
             <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
                 <Label
-                  htmlFor="raw_material_category"
+                  htmlFor="raw_material_category_id"
                   value="Raw Material Category"
                 />
                 <Select
-                  id="raw_material_category"
+                  id="raw_material_category_id"
                   placeholder="Enter raw material category"
-                  value={values.raw_material_category}
+                  value={values.raw_material_category_id}
                   onChange={handleChange}
                   helperText={
-                    error?.raw_material_category && (
+                    error?.raw_material_category_id && (
                       <>
                         <span className="font-medium text-red-400">
-                          {error.raw_material_category}
+                          {error.raw_material_category_id}
                         </span>
                       </>
                     )
                   }
                 >
                   <option value="">Select an option</option>
-                  <option value="CATEGORY_1">Category 1</option>
-                  <option value="CATEGORY_2">Category 2</option>
-                  <option value="CATEGORY_3">Category 3</option>
+                  {categories && categories.map((category) =>(
+                    <option value={category.id}>{category.category_name}</option>
+                  ))}
                 </Select>
               </div>
 

@@ -37,7 +37,7 @@ const RawMaterialExport = () => {
     minimum_stock_level: "",
     unit_of_measurement: "",
     package_size: "",
-    raw_material_category: "",
+    raw_material_category_id: "",
     start_date: "",
     end_date: "",
   });
@@ -49,6 +49,25 @@ const RawMaterialExport = () => {
     const value = e.target.value;
     setValues({ ...values, [key]: value });
   };
+
+  // get raw material category
+  const [categories, setCategories] = useState([]);
+  console.log(categories);
+
+  useEffect(() => {
+    const getCategory = async (e) => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/non-paginate/raw-material-categories`
+        );
+        console.log(response.data);
+        setCategories(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getCategory();
+  }, []);
 
   // get export file
   const exportRawMaterials = async (e) => {
@@ -65,28 +84,28 @@ const RawMaterialExport = () => {
           "filter[minimum_stock_level]": values.minimum_stock_level,
           "filter[unit_of_measurement]": values.unit_of_measurement,
           "filter[package_size]": values.package_size,
-          "filter[raw_material_category]": values.raw_material_category,
+          "filter[raw_material_category_id]": values.raw_material_category_id,
           "filter[start_date]": values.start_date,
           "filter[end_date]": values.end_date,
         },
       });
       console.log(response);
       if (response.status === 200) {
-        window.location.href = `${BASE_URL}/raw-materials/export?filter[name]=${values.name}&filter[status]=${values.status}&filter[material_code]=${values.material_code}&filter[remaining_quantity]=${values.remaining_quantity}&filter[minimum_stock_level]=${values.minimum_stock_level}&filter[unit_of_measurement]=${values.unit_of_measurement}&filter[package_size]=${values.package_size}&filter[raw_material_category]=${values.raw_material_category}&filter[start_date]=${values.start_date}&filter[end_date]=${values.end_date}`;
+        window.location.href = `${BASE_URL}/raw-materials/export?filter[name]=${values.name}&filter[status]=${values.status}&filter[material_code]=${values.material_code}&filter[remaining_quantity]=${values.remaining_quantity}&filter[minimum_stock_level]=${values.minimum_stock_level}&filter[unit_of_measurement]=${values.unit_of_measurement}&filter[package_size]=${values.package_size}&filter[raw_material_category_id]=${values.raw_material_category_id}&filter[start_date]=${values.start_date}&filter[end_date]=${values.end_date}`;
         setOpenModal(false);
         setValues({
-            name: "",
-            status: "",
-            material_code: "",
-            quantity: "",
-            remaining_quantity: "",
-            minimum_stock_level: "",
-            unit_of_measurement: "",
-            package_size: "",
-            raw_material_category: "",
-            start_date: "",
-            end_date: "",
-        })
+          name: "",
+          status: "",
+          material_code: "",
+          quantity: "",
+          remaining_quantity: "",
+          minimum_stock_level: "",
+          unit_of_measurement: "",
+          package_size: "",
+          raw_material_category_id: "",
+          start_date: "",
+          end_date: "",
+        });
       }
       setLoading(false);
       setSuccessToastOpen(true);
@@ -123,15 +142,23 @@ const RawMaterialExport = () => {
                 </div>
 
                 <div>
-                  <Label value="Raw Material Category" className="font-bold" />
+                  <Label
+                    htmlFor="raw_material_category_id"
+                    value="Raw Material Category"
+                  />
                   <Select
-                    id="raw_material_category"
-                    value={values.raw_material_category}
+                    id="raw_material_category_id"
+                    placeholder="Enter raw material category"
+                    value={values.raw_material_category_id}
                     onChange={handleChage}
                   >
                     <option value="">Select an option</option>
-                    <option value="Category 1">Category 1</option>
-                    <option value="Category 2">Category 2</option>
+                    {categories &&
+                      categories.map((category) => (
+                        <option value={category.id}>
+                          {category.category_name}
+                        </option>
+                      ))}
                   </Select>
                 </div>
 

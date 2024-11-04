@@ -34,7 +34,7 @@ const RawMaterialTable = ({ filters }) => {
           page,
           "filter[search]": filters.query,
           "filter[status]": filters.status,
-          "filter[raw_material_category]": filters.category,
+          "filter[raw_material_category_id]": filters.category_id,
           sort: filters.sort,
         },
       });
@@ -44,7 +44,7 @@ const RawMaterialTable = ({ filters }) => {
       setTotalItems(response.data.total);
     } catch (err) {
       dispatch(fetchRawMaterialsFailure(err?.message))
-      console.log("Failed to fetch raw materials: " + err.message);
+      console.log("Failed to fetch raw materials: " + err.response);
     }
   };
 
@@ -112,6 +112,7 @@ const RawMaterialTable = ({ filters }) => {
             <Table.HeadCell>Code</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
+            <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Quantity</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Remaining Quantity</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Unit Price in USD</Table.HeadCell>
@@ -158,6 +159,13 @@ const RawMaterialTable = ({ filters }) => {
                       )}
                     </div>
                   </Table.Cell>
+
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <div className="flex flex-wrap gap-2">
+                        <Badge color="warning">{material.category.category_name}</Badge>
+                    </div>
+                  </Table.Cell>
+
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.quantity}
                   </Table.Cell>

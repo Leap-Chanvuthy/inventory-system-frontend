@@ -72,7 +72,7 @@ const UpdateForm = () => {
     unit_price_in_riel: "",
     total_value_in_riel: "",
     minimum_stock_level: "",
-    raw_material_category: "",
+    raw_material_category_id: "",
     unit_of_measurement: "",
     package_size: "",
     status: "",
@@ -97,7 +97,7 @@ const UpdateForm = () => {
         unit_price_in_riel: rawMaterials?.unit_price_in_riel || "",
         total_value_in_riel: rawMaterials?.total_value_in_riel || "",
         minimum_stock_level: rawMaterials?.minimum_stock_level || "",
-        raw_material_category: rawMaterials?.raw_material_category || "",
+        raw_material_category_id: rawMaterials?.raw_material_category_id || "",
         unit_of_measurement: rawMaterials?.unit_of_measurement || "",
         package_size: rawMaterials?.package_size || "",
         status: rawMaterials?.status || "",
@@ -142,7 +142,27 @@ const UpdateForm = () => {
     setValues({ ...values, image: updatedImages });
   };
 
-  // handle submit form function
+
+  // get raw material category
+  const [categories , setCategories] = useState([]);
+  console.log(categories)
+
+  useEffect(() =>{
+    const getCategory = async (e) =>{
+      try {
+        
+        const response = await axios.get(`${BASE_URL}/non-paginate/raw-material-categories`)
+        console.log(response.data);
+        setCategories(response.data);
+      }catch (err){
+        console.log(err);
+      }
+    }
+    getCategory();
+  } , [])
+
+  
+  // Submit post request to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(updateRawMaterialStart());
@@ -440,30 +460,30 @@ const UpdateForm = () => {
 
             <h2 className="text-md font-semibold">Additional</h2>
             <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-              <div>
+            <div>
                 <Label
-                  htmlFor="raw_material_category"
+                  htmlFor="raw_material_category_id"
                   value="Raw Material Category"
                 />
                 <Select
-                  id="raw_material_category"
+                  id="raw_material_category_id"
                   placeholder="Enter raw material category"
-                  value={values.raw_material_category}
+                  value={values.raw_material_category_id}
                   onChange={handleChange}
                   helperText={
-                    error?.raw_material_category && (
+                    error?.raw_material_category_id && (
                       <>
                         <span className="font-medium text-red-400">
-                          {error.raw_material_category}
+                          {error.raw_material_category_id}
                         </span>
                       </>
                     )
                   }
                 >
                   <option value="">Select an option</option>
-                  <option value="CATEGORY_1">Category 1</option>
-                  <option value="CATEGORY_2">Category 2</option>
-                  <option value="CATEGORY_3">Category 3</option>
+                  {categories && categories.map((category) =>(
+                    <option value={category.id}>{category.category_name}</option>
+                  ))}
                 </Select>
               </div>
 

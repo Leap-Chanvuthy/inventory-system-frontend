@@ -119,10 +119,6 @@ const SupplierTable = ({ filters }) => {
     return <div className="text-center py-5 text-red-500">Suppliers data is invalid.</div>;
   }
 
-  if (suppliers.length === 0) {
-    return <div className="text-center py-5 text-red-500">No suppliers found.</div>;
-  }
-
   const locations = suppliers.map((supplier) => ({
     id: supplier.id,
     image : supplier.image,
@@ -140,7 +136,7 @@ const SupplierTable = ({ filters }) => {
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
-            <Table.HeadCell>Name / Company</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Name / Company</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Phone Number</Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
@@ -157,93 +153,97 @@ const SupplierTable = ({ filters }) => {
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            {suppliers.map((supplier) => (
-              <Table.Row
-                key={supplier.id}
-                className="bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  <Avatar
-                    img={
-                      supplier.image
-                        ? `${BASE_IMAGE_URL}/${supplier.image}`
-                        : ""
-                    }
-                  />
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.name}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.phone_number}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                {supplier.supplier_category === 'PRODUCT' && (
-                    <Badge color="success">{supplier.supplier_category}</Badge>
-                  )}
-                  {supplier.supplier_category === 'SERVICE' && (
-                    <Badge color="warning">{supplier.supplier_category}</Badge>
-                  )}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  <div className="flex flex-wrap gap-2">
-                    {supplier.supplier_status === 'ACTIVE' && (
-                      <Badge color="success">{supplier.supplier_status}</Badge>
+            {suppliers.length > 0 ? (
+              suppliers.map((supplier) => (
+                <Table.Row
+                  key={supplier.id}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Avatar
+                      img={supplier.image ? `${BASE_IMAGE_URL}/${supplier.image}` : ""}
+                    />
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.name}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.phone_number}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.supplier_category === 'PRODUCT' && (
+                      <Badge color="success">{supplier.supplier_category}</Badge>
                     )}
-                    {supplier.supplier_status === 'INACTIVE' && (
-                      <Badge color="warning">{supplier.supplier_status}</Badge>
+                    {supplier.supplier_category === 'SERVICE' && (
+                      <Badge color="warning">{supplier.supplier_category}</Badge>
                     )}
-                    {supplier.supplier_status === 'SUSPENDED' && (
-                      <Badge color="failure">{supplier.supplier_status}</Badge>
-                    )}
-                  </div>
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.location}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.contact_person}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.business_registration_number}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.bank_account_number}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.bank_name}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.supplier_code}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.address}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  {supplier.email}
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  <a href={supplier.website} target="_blank" rel="noopener noreferrer">
-                    {supplier.website}
-                  </a>
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  <a href={supplier.social_media} target="_blank" rel="noopener noreferrer">
-                    {supplier.social_media}
-                  </a>
-                </Table.Cell>
-                <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                  <Link to={`/supplier/update/${supplier.id}`}><FiEdit /></Link>
-                  <MdDelete
-                    className="text-red-600 text-lg cursor-pointer"
-                    onClick={() => {
-                      setOpenModal(true);
-                      setSelectedId(supplier.id);
-                    }}
-                  />
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <div className="flex flex-wrap gap-2">
+                      {supplier.supplier_status === 'ACTIVE' && (
+                        <Badge color="success">{supplier.supplier_status}</Badge>
+                      )}
+                      {supplier.supplier_status === 'INACTIVE' && (
+                        <Badge color="warning">{supplier.supplier_status}</Badge>
+                      )}
+                      {supplier.supplier_status === 'SUSPENDED' && (
+                        <Badge color="failure">{supplier.supplier_status}</Badge>
+                      )}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.location}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.contact_person}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.business_registration_number}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.bank_account_number}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.bank_name}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.supplier_code}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.address}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.email}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <a href={supplier.website} target="_blank" rel="noopener noreferrer">
+                      {supplier.website}
+                    </a>
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <a href={supplier.social_media} target="_blank" rel="noopener noreferrer">
+                      {supplier.social_media}
+                    </a>
+                  </Table.Cell>
+                  <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Link to={`/supplier/update/${supplier.id}`}><FiEdit /></Link>
+                    <MdDelete
+                      className="text-red-600 text-lg cursor-pointer"
+                      onClick={() => {
+                        setOpenModal(true);
+                        setSelectedId(supplier.id);
+                      }}
+                    />
+                  </Table.Cell>
+                </Table.Row>
+              ))
+            ) : (
+              <Table.Row>
+                <Table.Cell colSpan="16" className="text-center py-4">
+                  No suppliers found.
                 </Table.Cell>
               </Table.Row>
-            ))}
+            )}
           </Table.Body>
         </Table>
       </div>
