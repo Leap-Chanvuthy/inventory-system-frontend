@@ -16,8 +16,9 @@ import RawMaterialExport from "./export/RawMaterialExport";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import Create from "./category/Create";
+import CategoryTable from "./list/CategoryTable";
 
-const RawMaterialList = () => {
+const CategoryList = () => {
   const [filters, setFilters] = useState({
     query: "",
     category_id: "",
@@ -78,6 +79,7 @@ const RawMaterialList = () => {
   return (
     <div>
       <div>
+      <h3 className="text-lg font-bold">Raw Material Category</h3>
         <div className="my-5 flex flex-col lg:md:flex-row gap-3 justify-between">
           <form
             onSubmit={handleSearch}
@@ -108,14 +110,6 @@ const RawMaterialList = () => {
                   />
                   <label htmlFor="updated_at">Updated At</label>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    id="material_code"
-                    onChange={handleSortChange}
-                    checked={filters.sort.includes("material_code")}
-                  />
-                  <label htmlFor="material_code">Material Code</label>
-                </div>
               </div>
             </Dropdown>
 
@@ -129,23 +123,6 @@ const RawMaterialList = () => {
               </p>
               <div className="p-5">
                 <div className="flex flex-col gap-3">
-                  <div>
-                    <Label
-                      htmlFor="status"
-                      value="Status"
-                      className="mb-2 block"
-                    />
-                    <Select
-                      id="status"
-                      value={filters.status}
-                      onChange={handleFilterChange}
-                    >
-                      <option value="">Select Status</option>
-                      <option value="IN_STOCK">In stock</option>
-                      <option value="OUT_OF_STOCK">Out of stock</option>
-                    </Select>
-                  </div>
-
                   <div>
                     <Label
                       htmlFor="category_id"
@@ -170,31 +147,20 @@ const RawMaterialList = () => {
                 </div>
               </div>
             </Dropdown>
-
-            <div className="flex gap-3 items-center">
-              <RawMaterialExport />
-              <Link to='/raw-materials/recover'>
-                <Tooltip content="Recover">
-                  <Button color="success" className="flex justify-center items-center">
-                    <TbRestore className="text-xl" />{" "}
-                  </Button>
-                </Tooltip>
-              </Link>
-            </div>
-
             
+            {/* Refresh data */}
+            <Button color='success' onClick={resetFilters}>Refresh</Button>
+
           </form>
           <div className="flex gap-3 items-center">
-            <Link to="/raw-materials/create">
-              <Button color="info">Create New</Button>
-            </Link>
+            <Create />
           </div>
         </div>
       </div>
-
-      <RawMaterialTable filters={filters} />
+                        
+      <CategoryTable filters={filters} />
     </div>
   );
 };
 
-export default RawMaterialList;
+export default CategoryList;
