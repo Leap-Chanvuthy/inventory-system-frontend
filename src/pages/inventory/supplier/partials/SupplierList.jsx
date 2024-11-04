@@ -10,6 +10,7 @@ import {
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import SupplierTable from "./list/SupplierTable";
+import SupplierExport from "./Export/SupplierExport";
 
 const SupplierList = () => {
   const [filters, setFilters] = useState({
@@ -131,7 +132,7 @@ const SupplierList = () => {
                 </div>
               </Dropdown>
             </form>
-            <Button>Export</Button>
+            <SupplierExport />
           </div>
           <Link to="/suppliers/create">
             <Button color="info">Create New</Button>

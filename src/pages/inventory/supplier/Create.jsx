@@ -20,9 +20,9 @@ const Create = () => {
         <Tabs.Item title="Import Excel" icon={RiFileExcel2Line}>
             <SupplierImport />
         </Tabs.Item>
-        <Tabs.Item title="Download" icon={BsDownload}>
+        {/* <Tabs.Item title="Download" icon={BsDownload}>
           <SupplierExport />
-        </Tabs.Item>
+        </Tabs.Item> */}
       </Tabs>
     </div>
   );
