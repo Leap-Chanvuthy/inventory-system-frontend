@@ -59,7 +59,7 @@ const CategoryTable = ({ filters }) => {
 
     setStatus("loading");
     try {
-      const response = await axios.delete(`${BASE_URL}/raw-material/${selectedId}`);
+      const response = await axios.delete(`${BASE_URL}/raw-material-category/delete/${selectedId}`);
       if (response.status === 200) {
         setRawMaterials(rawMaterials.filter(material => material.id !== selectedId));
         setOpenModal(false);
@@ -158,7 +158,7 @@ const CategoryTable = ({ filters }) => {
             ) : (
               <Table.Row>
                 <Table.Cell colSpan="8" className="text-center py-4">
-                  No raw materials found.
+                  No categories found.
                 </Table.Cell>
               </Table.Row>
             )}

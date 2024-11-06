@@ -227,12 +227,12 @@ function UserTable({ filters }) {
         />
       </div>
 
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to delete this user ?</p></Modal.Header>
+      <Modal size='lg' show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header><p className="text-center font-bold text-sm capitalize">Are you sure want to delete ?</p></Modal.Header>
         <Modal.Body>
-          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 rounded-md">
+          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 ">
             <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500">Once user is deleted, Data will not be recoverd!</p>
+            <p className="text-red-500 text-sm">Once user is deleted, Data will not be recoverd!</p>
           </div>
         </Modal.Body>
 

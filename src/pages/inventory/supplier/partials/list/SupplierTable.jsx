@@ -26,6 +26,7 @@ import { Button, Modal } from "flowbite-react";
 import { LuAlertTriangle } from "react-icons/lu";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { HiCheck } from "react-icons/hi";
+import { ImWarning } from "react-icons/im";
 
 const SupplierTable = ({ filters }) => {
 
@@ -263,23 +264,18 @@ const SupplierTable = ({ filters }) => {
         <SupplierMap locations={locations} />
       </div>
       <>
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal size='lg' show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header><p className="text-center font-bold text-lg capitalize">Are you sure want to delete ?</p></Modal.Header>
         <Modal.Body>
-          <p className="text-center font-bold text-lg">Are you sure want to delete this supplier ?</p>
-          <div className="flex flex-col p-4 my-4 border-l-4 border-red-600 bg-red-100 rounded-md">
-            <div className="flex items-center gap-2 mx-4 font-bold text-red-900">
-              <LuAlertTriangle />
-              <p>Warning</p>
-            </div>
-            <p className="mx-4 text-red-400">Once you deleted this supplier, Data will not be recovered!</p>
+          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
+            <ImWarning className="text-lg text-red-500" />
+            <p className="text-red-500 capitalize">Item will be shown in recover list after deleted.</p>
           </div>
         </Modal.Body>
+
         <Modal.Footer>
           <Button onClick={handleDelete} color='failure'>
             {status == "loading" ? <Spinner /> : "Delete"}
-          </Button>
-          <Button onClick={() => setOpenModal(false)}>
-            Decline
           </Button>
         </Modal.Footer>
       </Modal>

@@ -162,7 +162,9 @@ const RawMaterialTable = ({ filters }) => {
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
-                        <Badge color="warning">{material.category.category_name}</Badge>
+                      <Badge color={material.category ? "warning" : "failure"}>
+                        {material.category ? material.category.category_name : 'NULL'}
+                      </Badge>
                     </div>
                   </Table.Cell>
 
@@ -226,12 +228,12 @@ const RawMaterialTable = ({ filters }) => {
         />
       </div>
 
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to delete this item ?</p></Modal.Header>
+      <Modal size='lg' show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header><p className="text-center font-bold text-lg capitalize">Are you sure want to delete ?</p></Modal.Header>
         <Modal.Body>
-          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 rounded-md">
+          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
             <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500">After successfully deleted, Item will be shown in active recover list.</p>
+            <p className="text-red-500 capitalize">Item will be shown in recover list after deleted.</p>
           </div>
         </Modal.Body>
 
