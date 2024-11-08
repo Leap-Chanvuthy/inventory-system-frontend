@@ -182,7 +182,7 @@ const PurchaseInvoiceList = () => {
             </Dropdown>
 
           </form>
-          <Link to="/raw-materials/create">
+          <Link to="/purchase-invoice/create">
             <Button color="info">Create New</Button>
           </Link>
         </div>
