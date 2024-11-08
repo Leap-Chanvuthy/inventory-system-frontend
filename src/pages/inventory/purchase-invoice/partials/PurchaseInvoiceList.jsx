@@ -187,7 +187,7 @@ const PurchaseInvoiceList = () => {
           </Link>
         </div>
 
-        <div className="flex gap-3 items-center">
+        {/* <div className="flex gap-3 items-center">
           <Link to='/raw-materials/recover'>
             <Tooltip content="Recover">
               <Button color="success" className="flex justify-center items-center">
@@ -195,7 +195,7 @@ const PurchaseInvoiceList = () => {
               </Button>
             </Tooltip>
           </Link>
-        </div>
+        </div> */}
       </div>
 
       <PurchaseInvoiceTable filters={filters} />  

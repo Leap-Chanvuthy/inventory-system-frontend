@@ -90,6 +90,7 @@ import UnauthenticatedRoute from "./components/privilege/UnauthenticatedRoute";
 import PublicRoute from "./components/privilege/PublicRoute";
 import PurchaseInvoice from "./pages/inventory/purchase-invoice/PurchaseInvoice";
 import CreatePurchaseInvoice from "./pages/inventory/purchase-invoice/Create";
+import UpdatePurchaseInvoice from "./pages/inventory/purchase-invoice/Update";
 
 function App() {
 
@@ -121,6 +122,7 @@ function App() {
           <Route path="/supplier/update/:id" element={<Layout><UpdateSupplier /></Layout>} />
           <Route path="/purchase-invoice" element={<Layout><PurchaseInvoice /></Layout>} />
           <Route path="/purchase-invoice/create" element={<Layout><CreatePurchaseInvoice /></Layout>} />
+          <Route path="/purchase-invoice/update/:id" element={<Layout><UpdatePurchaseInvoice /></Layout>} />
 
         </Route>
 
