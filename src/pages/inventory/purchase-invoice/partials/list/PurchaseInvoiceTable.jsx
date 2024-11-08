@@ -222,7 +222,7 @@ const handlePrint = (invoice) => {
                           <Badge color="warning">{invoice.payment_method}</Badge>
                           )}
                           {invoice.payment_method === "CASH" && (
-                          <Badge color="danger">{invoice.payment_method}</Badge>
+                          <Badge color="failure">{invoice.payment_method}</Badge>
                           )}
                         </div>
                     </Table.Cell>
