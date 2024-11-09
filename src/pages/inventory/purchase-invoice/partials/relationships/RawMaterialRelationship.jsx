@@ -152,7 +152,7 @@
 
 
 import { useState } from "react";
-import { TextInput, Select, Dropdown, Checkbox, Label } from "flowbite-react";
+import { TextInput, Select, Dropdown, Checkbox, Label , Button } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import RawMaterialRelationshipTable from "./table/RawMaterialRelationshipTable";
 
@@ -250,6 +250,7 @@ const RawMaterialRelationship = ({ onRawMaterialsSelected }) => {
               </div>
             </div>
           </Dropdown>
+          <Button color='success' onClick={resetFilters}>Refresh</Button>
         </form>
       </div>
       

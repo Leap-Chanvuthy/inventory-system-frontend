@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState , ReactDOMServer } from "react";
 import RawMaterialRelationship from "./relationships/RawMaterialRelationship";
 import {
   Label,
@@ -12,7 +12,7 @@ import {
   Checkbox,
   Badge,
 } from "flowbite-react";
-import { IoCartOutline } from "react-icons/io5";
+import { IoCartOutline, IoPrintOutline } from "react-icons/io5";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import {
   addInvoiceStart,
@@ -21,6 +21,9 @@ import {
   fetchInvoiceStart,
   fetchInvoiceSuccess,
   fetchInvoiceFailure,
+  updateInvoiceStart,
+  updateInvoiceSuccess,
+  updateInvoiceFailure,
 } from "../../../../redux/slices/invoiceSlice";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
@@ -91,14 +94,14 @@ const UpdateForm = () => {
   console.log(values);
 
   // handle selected raw material ids changes
-//   const [selectedRawMaterialIds, setSelectedRawMaterialIds] = useState([]);
-//   const handleRawMaterialsSelected = (selectedIds) => {
-//     setSelectedRawMaterialIds(selectedIds);
-//     setValues((prevValues) => ({ ...prevValues, raw_materials: selectedIds }));
-//   };
-    const handleRawMaterialsSelected = (selectedIds) => {
-        setValues((prevValues) => ({...prevValues, raw_materials: Array.from(new Set([...prevValues.raw_materials, ...selectedIds])),}));
-    };
+  const [selectedRawMaterialIds, setSelectedRawMaterialIds] = useState([]);
+  const handleRawMaterialsSelected = (selectedIds) => {
+    setSelectedRawMaterialIds(selectedIds);
+    setValues((prevValues) => ({ ...prevValues, raw_materials: selectedIds }));
+  };
+    // const handleRawMaterialsSelected = (selectedIds) => {
+    //     setValues((prevValues) => ({...prevValues, raw_materials: Array.from(new Set([...prevValues.raw_materials, ...selectedIds])),}));
+    // };
   
 
   // toggle raw material ids from api
@@ -118,25 +121,21 @@ const UpdateForm = () => {
     setValues({ ...values, [key]: value });
   };
 
+  // handle update invoice function
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addInvoiceStart());
+    dispatch(updateInvoiceStart());
     try {
-      const response = await axios.post(`${BASE_URL}/purchase-invoice`, values);
+      const response = await axios.patch(`${BASE_URL}/purchase-invoice/${id}`, values);
       console.log(response);
-      dispatch(addInvoiceSuccess(response.data));
+      dispatch(updateInvoiceSuccess(response));
       setSuccessToastOpen(true);
-      setValues({
-        payment_method: "",
-        payment_date: "",
-        discount_percentage: "",
-        tax_percentage: "",
-        clearing_payable_percentage: "",
-        raw_materials: [],
-      });
+          // Fetch the updated invoice details to ensure data consistency
+        const updatedInvoice = await axios.get(`${BASE_URL}/purchase-invoice/${id}`);
+        dispatch(fetchInvoiceSuccess(updatedInvoice.data));
     } catch (err) {
       console.log(err);
-      dispatch(addInvoiceFailure(err?.response?.data?.errors));
+      dispatch(updateInvoiceFailure(err?.response?.data?.errors));
       setFailToastOpen(true);
     }
   };
@@ -145,6 +144,16 @@ const UpdateForm = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <Timeline>
+          <Timeline.Item>
+            <Timeline.Point icon={IoPrintOutline} />
+            <Timeline.Content>
+              <Timeline.Title>Print Invoice</Timeline.Title>
+              <Timeline.Body>
+                <p className="capitalize">Click this button to print this invoice</p>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
           <Timeline.Item>
             <Timeline.Point icon={FaFileInvoiceDollar} />
             <Timeline.Content>
@@ -341,7 +350,9 @@ const UpdateForm = () => {
                                   checked={values.raw_materials.includes(
                                     invoiceDetail.id
                                   )}
-                                  onChange={() => toggleRawMaterial(invoiceDetail.id)}
+                                  onChange={() =>
+                                    toggleRawMaterial(invoiceDetail.id)
+                                  }
                                 />
                               </Table.Cell>
                               <Table.Cell className="whitespace-nowrap">
@@ -449,9 +460,8 @@ const UpdateForm = () => {
               </div>
               <Timeline.Body>
                 <RawMaterialRelationship
-                //   onRawMaterialsSelected={handleRawMaterialsSelected}
-                                  onRawMaterialsSelected={handleRawMaterialsSelected}
-                  selectedRawMaterials={values.raw_materials}
+                  //   onRawMaterialsSelected={handleRawMaterialsSelected}
+                  onRawMaterialsSelected={handleRawMaterialsSelected}
                 />
               </Timeline.Body>
             </Timeline.Content>
