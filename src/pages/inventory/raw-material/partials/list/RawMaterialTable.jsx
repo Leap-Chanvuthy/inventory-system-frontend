@@ -117,8 +117,10 @@ const RawMaterialTable = ({ filters }) => {
             <Table.HeadCell className="whitespace-nowrap">Remaining Quantity</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Unit Price in USD</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Total Value in USD</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Exchange Rate USD to Riel</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Unit Price in Riel</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Total Value in Riel</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Exchange Rate Riel to USD</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Minimum Stock</Table.HeadCell>
             <Table.HeadCell>location</Table.HeadCell>
             <Table.HeadCell>Created</Table.HeadCell>
@@ -174,10 +176,12 @@ const RawMaterialTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.remaining_quantity}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-green-600 dark:text-green-300">$ {material.unit_price_in_usd}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-green-600 dark:text-green-300">$ {material.total_value_in_usd}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-green-600 dark:text-green-300">{material.unit_price_in_riel} ​៛</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-green-600 dark:text-green-300">{material.total_value_in_riel} ​៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.unit_price_in_usd}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.total_value_in_usd}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">៛ {material.exchange_rate_from_usd_to_riel} / 1$</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.unit_price_in_riel} ​៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.total_value_in_riel} ​៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.exchange_rate_from_riel_to_usd} / 100៛</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.minimum_stock_level}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.location}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap">

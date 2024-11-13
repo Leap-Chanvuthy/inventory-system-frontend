@@ -3,6 +3,7 @@ import axios from 'axios';
 import PieChart from '../../../../../components/charts/PieChart';
 import BarChartComponent from '../../../../../components/charts/BarChart';
 import { BASE_URL } from '../../../../../components/const/constant';
+import TopSupplier from './TopSuppliers';
 
 const SupplierStats = () => {
   const [statusData, setStatusData] = useState([]);
@@ -53,6 +54,7 @@ const SupplierStats = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <PieChart data={pieData} title="Supplier Status Distribution" />
         <BarChartComponent title="Supplier Category Distribution" dataset={categoryDataset} />
+        <TopSupplier />
       </div>
     </div>
   );
