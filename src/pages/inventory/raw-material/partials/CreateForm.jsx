@@ -24,8 +24,10 @@ const CreateForm = () => {
     remaining_quantity: "",
     unit_price_in_usd: "",
     total_value_in_usd: "",
+    exchange_rate_from_usd_to_riel : "",
     unit_price_in_riel: "",
     total_value_in_riel: "",
+    exchange_rate_from_riel_to_usd : "",
     minimum_stock_level: "",
     raw_material_category_id: "",
     unit_of_measurement: "",
@@ -107,8 +109,11 @@ const CreateForm = () => {
         name: "",
         material_code: "",
         quantity: "",
-        unit_price: "",
-        total_value: "",
+        remaining_quantity: "",
+        unit_price_in_usd: "",
+        total_value_in_usd: "",
+        unit_price_in_riel: "",
+        total_value_in_riel: "",
         minimum_stock_level: "",
         raw_material_category_id: "",
         unit_of_measurement: "",
@@ -339,6 +344,30 @@ const CreateForm = () => {
                     }
                   />
                 </div>
+                <div>
+                  <Label htmlFor="exchange_rate_from_usd_to_riel" value="Exchange Rate From USD to Riel" />
+                  <TextInput
+                    id="exchange_rate_from_usd_to_riel"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.exchange_rate_from_usd_to_riel}
+                    onChange={handleChange}
+                    className={`${
+                      error?.exchange_rate_from_usd_to_riel
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.exchange_rate_from_usd_to_riel && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.exchange_rate_from_usd_to_riel}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
@@ -389,6 +418,30 @@ const CreateForm = () => {
                         <>
                           <span className="font-medium text-red-400">
                             {error.total_value_in_riel}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="exchange_rate_from_riel_to_usd" value="Exchange Rate From Riel to USD" />
+                  <TextInput
+                    id="exchange_rate_from_riel_to_usd"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.exchange_rate_from_riel_to_usd}
+                    onChange={handleChange}
+                    className={`${
+                      error?.exchange_rate_from_riel_to_usd
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.exchange_rate_from_riel_to_usd && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.exchange_rate_from_riel_to_usd}
                           </span>
                         </>
                       )
