@@ -34,8 +34,8 @@ const CreateForm = () => {
   const [values, setValues] = useState({
     payment_method: "",
     payment_date: "",
-    discount_percentage: "",
-    tax_percentage: "",
+    discount_percentage: 0,
+    tax_percentage: 0,
     clearing_payable_percentage: "",
     raw_materials: [],
   });
