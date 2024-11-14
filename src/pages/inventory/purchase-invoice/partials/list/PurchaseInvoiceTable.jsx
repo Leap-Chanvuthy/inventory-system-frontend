@@ -306,10 +306,10 @@ const handlePrint = (invoice) => {
           </p>
         </Modal.Header>
         <Modal.Body>
-          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 rounded-md">
+          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
             <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500">
-              After successfully deleted, Item will be shown in active recover
+            <p className="text-red-500  uppercase text-sm font-semibold">
+              After deleted, Item will be shown in active recover
               list.
             </p>
           </div>

@@ -230,9 +230,9 @@ const RecoverRawMaterialTable = ({ filters }) => {
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to recover this item ?</p></Modal.Header>
         <Modal.Body>
-          <div className="flex items-center gap-3 p-4 border-l-4 border-green-600 bg-green-100 rounded-md">
+          <div className="flex items-center gap-3 p-4 border-l-4 border-green-600 bg-green-100">
             <CiCircleCheck className="text-lg text-green-500" />
-            <p className="text-green-500">After successfully restored, Item will be shown in active list.</p>
+            <p className="text-green-500 uppercase text-sm font-semibold">After successfully restored, Item will be shown in active list.</p>
           </div>
         </Modal.Body>
         <Modal.Footer>

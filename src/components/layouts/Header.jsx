@@ -1,7 +1,7 @@
 import { MdLightMode } from "react-icons/md";
 import { MdNightlight } from "react-icons/md";
 import { HiMenu } from "react-icons/hi";
-import { Avatar } from "flowbite-react";
+import { Avatar} from "flowbite-react";
 import { useSelector , useDispatch } from "react-redux";
 import { toggleTheme } from "../../redux/slices/themeSlice";
 import { Link } from "react-router-dom";
@@ -37,7 +37,7 @@ const Header = ({ toggleSidebar }) => {
           }
           </div>
           <Link to='/profile'>
-            <Avatar img="https://www.leapchanvuthy.dev/images/Leapchanvuthy.png" rounded />
+            <Avatar img="https://www.leapchanvuthy.dev/images/Leapchanvuthy.png" status="online" statusPosition="top-right" bordered color='success' rounded />
           </Link>
         </div>
       </div>
