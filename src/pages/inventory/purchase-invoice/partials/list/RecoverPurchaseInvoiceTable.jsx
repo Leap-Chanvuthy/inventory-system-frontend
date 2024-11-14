@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Avatar, Badge, Button, Modal, Table } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { useEffect , useState } from "react";
+import { Badge, Button, Modal, Table, Tooltip } from "flowbite-react";
 import axios from "axios";
 import GlobalPagination from "../../../../../components/Pagination";
 import {
@@ -8,89 +7,33 @@ import {
 } from "../../../../../components/const/constant";
 import LoadingState from "./LoadingState";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { ImWarning } from "react-icons/im";
-import { FiEdit } from "react-icons/fi";
 import {
   fetchInvoiceStart,
   fetchInvoiceSuccess,
   fetchInvoiceFailure,
-  deleteInvoiceFailure,
-  deleteInvoiceStart,
-  deleteInvoiceSuccess,
+  recoverInvoiceStart,
+  recoverInvoiceSuccess,
+  recoverInvoiceFailure,
 } from "../../../../../redux/slices/invoiceSlice";
 import { SuccessToast } from "../../../../../components/ToastNotification";
-import { IoPrintOutline } from "react-icons/io5";
-import GenerateInvoice from "../print/GenerateInvoice";
-import ReactDOMServer from 'react-dom/server';
+import { TbRestore } from "react-icons/tb";
+import {CiCircleCheck} from 'react-icons/ci';
 
-
-const PurchaseInvoiceTable = ({ filters }) => {
+const RecoverPurchaseInvoiceTable = ({ filters }) => {
   const dispatch = useDispatch();
   const { invoices, error, status } = useSelector((state) => state.invoices);
-  const [successToastOpen, setSuccessToastOpen] = useState(false);
-  const [selectedId , setSelectedId] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [successToastOpen , setSuccessToastOpen] = useState(false);
+  const [openModal , setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  
-// Handle print function and states
-const handlePrint = (invoice) => {
-  const printWindow = window.open('', '_blank');
-  if (!printWindow) return;
 
-  const invoiceHTML = ReactDOMServer.renderToString(<GenerateInvoice invoice={invoice} />);
-
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>Print Invoice</title>
-        <style>
-          body { font-family: Arial, sans-serif; }
-          h1, h2 { color: #333; }
-          .invoice-container { margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; }
-          .invoice-title { font-size: 24px; text-align: center; margin-bottom: 20px; }
-          .invoice-info { margin-bottom: 20px; }
-          .invoice-info p { margin: 4px 0; font-size: 14px; }
-          .status { font-weight: bold; padding: 5px 10px; border-radius: 4px; color: #fff; text-transform: uppercase; }
-          .status.paid { background-color: #4caf50; }
-          .status.unpaid { background-color: #e53935; }
-          .section-title { font-size: 18px; font-weight: bold; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; }
-          .invoice-summary {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
-            gap: 20px; /* Space between grid items */
-            padding: 0; /* Remove default padding */
-            list-style: none; /* Remove bullets */
-          }
-          .invoice-summary li {
-            margin: 0; /* Remove margin for each item */
-          }
-          .invoice-table { width: 100%; margin-top: 20px; border-collapse: collapse; }
-          .invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-          .invoice-table th { background-color: #f1f1f1; }
-          .invoice-table tr:nth-child(even) { background-color: #f9f9f9; }
-          .thank-you { text-align: center; margin-top: 20px; font-style: italic; }
-        </style>
-      </head>
-      <body>${invoiceHTML}</body>
-    </html>
-  `);
-
-  printWindow.document.close();
-  printWindow.print();
-  printWindow.onafterprint = () => printWindow.close();
-};
-
-
-
-
-  const fetchInvoice = async (page = 1) => {
+  const fetchInvoices = async (page = 1) => {
     dispatch(fetchInvoiceStart());
     try {
-      const response = await axios.get(`${BASE_URL}/purchase-invoices`, {
+      const response = await axios.get(`${BASE_URL}/purchase-invoices/trashed`, {
         params: {
           page,
           'filter[search]' : filters.search,
@@ -98,52 +41,48 @@ const handlePrint = (invoice) => {
           'filter[payment_method]' : filters.payment_method,
           'filter[date_range][start_date]' : filters.start_date,
           'filter[date_range][end_date]' : filters.end_date,
-          sort : filters.sort
+          sort : filters.sort,
         },
       });
-      console.log(response);
       dispatch(fetchInvoiceSuccess(response.data.data));
       setCurrentPage(response.data.current_page);
       setTotalPages(response.data.last_page);
       setTotalItems(response.data.total);
     } catch (err) {
-      dispatch(fetchInvoiceFailure(err?.message));
-      console.log("Failed to fetch raw materials: " + err?.message);
+      dispatch(fetchInvoiceFailure(err?.message))
+      console.log("Failed to fetch raw materials: " + err.response);
     }
   };
 
   // Fetch data when filters or page changes
   useEffect(() => {
-    fetchInvoice(currentPage);
+    fetchInvoices(currentPage);
   }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
   };
 
-  // delete invoice function
-  const handleDelete = async () => {
+
+  // recover raw material function
+  const handleRecover = async () => {
     if (!selectedId) {
-      console.log("No user selected for deletion");
+      console.log("No raw material selected for deletion");
       return;
     }
-    dispatch(deleteInvoiceStart());
+    dispatch(recoverInvoiceStart());
     try {
-      const response = await axios.delete(
-        `${BASE_URL}/purchase-invoice/${selectedId}`
-      );
+      const response = await axios.patch(`${BASE_URL}/purchase-invoice/recover/${selectedId}`);
       console.log(response);
       if (response.status === 200) {
-        dispatch(deleteInvoiceSuccess(selectedId));
+        dispatch(recoverInvoiceSuccess(selectedId));
         setOpenModal(false);
         setSuccessToastOpen(true);
       }
     } catch (err) {
-      console.log("Delete error:", err.message);
+      console.log("Restore error:", err.response);
       dispatch(
-        deleteInvoiceFailure(
-          err.message || "Error deleting data from the server."
-        )
+        recoverInvoiceFailure(err.message || "Error restore data from the server.")
       );
     }
   };
@@ -151,6 +90,7 @@ const handlePrint = (invoice) => {
   if (!Array.isArray(invoices)) {
     return <LoadingState />;
   }
+
 
   if (status === "loading")
     return (
@@ -166,6 +106,7 @@ const handlePrint = (invoice) => {
         />
       </div>
     );
+
   if (status === "failed")
     return <div className="text-center py-5 text-red-500">{error}</div>;
 
@@ -174,7 +115,6 @@ const handlePrint = (invoice) => {
       <div className="overflow-x-auto lg:max-w-6xl  my-5">
         <Table striped>
         <Table.Head>
-            <Table.HeadCell className="whitespace-nowrap">Print</Table.HeadCell>
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Invoice Number</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Payment Method</Table.HeadCell>
@@ -203,12 +143,6 @@ const handlePrint = (invoice) => {
                   key={invoice.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800 font-medium text-gray-900 dark:text-white"
                 >
-                    <Table.Cell>
-                    <IoPrintOutline
-                      onClick={() => handlePrint(invoice)}
-                      className="text-lg text-center font-bold text-yellow-300 cursor-pointer"
-                    />
-                    </Table.Cell>
                     <Table.Cell>{invoice.id}</Table.Cell>
                     <Table.Cell>{invoice.invoice_number}</Table.Cell>
                     <Table.Cell>
@@ -261,17 +195,17 @@ const handlePrint = (invoice) => {
                         minute: '2-digit',
                     })}, {formatDistanceToNow(new Date(invoice.created_at))} ago
                   </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex items-center gap-2">
-                      <Link to={`/purchase-invoice/update/${invoice.id}`}><FiEdit className="text-green-600 dark:text-green-300 font-bold" /></Link>
-                      <MdDelete
-                        className="text-red-600 text-lg cursor-pointer"
-                        onClick={() => {
-                          setOpenModal(true);
-                          setSelectedId(invoice.id);
-                        }}
-                      />
-                    </div>
+
+                  <Table.Cell className="flex justify-center items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Tooltip content='Click to recover'>
+                        <TbRestore
+                          className="text-green-600 text-lg cursor-pointer"
+                          onClick={() => {
+                            setOpenModal(true);
+                            setSelectedId(invoice.id);
+                          }}
+                        />
+                    </Tooltip>
                   </Table.Cell>
 
                 </Table.Row>
@@ -279,7 +213,7 @@ const handlePrint = (invoice) => {
             ) : (
               <Table.Row>
                 <Table.Cell colSpan="8" className="text-center py-4">
-                  No purchase invoice found.
+                  No deleted purchase invoice found.
                 </Table.Cell>
               </Table.Row>
             )}
@@ -300,24 +234,16 @@ const handlePrint = (invoice) => {
       </div>
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>
-          <p className="text-center font-bold text-lg">
-            Are you sure want to delete this item ?
-          </p>
-        </Modal.Header>
+        <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to recover this item ?</p></Modal.Header>
         <Modal.Body>
-          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 rounded-md">
-            <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500">
-              After successfully deleted, Item will be shown in active recover
-              list.
-            </p>
+          <div className="flex items-center gap-3 p-4 border-l-4 border-green-600 bg-green-100 rounded-md">
+            <CiCircleCheck className="text-lg text-green-500" />
+            <p className="text-green-500">After successfully restored, Item will be shown in active list.</p>
           </div>
         </Modal.Body>
-
         <Modal.Footer>
-          <Button onClick={handleDelete} color="failure">
-            {status == "loading" ? <Spinner /> : "Delete"}
+          <Button onClick={handleRecover} color='success'>
+            {status == "loading" ? <Spinner /> : "Restore"}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -331,4 +257,4 @@ const handlePrint = (invoice) => {
   );
 };
 
-export default PurchaseInvoiceTable;
+export default RecoverPurchaseInvoiceTable;

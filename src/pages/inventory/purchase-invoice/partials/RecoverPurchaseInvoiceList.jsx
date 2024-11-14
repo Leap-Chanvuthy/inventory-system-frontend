@@ -1,59 +1,54 @@
 import { useState } from "react";
 import {
   TextInput,
-  Button,
   Select,
   Dropdown,
   Checkbox,
   Label,
-  Tooltip,
 } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
-import {TbRestore} from 'react-icons/tb';
-import { Link } from "react-router-dom";
-import PurchaseInvoiceTable from "./list/PurchaseInvoiceTable";
-
-const PurchaseInvoiceList = () => {
-  const [filters, setFilters] = useState({
-    search: "",
-    payment_method: "",
-    status: "",
-    start_date : "",
-    end_date :"",
-    sort: [],
-  });
-
-  const handleFilterChange = (e) => {
-    const { id, value } = e.target;
-    setFilters({ ...filters, [id]: value });
-  };
-
-  const handleSortChange = (e) => {
-    const { id, checked } = e.target;
-    if (checked) {
-      setFilters({ ...filters, sort: [...filters.sort, id] });
-    } else {
-      setFilters({
-        ...filters,
-        sort: filters.sort.filter((sortField) => sortField !== id),
+import RecoverPurchaseInvoiceTable from "./list/RecoverPurchaseInvoiceTable";
+const RecoverPurchaseInvoiceList = () => {
+    const [filters, setFilters] = useState({
+        search: "",
+        payment_method: "",
+        status: "",
+        start_date : "",
+        end_date :"",
+        sort: [],
       });
-    }
-  };
-
-  const resetFilters = () => {
-    setFilters({
-      search: "",
-      status: "",
-      payment_method: "",
-      start_date : "",
-      end_date :"",
-      sort: [],
-    });
-  };
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-  };
+    
+      const handleFilterChange = (e) => {
+        const { id, value } = e.target;
+        setFilters({ ...filters, [id]: value });
+      };
+    
+      const handleSortChange = (e) => {
+        const { id, checked } = e.target;
+        if (checked) {
+          setFilters({ ...filters, sort: [...filters.sort, id] });
+        } else {
+          setFilters({
+            ...filters,
+            sort: filters.sort.filter((sortField) => sortField !== id),
+          });
+        }
+      };
+    
+      const resetFilters = () => {
+        setFilters({
+          search: "",
+          status: "",
+          payment_method: "",
+          start_date : "",
+          end_date :"",
+          sort: [],
+        });
+      };
+    
+      const handleSearch = (e) => {
+        e.preventDefault();
+      };
 
   return (
     <div>
@@ -87,14 +82,6 @@ const PurchaseInvoiceList = () => {
                     checked={filters.sort.includes("updated_at")}
                   />
                   <label htmlFor="updated_at">Updated At</label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    id="material_code"
-                    onChange={handleSortChange}
-                    checked={filters.sort.includes("material_code")}
-                  />
-                  <label htmlFor="material_code">Material Code</label>
                 </div>
               </div>
             </Dropdown>
@@ -180,29 +167,14 @@ const PurchaseInvoiceList = () => {
                 </div>
               </div>
             </Dropdown>
-
-            <div className="flex gap-3 items-center">
-              <Link to='/purchase-invoices/recover'>
-                <Tooltip content="Recover">
-                  <Button color="success" className="flex justify-center items-center">
-                    <TbRestore className="text-xl" />{" "}
-                  </Button>
-                </Tooltip>
-              </Link>
-            </div>
-
           </form>
-          <Link to="/purchase-invoice/create">
-            <Button color="info">Create New</Button>
-          </Link>
         </div>
-
       </div>
 
-      <PurchaseInvoiceTable filters={filters} />  
+      <RecoverPurchaseInvoiceTable filters={filters} />  
 
     </div>
   );
 };
 
-export default PurchaseInvoiceList;
+export default RecoverPurchaseInvoiceList;
