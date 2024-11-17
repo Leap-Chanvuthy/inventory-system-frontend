@@ -110,7 +110,8 @@ const RecoverRawMaterialTable = ({ filters }) => {
           <Table.Head>
             <Table.HeadCell>Code</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
-            <Table.HeadCell>Material Status</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Material Status</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Category</Table.HeadCell>
             <Table.HeadCell>Quantity</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Status</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Remaining Quantity</Table.HeadCell>
@@ -139,12 +140,21 @@ const RecoverRawMaterialTable = ({ filters }) => {
                     {material.name}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.status === "IN_STOCK" && (
-                      <Badge color="success">{material.status}</Badge>
-                    )}
-                    {material.status === "OUT_OF_STOCK" && (
-                      <Badge color="failure">{material.status}</Badge>
-                    )}
+                    <div className="flex flex-wrap gap-2">
+                      {material.status === "IN_STOCK" && (
+                        <Badge color="success">{material.status}</Badge>
+                      )}
+                      {material.status === "OUT_OF_STOCK" && (
+                        <Badge color="failure">{material.status}</Badge>
+                      )}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                   <div className="flex flex-wrap gap-2">
+                      <Badge color={material.category ? "warning" : "failure"}>
+                        {material.category ? material.category.category_name : 'NULL'}
+                      </Badge>
+                    </div>
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.quantity}

@@ -145,6 +145,7 @@ const RawMaterialExport = () => {
                   <Label
                     htmlFor="raw_material_category_id"
                     value="Raw Material Category"
+                    className="font-bold"
                   />
                   <Select
                     id="raw_material_category_id"

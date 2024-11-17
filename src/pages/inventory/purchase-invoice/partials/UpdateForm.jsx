@@ -78,6 +78,8 @@ const UpdateForm = () => {
     raw_materials: [],
   });
 
+  console.log(values);
+
   useEffect(() => {
     if (invoices) {
       setValues({
@@ -144,16 +146,6 @@ const UpdateForm = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <Timeline>
-          <Timeline.Item>
-            <Timeline.Point icon={IoPrintOutline} />
-            <Timeline.Content>
-              <Timeline.Title>Print Invoice</Timeline.Title>
-              <Timeline.Body>
-                <p className="capitalize">Click this button to print this invoice</p>
-              </Timeline.Body>
-            </Timeline.Content>
-          </Timeline.Item>
-
           <Timeline.Item>
             <Timeline.Point icon={FaFileInvoiceDollar} />
             <Timeline.Content>
@@ -309,9 +301,11 @@ const UpdateForm = () => {
                       <Table.HeadCell className="whitespace-nowrap">
                         Select
                       </Table.HeadCell>
+                      <Table.HeadCell>ID</Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
                         Code
                       </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
                         Status
                       </Table.HeadCell>
@@ -355,8 +349,12 @@ const UpdateForm = () => {
                                   }
                                 />
                               </Table.Cell>
+                              <Table.Cell>{invoiceDetail?.raw_material?.id}</Table.Cell>
                               <Table.Cell className="whitespace-nowrap">
                                 {invoiceDetail?.raw_material?.material_code}
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {invoiceDetail?.raw_material?.name}
                               </Table.Cell>
                               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                 <div className="flex flex-wrap gap-2">
