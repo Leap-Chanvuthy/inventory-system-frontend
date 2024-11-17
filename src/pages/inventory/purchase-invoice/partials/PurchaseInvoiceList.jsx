@@ -12,6 +12,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import {TbRestore} from 'react-icons/tb';
 import { Link } from "react-router-dom";
 import PurchaseInvoiceTable from "./list/PurchaseInvoiceTable";
+import PurchaseInvoiceExport from "./export/PurchaseInvoiceExport";
 
 const PurchaseInvoiceList = () => {
   const [filters, setFilters] = useState({
@@ -180,6 +181,7 @@ const PurchaseInvoiceList = () => {
                 </div>
               </div>
             </Dropdown>
+            <PurchaseInvoiceExport />
 
             <div className="flex gap-3 items-center">
               <Link to='/purchase-invoices/recover'>
