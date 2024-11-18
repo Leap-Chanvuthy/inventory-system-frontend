@@ -92,6 +92,8 @@ import PurchaseInvoice from "./pages/inventory/purchase-invoice/PurchaseInvoice"
 import CreatePurchaseInvoice from "./pages/inventory/purchase-invoice/Create";
 import UpdatePurchaseInvoice from "./pages/inventory/purchase-invoice/Update";
 import RecoverPurchaseInvoice from "./pages/inventory/purchase-invoice/RecoverPurchaseInvoice";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 function App() {
 
@@ -139,6 +141,8 @@ function App() {
         {/* Unauthenticated Routes */}
         <Route element={<UnauthenticatedRoute />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/test" element={<Test />} />
         </Route>
       </Routes>

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../../components/const/constant";
 import axios from "axios";
 import { DangerToast } from "../../components/ToastNotification";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const { error, status } = useSelector((state) => state.auth);
@@ -42,8 +43,8 @@ const Login = () => {
   };
 
   return (
-    <div className="">
-      <div className="flex items-center justify-center">
+    <div className="h-screen bg-gray-200">
+      <div className="flex justify-center">
         <DangerToast
           open={failToastOpen}
           onClose={() => setFailToastOpen(false)}
@@ -51,7 +52,7 @@ const Login = () => {
         />
         <form
           onSubmit={handleLogin}
-          className="flex flex-col gap-4 max-w-md w-full p-6 rounded-lg"
+          className="flex flex-col gap-4 max-w-md w-full p-6 my-10 mx-5 h-[30rem] rounded-lg bg-white"
         >
           <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
           <div>
@@ -106,6 +107,7 @@ const Login = () => {
           <Button type="submit" className="w-full">
             {status == "loading" ? <Spinner /> : "Login"}
           </Button>
+          <Link to='/forgot-password'><p className="text-center underline">Forgot password ?</p></Link>
         </form>
       </div>
     </div>

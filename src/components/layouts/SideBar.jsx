@@ -60,13 +60,6 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
             </Sidebar.Collapse>
             <Sidebar.Collapse
               href="#"
-              icon={RiMoneyPoundCircleLine}
-              label="Accounting"
-            >
-              <Sidebar.Item href="#">Currency</Sidebar.Item>
-            </Sidebar.Collapse>
-            <Sidebar.Collapse
-              href="#"
               icon={TbBrandGoogleAnalytics}
               label="Report Analytics"
             >
@@ -74,9 +67,6 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
               <Sidebar.Item href="#">Customer</Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Item href="#" icon={PiSignOut}>
-              <span className="text-red font-medium">Sign Out</span>
-            </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>

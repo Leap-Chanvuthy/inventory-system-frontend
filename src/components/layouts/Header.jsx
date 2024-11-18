@@ -1,10 +1,12 @@
 import { MdLightMode } from "react-icons/md";
 import { MdNightlight } from "react-icons/md";
 import { HiMenu } from "react-icons/hi";
-import { Avatar} from "flowbite-react";
+import { Avatar, Dropdown} from "flowbite-react";
 import { useSelector , useDispatch } from "react-redux";
 import { toggleTheme } from "../../redux/slices/themeSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { persistor } from '../../redux/store';
+import { logout } from "../../redux/slices/authSlice";
 
 const Header = ({ toggleSidebar }) => {
 
@@ -13,6 +15,15 @@ const Header = ({ toggleSidebar }) => {
   const toggle = () =>{
     dispatch(toggleTheme());
   }
+
+  // Logout Function 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    persistor.purge();
+    navigate('/login');
+  };
 
   return (
     <header className="w-full h-14 p-4 flex items-center justify-between">
@@ -36,9 +47,16 @@ const Header = ({ toggleSidebar }) => {
             </div>
           }
           </div>
-          <Link to='/profile'>
-            <Avatar img="https://www.leapchanvuthy.dev/images/Leapchanvuthy.png" status="online" statusPosition="top-right" bordered color='success' rounded />
-          </Link>
+          <Avatar img="https://www.leapchanvuthy.dev/images/Leapchanvuthy.png" status="online" statusPosition="top-right" bordered color='success' rounded />
+          <Dropdown size='sm' inline>
+            <Dropdown.Header>
+              <span className="block text-sm">Bonnie Green</span>
+              <span className="block truncate text-sm font-medium">bonnie@flowbite.com</span>
+            </Dropdown.Header>
+            <Link to='/profile'><Dropdown.Item>Profile</Dropdown.Item></Link>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
+          </Dropdown>
         </div>
       </div>
     </header>
