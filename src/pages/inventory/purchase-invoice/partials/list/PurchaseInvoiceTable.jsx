@@ -194,6 +194,7 @@ const handlePrint = (invoice) => {
             <Table.HeadCell className="whitespace-nowrap">Discount (%)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Tax (%)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Created At</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Updated At</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Actions</Table.HeadCell>
             </Table.Head>
           <Table.Body className="divide-y">
@@ -260,6 +261,9 @@ const handlePrint = (invoice) => {
                         hour: '2-digit',
                         minute: '2-digit',
                     })}, {formatDistanceToNow(new Date(invoice.created_at))} ago
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap">
+                     {formatDistanceToNow(new Date(invoice.created_at))} ago
                   </Table.Cell>
                   <Table.Cell>
                     <div className="flex items-center gap-2">

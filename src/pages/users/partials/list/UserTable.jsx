@@ -19,12 +19,13 @@ import {
 import LoadingState from "../../../inventory/supplier/partials/list/LoadingState";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { SuccessToast } from "../../../../components/ToastNotification";
-import { LuAlertTriangle } from "react-icons/lu";
+import { DangerToast, SuccessToast } from "../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
+import useToken from "../../../../hooks/useToken";
 
 function UserTable({ filters }) {
   const dispatch = useDispatch();
+  const token = useToken();
   const { users, status, error } = useSelector((state) => state.users);
 
   // Fetch data & pagination
@@ -42,6 +43,9 @@ function UserTable({ filters }) {
           "filter[role]": filters.role,
           sort: filters.sort,
         },
+        headers : {
+          Authorization: `Bearer ${token}`,
+        }
       });
       dispatch(fetchUsersSuccess(response.data.data));
       setCurrentPage(response.data.current_page);
@@ -51,7 +55,7 @@ function UserTable({ filters }) {
       console.error("Failed to fetch user:", err);
       dispatch(
         fetchUsersFailure(
-          err.message || "Failed to fetch data from the server."
+          err?.response?.data?.message || "Failed to fetch data from the server."
         )
       );
     }
@@ -88,6 +92,7 @@ function UserTable({ filters }) {
       }
     } catch (err) {
       console.log("Delete error:", err.message);
+      setFailedToastOpen(true);
       dispatch(
         deleteUserFailure(err.message || "Error deleting data from the server.")
       );

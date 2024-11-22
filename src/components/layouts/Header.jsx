@@ -1,12 +1,13 @@
 import { MdLightMode } from "react-icons/md";
 import { MdNightlight } from "react-icons/md";
 import { HiMenu } from "react-icons/hi";
-import { Avatar, Dropdown} from "flowbite-react";
+import { Avatar, Badge, Dropdown} from "flowbite-react";
 import { useSelector , useDispatch } from "react-redux";
 import { toggleTheme } from "../../redux/slices/themeSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { persistor } from '../../redux/store';
 import { logout } from "../../redux/slices/authSlice";
+import { BASE_IMAGE_URL } from "../const/constant";
 
 const Header = ({ toggleSidebar }) => {
 
@@ -15,6 +16,12 @@ const Header = ({ toggleSidebar }) => {
   const toggle = () =>{
     dispatch(toggleTheme());
   }
+  // current user
+  const {currentUser} = useSelector((state) => state.auth);
+  const userEmail = currentUser?.user?.email;
+  const userName = currentUser?.user?.name;
+  const userRole = currentUser?.user?.role;
+  console.log(currentUser);
 
   // Logout Function 
   const navigate = useNavigate();
@@ -47,11 +54,14 @@ const Header = ({ toggleSidebar }) => {
             </div>
           }
           </div>
-          <Avatar img="https://www.leapchanvuthy.dev/images/Leapchanvuthy.png" status="online" statusPosition="top-right" bordered color='success' rounded />
+          <Avatar className="object-cover" img={`${BASE_IMAGE_URL}/${currentUser?.user?.profile_picture}`} status="online" statusPosition="top-right" bordered color='success' rounded />
           <Dropdown size='sm' inline>
             <Dropdown.Header>
-              <span className="block text-sm">Bonnie Green</span>
-              <span className="block truncate text-sm font-medium">bonnie@flowbite.com</span>
+              <div className="flex flex-col gap-2">
+                <span className="block text-sm">{userName}</span>
+                <span className="block truncate text-sm font-medium">{userEmail}</span>
+                <div className="flex flex-wrap gap-2"><Badge color='success'>{userRole}</Badge></div>
+              </div>
             </Dropdown.Header>
             <Link to='/profile'><Dropdown.Item>Profile</Dropdown.Item></Link>
             <Dropdown.Divider />

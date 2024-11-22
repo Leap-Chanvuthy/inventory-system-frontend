@@ -94,6 +94,7 @@ import UpdatePurchaseInvoice from "./pages/inventory/purchase-invoice/Update";
 import RecoverPurchaseInvoice from "./pages/inventory/purchase-invoice/RecoverPurchaseInvoice";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import NotFound from "./components/NotFound";
 
 function App() {
 
@@ -131,7 +132,8 @@ function App() {
         </Route>
 
         {/* Admin Only Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+        {/* element={<ProtectedRoute allowedRoles={['ADMIN']} />} */}
+        <Route >
           <Route path="/users" element={<Layout><Users /></Layout>} />
           <Route path="/users/create" element={<Layout><CreateUser /></Layout>} />
           <Route path="/users/update/:id" element={<Layout><UpdateUser /></Layout>} />
@@ -141,10 +143,13 @@ function App() {
         {/* Unauthenticated Routes */}
         <Route element={<UnauthenticatedRoute />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/test" element={<Test />} />
         </Route>
+
+        {/* Public Route That not Required Login */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

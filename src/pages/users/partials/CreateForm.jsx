@@ -10,9 +10,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../../components/const/constant";
+import useToken from "../../../hooks/useToken";
 
 const CreateForm = () => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { error, loading, status } = useSelector((state) => state.users);
   console.log(error);
 
@@ -54,6 +56,7 @@ const CreateForm = () => {
       const response = await axios.post(`${BASE_URL}/users`, values , {
         headers: {
           "Content-Type": "multipart/form-data",
+           Authorization : `Bearer ${token}`
         },
       });
       console.log(response);

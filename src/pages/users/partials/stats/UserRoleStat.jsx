@@ -1,22 +1,24 @@
 import { useState , useEffect } from "react";
 import axios from "axios";
-import { addUserStart , addUserSuccess , addUserFailure } from "../../../../redux/slices/userSlice";
-import { useSelector ,  useDispatch } from "react-redux";
 import { BASE_URL } from "../../../../components/const/constant";
 import PieChart from "../../../../components/charts/PieChart";
+import useToken from "../../../../hooks/useToken";
 
 
 
 const UserRoleStat = () => {
     const [userRole, setUserRole] = useState([]);
     const [loading, setLoading] = useState(true);
+    const token = useToken();
   
 
 
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await axios.get(`${BASE_URL}/users/role-counts`);
+            const response = await axios.get(`${BASE_URL}/users/role-counts` , {
+              headers : {Authorization : `Bearer ${token}`}
+            });
             setUserRole(response.data.user_role || []);
           } catch (error) {
             console.error("Error fetching data", error);

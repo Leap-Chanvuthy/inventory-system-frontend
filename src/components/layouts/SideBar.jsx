@@ -28,8 +28,8 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
         </button>
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item href="/" active={pathname === "/"} icon={GoHome}>
-              Dashboard
+            <Sidebar.Item active={pathname === "/"} icon={GoHome}>
+              <Link to='/'>Dashboard</Link>
             </Sidebar.Item>
             <Sidebar.Item
               active={pathname === "/users"}
