@@ -27,7 +27,7 @@ const Update = ({raw_material_category_id}) => {
     const getCategory = async () =>{
         try {
             const response = await axios.get(`${BASE_URL}/raw-material-category/${raw_material_category_id}`);
-            console.log(response);
+            //console.log(response);
             setCategories(response.data)
         }catch (err){
             console.log(err);

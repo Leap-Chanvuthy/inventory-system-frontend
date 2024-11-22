@@ -133,7 +133,7 @@ function App() {
 
         {/* Admin Only Routes */}
         {/* element={<ProtectedRoute allowedRoles={['ADMIN']} />} */}
-        <Route >
+        <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />} >
           <Route path="/users" element={<Layout><Users /></Layout>} />
           <Route path="/users/create" element={<Layout><CreateUser /></Layout>} />
           <Route path="/users/update/:id" element={<Layout><UpdateUser /></Layout>} />

@@ -9,9 +9,15 @@ import { PiSignOut } from "react-icons/pi";
 import { HiMenu } from "react-icons/hi";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const SideBar = ({ isOpen, toggleSidebar }) => {
   const pathname = useLocation().pathname;
+  const {currentUser} = useSelector((state) => state.auth);
+
+  const userRole = currentUser?.user?.role;
+
+  console.log(currentUser);
 
   return (
     <div
@@ -28,16 +34,24 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
         </button>
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item active={pathname === "/"} icon={GoHome}>
-              <Link to='/'>Dashboard</Link>
+            <Sidebar.Item active={pathname === "/"}  icon={GoHome}>
+              <Link to='/'><span className="font-bold">Dashboard</span></Link>
             </Sidebar.Item>
+
+            {/* Only allow Admin user */}
+            {userRole == 'ADMIN' ?
             <Sidebar.Item
               active={pathname === "/users"}
               icon={FiUsers}
             >
-              <Link to='/users'>Users</Link>
+              <Link to='/users'><span className="font-bold">Users</span></Link>
             </Sidebar.Item>
-            <Sidebar.Collapse icon={MdOutlineInventory2} label="Inventory">
+            : <></>
+            }
+
+            {/* Only allow Admin & Stock Controller user */}
+            {userRole == 'ADMIN' || userRole == 'STOCK_CONTROLLER' ?
+            <Sidebar.Collapse icon={MdOutlineInventory2} label="Inventory" className="font-bold">
               <Sidebar.Item href="/products" active={pathname === "/products"}>
                 Products
               </Sidebar.Item>
@@ -51,17 +65,26 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
                 <Link to='/suppliers'>Suppliers</Link>
               </Sidebar.Item>
             </Sidebar.Collapse>
-            <Sidebar.Collapse href="#" icon={BsCart3} label="Sale">
+            : <></>
+            }
+
+            {/* Only allow Admin & Vender user */}
+            {userRole == 'ADMIN' || userRole == 'VENDER' ?
+            <Sidebar.Collapse href="#" icon={BsCart3} label="Sale" className="font-bold">
               <Sidebar.Item href="#">Sale Order</Sidebar.Item>
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
               <Sidebar.Item href="/customer" active={pathname === "/customer"}>
                 Customer
               </Sidebar.Item>
             </Sidebar.Collapse>
+            : <></>
+            }
+
             <Sidebar.Collapse
               href="#"
               icon={TbBrandGoogleAnalytics}
               label="Report Analytics"
+              className="font-bold"
             >
               <Sidebar.Item href="#">Sale Order</Sidebar.Item>
               <Sidebar.Item href="#">Invoice</Sidebar.Item>

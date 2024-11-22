@@ -29,7 +29,7 @@ const CategoryList = () => {
 
     // get raw material category
     const [categories , setCategories] = useState([]);
-    console.log(categories)
+    // console.log(categories)
   
     useEffect(() =>{
       const getCategory = async (e) =>{
