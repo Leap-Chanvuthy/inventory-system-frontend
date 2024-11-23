@@ -21,7 +21,6 @@ const Header = ({ toggleSidebar }) => {
   const userEmail = currentUser?.user?.email;
   const userName = currentUser?.user?.name;
   const userRole = currentUser?.user?.role;
-  console.log(currentUser);
 
   // Logout Function 
   const navigate = useNavigate();

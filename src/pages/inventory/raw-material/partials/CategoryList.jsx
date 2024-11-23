@@ -147,9 +147,9 @@ const CategoryList = () => {
                 </div>
               </div>
             </Dropdown>
-            
             {/* Refresh data */}
             <Button color='success' onClick={resetFilters}>Refresh</Button>
+            
 
           </form>
           <div className="flex gap-3 items-center">

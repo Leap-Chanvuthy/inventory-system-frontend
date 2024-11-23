@@ -14,10 +14,7 @@ import { useSelector } from "react-redux";
 const SideBar = ({ isOpen, toggleSidebar }) => {
   const pathname = useLocation().pathname;
   const {currentUser} = useSelector((state) => state.auth);
-
   const userRole = currentUser?.user?.role;
-
-  console.log(currentUser);
 
   return (
     <div
