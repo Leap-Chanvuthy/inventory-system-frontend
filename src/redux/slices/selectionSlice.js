@@ -45,6 +45,9 @@ const selectionSlice = createSlice({
       const id = action.payload;
       state.singleSelection = state.singleSelection === id ? null : id;
     },
+    resetSingleSelectionState : (state) =>{
+      state.singleSelection = null;
+    },
     setMultipleSelection: (state, action) => {
       state.multipleSelection = action.payload;
     },
@@ -56,6 +59,9 @@ const selectionSlice = createSlice({
         state.multipleSelection.push(id);
       }
     },
+    resetMultipleSelectionState : (state) =>{
+      state.multipleSelection = [];
+    },
   },
 });
 
@@ -64,6 +70,8 @@ export const {
   toggleMultipleSelection,
   setSingleSelection,
   setMultipleSelection,
+  resetSingleSelectionState,
+  resetMultipleSelectionState,
 } = selectionSlice.actions;
 
 export default selectionSlice.reducer;

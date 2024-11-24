@@ -156,7 +156,7 @@ import { TextInput, Select, Dropdown, Checkbox, Label , Button } from "flowbite-
 import { IoSearchOutline } from "react-icons/io5";
 import RawMaterialRelationshipTable from "./table/RawMaterialRelationshipTable";
 
-const RawMaterialRelationship = ({ onRawMaterialsSelected }) => {
+const RawMaterialRelationship = ({createStatus}) => {
   const [filters, setFilters] = useState({
     query: "",
     category: "",
@@ -194,10 +194,6 @@ const RawMaterialRelationship = ({ onRawMaterialsSelected }) => {
     e.preventDefault();
   };
 
-  // This function receives selected raw materials' ids
-  const handleSelectedIdsChange = (selectedIds) => {
-    onRawMaterialsSelected(selectedIds);
-  };
 
   return (
     <div>
@@ -254,7 +250,7 @@ const RawMaterialRelationship = ({ onRawMaterialsSelected }) => {
         </form>
       </div>
       
-      <RawMaterialRelationshipTable filters={filters} onSelectedIdsChange={handleSelectedIdsChange} />
+      <RawMaterialRelationshipTable filters={filters} createStatus={createStatus}  />
     </div>
   );
 };

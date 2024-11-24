@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RawMaterialRelationship from "./relationships/RawMaterialRelationship";
 import { Label, Select, TextInput, Button, Timeline, Alert, Spinner } from "flowbite-react";
 import { IoCartOutline } from "react-icons/io5";
@@ -16,6 +16,7 @@ import {
   SuccessToast,
 } from "../../../../components/ToastNotification";
 import { HiInformationCircle } from "react-icons/hi";
+import { resetMultipleSelectionState } from "../../../../redux/slices/selectionSlice";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -27,6 +28,8 @@ const payment_methods = [
 const CreateForm = () => {
   const dispatch = useDispatch();
   const { error, status } = useSelector((state) => state.invoices);
+  const { multipleSelection } = useSelector((state) => state.selections);
+  console.log(multipleSelection)
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
 
@@ -41,13 +44,6 @@ const CreateForm = () => {
   });
   console.log(values);
 
-  // handle selected raw material ids changes
-  const [selectedRawMaterialIds, setSelectedRawMaterialIds] = useState([]);
-  const handleRawMaterialsSelected = (selectedIds) => {
-    setSelectedRawMaterialIds(selectedIds);
-    setValues((prevValues) => ({ ...prevValues, raw_materials: selectedIds }));
-  };
-  
 
   // handle values change
   const handleChange = (e) => {
@@ -55,6 +51,10 @@ const CreateForm = () => {
     const value = e.target.value;
     setValues({ ...values, [key]: value });
   };
+
+  useEffect(() =>{
+    setValues((prevValues) => ({...prevValues , raw_materials : multipleSelection}))
+  },[multipleSelection])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,6 +72,7 @@ const CreateForm = () => {
         clearing_payable_percentage: "",
         raw_materials: [],
       })
+      dispatch(resetMultipleSelectionState());
     } catch (err) {
       console.log(err);
       dispatch(addInvoiceFailure(err?.response?.data?.errors));
@@ -242,9 +243,7 @@ const CreateForm = () => {
                     }  
                 </div>
               <Timeline.Body>
-                <RawMaterialRelationship
-                  onRawMaterialsSelected={handleRawMaterialsSelected}
-                />
+                <RawMaterialRelationship createStatus={status} />
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>

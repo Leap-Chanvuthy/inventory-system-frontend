@@ -81,3 +81,4 @@ Application will run on port 5173 by default
 ![Image Alt Text](/images/1-forgot-password.png)
 ![Image Alt Text](/images/1-profile.png)
 ![Image Alt Text](/images/1-profile-password.png)
+<a href="https://instagram.com/cchanvuthyy" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="cchanvuthyy" height="30" width="40" /></a>

@@ -13,10 +13,12 @@ import { ImWarning } from "react-icons/im";
 import {FiEdit} from 'react-icons/fi';
 import { SuccessToast } from "../../../../../../components/ToastNotification";
 import { HiInformationCircle } from "react-icons/hi";
+import { toggleMultipleSelection } from "../../../../../../redux/slices/selectionSlice";
 
-const RawMaterialRelationshipTable = ({ filters , onSelectedIdsChange }) => {
+const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   const dispatch = useDispatch();
   const {rawMaterials , error , status} =  useSelector((state) => state.rawMaterials);
+  const {multipleSelection} = useSelector((state) => state.selections);
   const [selectedId, setSelectedId] = useState(null);
   const [successToastOpen , setSuccessToastOpen] = useState(false);
   const [openModal , setOpenModal] = useState(false);
@@ -47,21 +49,15 @@ const RawMaterialRelationshipTable = ({ filters , onSelectedIdsChange }) => {
   };
 
   // Function to hanlde selected id change of raw materials
-
-  const [selectedIds, setSelectedIds] = useState([]);
-  const handleSelect = (id) => {
-    const newSelectedIds = selectedIds.includes(id)
-      ? selectedIds.filter((selectedId) => selectedId !== id)
-      : [...selectedIds, id];
-    setSelectedIds(newSelectedIds);
-    onSelectedIdsChange(newSelectedIds);
+  const handleMultipleSelect = (id) => {
+    dispatch(toggleMultipleSelection(id));
   };
 
 
   // Fetch data when filters or page changes
   useEffect(() => {
     fetchRawMaterials(currentPage);
-  }, [filters, currentPage]);
+  }, [filters, currentPage , createStatus=='succeeded']);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
@@ -146,8 +142,8 @@ const RawMaterialRelationshipTable = ({ filters , onSelectedIdsChange }) => {
                 >
                   <Table.Cell>
                   <Checkbox
-                    checked={selectedIds.includes(material.id)}
-                    onChange={() => handleSelect(material.id)}
+                    checked={multipleSelection.includes(material.id)}
+                    onChange={() => handleMultipleSelect(material.id)}
                   />
                   </Table.Cell>  
                   <Table.Cell>
