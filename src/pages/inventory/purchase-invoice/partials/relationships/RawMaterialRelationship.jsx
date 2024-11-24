@@ -246,7 +246,6 @@ const RawMaterialRelationship = ({createStatus}) => {
               </div>
             </div>
           </Dropdown>
-          <Button color='success' onClick={resetFilters}>Refresh</Button>
         </form>
       </div>
       

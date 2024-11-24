@@ -43,7 +43,11 @@ const GenerateInvoice = ({ invoice }) => (
           <tr key={item.id}>
             <td>{item.quantity}</td>
             <td>{item.raw_material.name}</td>
-            <td>{item.raw_material.supplier.name}</td>
+            { item.raw_material.supplier ? 
+              <td>{item.raw_material.supplier.name}</td>
+              :
+              <td>Not available</td>
+            }
             <td>{item.raw_material.unit_price_in_riel.toFixed(2)} ៛</td>
             <td>{item.total_price_in_riel.toFixed(2)} ៛</td>
             <td>${item.raw_material.unit_price_in_usd.toFixed(2)}</td>

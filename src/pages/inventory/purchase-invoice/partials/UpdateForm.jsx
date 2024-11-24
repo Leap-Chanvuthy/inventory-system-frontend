@@ -1,4 +1,4 @@
-import { useEffect, useState , ReactDOMServer } from "react";
+import { useEffect, useState } from "react";
 import RawMaterialRelationship from "./relationships/RawMaterialRelationship";
 import {
   Label,
@@ -12,12 +12,9 @@ import {
   Checkbox,
   Badge,
 } from "flowbite-react";
-import { IoCartOutline, IoPrintOutline } from "react-icons/io5";
+import { IoCartOutline} from "react-icons/io5";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import {
-  addInvoiceStart,
-  addInvoiceSuccess,
-  addInvoiceFailure,
   fetchInvoiceStart,
   fetchInvoiceSuccess,
   fetchInvoiceFailure,
@@ -35,6 +32,7 @@ import {
 import { HiInformationCircle } from "react-icons/hi";
 import { useParams } from "react-router-dom";
 import { MdOutlineAdd } from "react-icons/md";
+import { resetMultipleSelectionState, setMultipleSelection, toggleMultipleSelection } from "../../../../redux/slices/selectionSlice";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -46,6 +44,8 @@ const payment_methods = [
 const UpdateForm = () => {
   const dispatch = useDispatch();
   const { error, status, invoices } = useSelector((state) => state.invoices);
+  const {multipleSelection} = useSelector((state) => state.selections);
+  console.log(multipleSelection);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
 
@@ -88,33 +88,12 @@ const UpdateForm = () => {
         discount_percentage: invoices?.discount_percentage || "",
         tax_percentage: invoices?.tax_percentage || "",
         clearing_payable_percentage: invoices?.clearing_payable_percentage || "",
-        raw_materials: invoices?.purchase_invoice_details?.map((raw_material_ids) => raw_material_ids?.id) ||[],
+        raw_materials: invoices?.purchase_invoice_details?.map((detail) => detail.raw_material_id)
+        
       });
-    }
+    }    dispatch(setMultipleSelection(invoices?.purchase_invoice_details?.map((detail) => detail.raw_material_id)));
   }, [invoices]);
-
-  console.log(values);
-
-  // handle selected raw material ids changes
-  const [selectedRawMaterialIds, setSelectedRawMaterialIds] = useState([]);
-  const handleRawMaterialsSelected = (selectedIds) => {
-    setSelectedRawMaterialIds(selectedIds);
-    setValues((prevValues) => ({ ...prevValues, raw_materials: selectedIds }));
-  };
-    // const handleRawMaterialsSelected = (selectedIds) => {
-    //     setValues((prevValues) => ({...prevValues, raw_materials: Array.from(new Set([...prevValues.raw_materials, ...selectedIds])),}));
-    // };
   
-
-  // toggle raw material ids from api
-  const toggleRawMaterial = (materialId) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      raw_materials: prevValues.raw_materials.includes(materialId)
-        ? prevValues.raw_materials.filter((id) => id !== materialId)
-        : [...prevValues.raw_materials, materialId],
-    }));
-  };
 
   // handle values change
   const handleChange = (e) => {
@@ -123,6 +102,15 @@ const UpdateForm = () => {
     setValues({ ...values, [key]: value });
   };
 
+  const handleMultipleSelect = (id) => {
+    dispatch(toggleMultipleSelection(id));
+  };
+  
+  // handle selected raw material ids changes
+  useEffect(() =>{
+    setValues((prevValues) => ({...prevValues , raw_materials : multipleSelection}))
+  },[multipleSelection]);
+  
   // handle update invoice function
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -132,9 +120,10 @@ const UpdateForm = () => {
       console.log(response);
       dispatch(updateInvoiceSuccess(response));
       setSuccessToastOpen(true);
-          // Fetch the updated invoice details to ensure data consistency
-        const updatedInvoice = await axios.get(`${BASE_URL}/purchase-invoice/${id}`);
-        dispatch(fetchInvoiceSuccess(updatedInvoice.data));
+      // Fetch the updated invoice details to ensure data consistency
+      const updatedInvoice = await axios.get(`${BASE_URL}/purchase-invoice/${id}`);
+      dispatch(fetchInvoiceSuccess(updatedInvoice.data));
+      dispatch(resetMultipleSelectionState());
     } catch (err) {
       console.log(err);
       dispatch(updateInvoiceFailure(err?.response?.data?.errors));
@@ -340,13 +329,15 @@ const UpdateForm = () => {
                               className="bg-white dark:border-gray-700 dark:bg-gray-800 font-medium text-gray-900 dark:text-white"
                             >
                               <Table.Cell>
-                                <Checkbox
-                                  checked={values.raw_materials.includes(
-                                    invoiceDetail.id
+                                {/* <Checkbox
+                                  checked={multipleSelection?.includes(
+                                    invoiceDetail?.map((detail) => detail?.raw_material_id)
                                   )}
-                                  onChange={() =>
-                                    toggleRawMaterial(invoiceDetail.id)
-                                  }
+                                  onChange={() =>handleMultipleSelect(invoiceDetail?.map((detail) => detail?.raw_material_id))}
+                                /> */}
+                                <Checkbox
+                                  checked={multipleSelection?.includes(invoiceDetail.raw_material_id)}
+                                  onChange={() => handleMultipleSelect(invoiceDetail.raw_material_id)}
                                 />
                               </Table.Cell>
                               <Table.Cell>{invoiceDetail?.raw_material?.id}</Table.Cell>
@@ -457,10 +448,7 @@ const UpdateForm = () => {
                 )}
               </div>
               <Timeline.Body>
-                <RawMaterialRelationship
-                  //   onRawMaterialsSelected={handleRawMaterialsSelected}
-                  onRawMaterialsSelected={handleRawMaterialsSelected}
-                />
+                <RawMaterialRelationship createStatus={status}/>
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>
@@ -473,7 +461,7 @@ const UpdateForm = () => {
       <SuccessToast
         open={successToastOpen}
         onClose={() => setSuccessToastOpen(false)}
-        message="Purchase Invoice Created Successfully!"
+        message="Purchase Invoice Updated Successfully"
       />
       <DangerToast
         open={failToastOpen}

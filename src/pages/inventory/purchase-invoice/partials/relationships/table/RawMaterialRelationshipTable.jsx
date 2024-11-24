@@ -142,7 +142,7 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                 >
                   <Table.Cell>
                   <Checkbox
-                    checked={multipleSelection.includes(material.id)}
+                    checked={multipleSelection?.includes(material.id)}
                     onChange={() => handleMultipleSelect(material.id)}
                   />
                   </Table.Cell>  
@@ -191,10 +191,10 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.remaining_quantity}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-green-600 dark:text-green-300">$ {material.unit_price_in_usd}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-green-600 dark:text-green-300">$ {material.total_value_in_usd}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-green-600 dark:text-green-300">{material.unit_price_in_riel} ​៛</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-green-600 dark:text-green-300">{material.total_value_in_riel} ​៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.unit_price_in_usd}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.total_value_in_usd}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.unit_price_in_riel} ​៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.total_value_in_riel} ​៛</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.minimum_stock_level}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.location}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
