@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import {
   Button,
@@ -21,6 +21,7 @@ import {
   SuccessToast,
   DangerToast,
 } from "../../../../components/ToastNotification";
+import RawMaterialRelationship from "./relationship/RawMaterialRelationship";
 
 const mapContainerStyle = {
   width: "100%",
@@ -38,6 +39,14 @@ const center = {
 };
 
 const CreateForm = () => {
+
+    // diapatch redux action
+    const dispatch = useDispatch();
+    const [successToastOpen, setSuccessToastOpen] = useState(false);
+    const [failToastOpen, setFailToastOpen] = useState(false);
+    const { error, status } = useSelector((state) => state.suppliers);
+    const { multipleSelection } = useSelector((state) => state.selections);
+
   const [values, setValues] = useState({
     image: "",
     name: "",
@@ -62,8 +71,14 @@ const CreateForm = () => {
     bank_name: "",
     note: "",
   });
-  
 
+  console.log(values)
+
+
+  useEffect(() => {
+    setValues((prevValues) => ({...prevValues , raw_materials : multipleSelection}));
+  },[multipleSelection])
+  
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -104,12 +119,6 @@ const CreateForm = () => {
     }
   };
 
-  // diapatch redux action
-  const dispatch = useDispatch();
-  const [successToastOpen, setSuccessToastOpen] = useState(false);
-  const [failToastOpen, setFailToastOpen] = useState(false);
-  const { error, status } = useSelector((state) => state.suppliers);
-  console.log(error);
 
   // handle submit post request
   const handleSubmit = async (e) => {
@@ -540,6 +549,13 @@ const CreateForm = () => {
               cols={3}
             />
           </div>
+        </div>
+
+
+        {/* Raw Materials Relationship */}
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold my-5">Raw Materials</h2>
+          <RawMaterialRelationship createStatus={status} />
         </div>
 
         <div className="w-full mb-4" style={{ height: "400px" }}>
