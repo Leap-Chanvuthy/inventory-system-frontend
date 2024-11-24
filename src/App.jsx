@@ -143,13 +143,13 @@ function App() {
         {/* Unauthenticated Routes */}
         <Route element={<UnauthenticatedRoute />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/test" element={<Test />} />
         </Route>
 
         {/* Public Route That not Required Login */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </BrowserRouter>
   );

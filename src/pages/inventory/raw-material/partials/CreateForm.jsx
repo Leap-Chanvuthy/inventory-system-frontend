@@ -1,4 +1,4 @@
-import { Button, Label, Select, Textarea, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Select, Textarea, TextInput } from "flowbite-react";
 import { useState, useEffect } from "react";
 import {
   DangerToast,
@@ -14,8 +14,17 @@ import {
 } from "../../../../redux/slices/rawMaterialSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
+import SupplierRelationship from "./relationships/SupplierRelationship";
+import { HiInformationCircle } from "react-icons/hi";
+import { toggleSingleSelection } from "../../../../redux/slices/selectionSlice";
 
 const CreateForm = () => {
+  const { status, error } = useSelector((state) => state.rawMaterials);
+  const {singleSelection} = useSelector((state) => state.selections);
+  const dispatch = useDispatch();
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [failedToastOpen, setFailToastOpen] = useState(false);
+
   const [values, setValues] = useState({
     image: [],
     name: "",
@@ -41,15 +50,15 @@ const CreateForm = () => {
 
   console.log(values);
 
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [failedToastOpen, setFailToastOpen] = useState(false);
-  const dispatch = useDispatch();
-  const { status, error } = useSelector((state) => state.rawMaterials);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setValues((prevValues) => ({ ...prevValues, [id]: value }));
   };
+
+  useEffect(() => {
+    setValues((prevValues) => ({ ...prevValues, supplier_id: singleSelection }));
+  }, [singleSelection]);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -124,6 +133,7 @@ const CreateForm = () => {
         expiry_date: "",
         supplier_id: "",
       });
+      dispatch(toggleSingleSelection(null));
     } catch (error) {
       console.error("Error submitting the form:", error);
       setFailToastOpen(true);
@@ -563,6 +573,15 @@ const CreateForm = () => {
               value={values.description}
               onChange={handleChange}
             />
+          </div>
+
+          <div className="flex flex-col gap-3">
+              <SupplierRelationship/>
+              {error?.supplier_id &&
+                <Alert color="failure" icon={HiInformationCircle}>
+                  <span className="font-medium">{error?.supplier_id}</span>
+                </Alert>
+              }
           </div>
 
           <div className="flex items-center justify-center mt-4 mb-4">

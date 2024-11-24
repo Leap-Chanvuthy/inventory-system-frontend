@@ -1,4 +1,15 @@
-import { Button, Label, Modal, Select, Textarea, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Badge,
+  Button,
+  Checkbox,
+  Label,
+  Modal,
+  Select,
+  Table,
+  Textarea,
+  TextInput,
+} from "flowbite-react";
 import { useState, useEffect } from "react";
 import {
   DangerToast,
@@ -18,17 +29,25 @@ import {
   fetchRawMaterialsSuccess,
   fetchRawMaterialsFailure,
 } from "../../../../redux/slices/rawMaterialSlice";
-import { getCurrencyFailure, getCurrencyStart, getCurrencySuccess } from "../../../../redux/slices/currencySlice";
+import {
+  setSingleSelection,
+  toggleSingleSelection,
+} from "../../../../redux/slices/selectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
 import { useParams } from "react-router-dom";
+import { HiInformationCircle } from "react-icons/hi";
+import SupplierRelationship from "./relationships/SupplierRelationship";
 
 const UpdateForm = () => {
   const [openSuccess, setOpenSuccess] = useState(false);
   const [failedToastOpen, setFailToastOpen] = useState(false);
   const dispatch = useDispatch();
-  const { status, error, rawMaterials } = useSelector((state) => state.rawMaterials);
-  const {currencies} = useSelector((state) => state.currencies);
+  const { status, error, rawMaterials } = useSelector(
+    (state) => state.rawMaterials
+  );
+  const { singleSelection } = useSelector((state) => state.selections);
+  console.log(singleSelection);
   const { id } = useParams();
 
   // get specific material by id
@@ -51,7 +70,7 @@ const UpdateForm = () => {
   // list of images from API
   const [oldImages, setOldImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-  
+
   const handleImageClick = (img) => {
     setSelectedImage(img);
   };
@@ -69,10 +88,10 @@ const UpdateForm = () => {
     remaining_quantity: "",
     unit_price_in_usd: "",
     total_value_in_usd: "",
-    exchange_rate_from_usd_to_riel : "",
+    exchange_rate_from_usd_to_riel: "",
     unit_price_in_riel: "",
     total_value_in_riel: "",
-    exchange_rate_from_riel_to_usd : "",
+    exchange_rate_from_riel_to_usd: "",
     minimum_stock_level: "",
     raw_material_category_id: "",
     unit_of_measurement: "",
@@ -84,7 +103,6 @@ const UpdateForm = () => {
     supplier_id: "",
   });
 
-  console.log(values);
 
   useEffect(() => {
     if (rawMaterials) {
@@ -93,13 +111,15 @@ const UpdateForm = () => {
         name: rawMaterials?.name || "",
         material_code: rawMaterials?.material_code || "",
         quantity: rawMaterials?.quantity || "",
-        remaining_quantity : rawMaterials?.remaining_quantity || "",
+        remaining_quantity: rawMaterials?.remaining_quantity || "",
         unit_price_in_usd: rawMaterials?.unit_price_in_usd || "",
         total_value_in_usd: rawMaterials?.total_value_in_usd || "",
-        exchange_rate_from_usd_to_riel : rawMaterials?.exchange_rate_from_usd_to_riel || "",
+        exchange_rate_from_usd_to_riel:
+          rawMaterials?.exchange_rate_from_usd_to_riel || "",
         unit_price_in_riel: rawMaterials?.unit_price_in_riel || "",
         total_value_in_riel: rawMaterials?.total_value_in_riel || "",
-        exchange_rate_from_riel_to_usd : rawMaterials?.exchange_rate_from_riel_to_usd || "",
+        exchange_rate_from_riel_to_usd:
+          rawMaterials?.exchange_rate_from_riel_to_usd || "",
         minimum_stock_level: rawMaterials?.minimum_stock_level || "",
         raw_material_category_id: rawMaterials?.raw_material_category_id || "",
         unit_of_measurement: rawMaterials?.unit_of_measurement || "",
@@ -108,10 +128,11 @@ const UpdateForm = () => {
         location: rawMaterials?.location || "",
         description: rawMaterials?.description || "",
         expiry_date: rawMaterials?.expiry_date || "",
-        supplier_id: rawMaterials?.supplier_id || "",
+        supplier_id: rawMaterials?.supplier?.id || "",
       });
 
       setOldImages(rawMaterials?.raw_material_images || []);
+      dispatch(setSingleSelection(rawMaterials?.supplier?.id));
     }
   }, [rawMaterials]);
 
@@ -120,6 +141,17 @@ const UpdateForm = () => {
     const { id, value } = e.target;
     setValues((prevValues) => ({ ...prevValues, [id]: value }));
   };
+
+  const handleSingleSelect = (id) => {
+    dispatch(toggleSingleSelection(id));
+  };
+
+  useEffect(() => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      supplier_id: singleSelection,
+    }));
+  }, [singleSelection]);
 
   // handle file change
   const handleFileChange = (e) => {
@@ -146,27 +178,24 @@ const UpdateForm = () => {
     setValues({ ...values, image: updatedImages });
   };
 
-
   // get raw material category
-  const [categories , setCategories] = useState([]);
-  console.log(categories)
-
-  useEffect(() =>{
-    const getCategory = async (e) =>{
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const getCategory = async (e) => {
       try {
-        
-        const response = await axios.get(`${BASE_URL}/non-paginate/raw-material-categories`)
-        console.log(response.data);
+        const response = await axios.get(
+          `${BASE_URL}/non-paginate/raw-material-categories`
+        );
+        console.log(response);
         setCategories(response.data);
-      }catch (err){
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
     getCategory();
-  } , [])
+  }, []);
 
-  
-  // Submit post request to backend
+  // Submit patch request to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(updateRawMaterialStart());
@@ -182,7 +211,10 @@ const UpdateForm = () => {
         }
       );
       dispatch(updateRawMaterialSuccess(response));
-      dispatch(fetchRawMaterialsSuccess());
+      const updatedMaterial = await axios.get(`${BASE_URL}/raw-material/${id}`);
+      console.log("updated material:", updatedMaterial)
+      dispatch(fetchRawMaterialsSuccess(updatedMaterial.data));
+      // dispatch(fetchRawMaterialsSuccess());
       setOpenSuccess(true);
     } catch (error) {
       setFailToastOpen(true);
@@ -190,7 +222,6 @@ const UpdateForm = () => {
       dispatch(updateRawMaterialFailure(error?.response?.data?.errors));
     }
   };
-
 
   return (
     <div className="my-5">
@@ -206,7 +237,7 @@ const UpdateForm = () => {
       />
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div>
-        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5">
             <h2 className="text-md font-semibold">General Info</h2>
             <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
@@ -356,7 +387,10 @@ const UpdateForm = () => {
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
                 <div>
-                  <Label htmlFor="unit_price_in_usd" value="Unit Price in USD" />
+                  <Label
+                    htmlFor="unit_price_in_usd"
+                    value="Unit Price in USD"
+                  />
                   <TextInput
                     id="unit_price_in_usd"
                     type="number"
@@ -380,7 +414,10 @@ const UpdateForm = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="total_value_in_usd" value="Total Value in USD" />
+                  <Label
+                    htmlFor="total_value_in_usd"
+                    value="Total Value in USD"
+                  />
                   <TextInput
                     id="total_value_in_usd"
                     type="text"
@@ -404,7 +441,10 @@ const UpdateForm = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="exchange_rate_from_usd_to_riel" value="Exchange Rate From USD to Riel" />
+                  <Label
+                    htmlFor="exchange_rate_from_usd_to_riel"
+                    value="Exchange Rate From USD to Riel"
+                  />
                   <TextInput
                     id="exchange_rate_from_usd_to_riel"
                     type="text"
@@ -429,7 +469,7 @@ const UpdateForm = () => {
                 </div>
               </div>
               <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-              <div>
+                <div>
                   <Label
                     htmlFor="unit_price_in_riel"
                     value="Total Value in Riel"
@@ -484,7 +524,10 @@ const UpdateForm = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="exchange_rate_from_riel_to_usd" value="Exchange Rate From Riel to USD" />
+                  <Label
+                    htmlFor="exchange_rate_from_riel_to_usd"
+                    value="Exchange Rate From Riel to USD"
+                  />
                   <TextInput
                     id="exchange_rate_from_riel_to_usd"
                     type="text"
@@ -512,7 +555,7 @@ const UpdateForm = () => {
 
             <h2 className="text-md font-semibold">Additional</h2>
             <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-            <div>
+              <div>
                 <Label
                   htmlFor="raw_material_category_id"
                   value="Raw Material Category"
@@ -533,9 +576,12 @@ const UpdateForm = () => {
                   }
                 >
                   <option value="">Select an option</option>
-                  {categories && categories.map((category) =>(
-                    <option value={category.id}>{category.category_name}</option>
-                  ))}
+                  {categories &&
+                    categories.map((category) => (
+                      <option value={category.id}>
+                        {category.category_name}
+                      </option>
+                    ))}
                 </Select>
               </div>
 
@@ -624,14 +670,167 @@ const UpdateForm = () => {
             />
           </div>
 
-          {/* <div className="my-5"> 
-           <h2 className="text-md font-semibold mb-5">Images</h2>   
-            <div className="flex flex-wrap gap-3">
-              {oldImages.map((img) => (
-                <img src={`${BASE_IMAGE_URL}/${img.image}`} className="w-16 h-16 object-cover rounded-md" />
-              )) }
+          <div className="flex flex-col gap-3">
+            <h2 className="text-md font-semibold">Supplier</h2>
+            {error?.supplier_id && (
+              <Alert color="failure" icon={HiInformationCircle}>
+                <span className="font-medium">{error?.supplier_id}</span>
+              </Alert>
+            )}
+            <div className="overflow-x-auto lg:max-w-6xl  my-5">
+              <Table striped>
+                <Table.Head>
+                  <Table.HeadCell>Select</Table.HeadCell>
+                  {/* <Table.HeadCell>Image</Table.HeadCell> */}
+                  <Table.HeadCell className="whitespace-nowrap">
+                    Name / Company
+                  </Table.HeadCell>
+                  <Table.HeadCell className="whitespace-nowrap">
+                    Phone Number
+                  </Table.HeadCell>
+                  <Table.HeadCell>Category</Table.HeadCell>
+                  <Table.HeadCell>Status</Table.HeadCell>
+                  <Table.HeadCell>Location</Table.HeadCell>
+                  <Table.HeadCell className="whitespace-nowrap">
+                    Contact Person
+                  </Table.HeadCell>
+                  <Table.HeadCell className="whitespace-nowrap">
+                    Business Reg. No.
+                  </Table.HeadCell>
+                  <Table.HeadCell className="whitespace-nowrap">
+                    Bank Account No.
+                  </Table.HeadCell>
+                  <Table.HeadCell className="whitespace-nowrap">
+                    Bank Name
+                  </Table.HeadCell>
+                  <Table.HeadCell className="whitespace-nowrap">
+                    Supplier Code
+                  </Table.HeadCell>
+                  <Table.HeadCell>Address</Table.HeadCell>
+                  <Table.HeadCell>Email</Table.HeadCell>
+                  <Table.HeadCell>Website</Table.HeadCell>
+                  <Table.HeadCell className="whitespace-nowrap">
+                    Social Media
+                  </Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y">
+                  {rawMaterials?.supplier ? (
+                    <Table.Row
+                      key={rawMaterials?.supplier?.id}
+                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                    >
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <Checkbox
+                          checked={
+                            singleSelection === rawMaterials?.supplier?.id
+                          }
+                          onChange={() =>
+                            handleSingleSelect(rawMaterials?.supplier?.id)
+                          }
+                        />
+                      </Table.Cell>
+                      {/* <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            <Avatar
+                              img={supplier.image ? `${BASE_IMAGE_URL}/${rawMaterials?.supplier.image}` : ""}
+                            />
+                          </Table.Cell> */}
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.name}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.phone_number}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.supplier_category ===
+                          "PRODUCT" && (
+                          <Badge color="success">
+                            {rawMaterials?.supplier?.supplier_category}
+                          </Badge>
+                        )}
+                        {rawMaterials?.supplier?.supplier_category ===
+                          "SERVICE" && (
+                          <Badge color="warning">
+                            {rawMaterials?.supplier?.supplier_category}
+                          </Badge>
+                        )}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <div className="flex flex-wrap gap-2">
+                          {rawMaterials?.supplier?.supplier_status ===
+                            "ACTIVE" && (
+                            <Badge color="success">
+                              {rawMaterials?.supplier?.supplier_status}
+                            </Badge>
+                          )}
+                          {rawMaterials?.supplier?.supplier_status ===
+                            "INACTIVE" && (
+                            <Badge color="warning">
+                              {rawMaterials?.supplier?.supplier_status}
+                            </Badge>
+                          )}
+                          {rawMaterials?.supplier?.supplier_status ===
+                            "SUSPENDED" && (
+                            <Badge color="failure">
+                              {rawMaterials?.supplier?.supplier_status}
+                            </Badge>
+                          )}
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.location}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.contact_person}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.business_registration_number}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.bank_account_number}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.bank_name}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.supplier_code}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.address}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {rawMaterials?.supplier?.email}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <a
+                          href={rawMaterials?.supplier?.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {rawMaterials?.supplier?.website}
+                        </a>
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <a
+                          href={rawMaterials?.supplier?.social_media}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {rawMaterials?.supplier?.social_media}
+                        </a>
+                      </Table.Cell>
+                    </Table.Row>
+                  ) : (
+                    <Table.Row>
+                      <Table.Cell colSpan="16" className="text-center py-4">
+                        No suppliers found.
+                      </Table.Cell>
+                    </Table.Row>
+                  )}
+                </Table.Body>
+              </Table>
             </div>
-          </div> */}
+            <SupplierRelationship />
+          </div>
 
           <div className="my-5">
             <h2 className="text-md font-semibold mb-5">Images</h2>
@@ -647,13 +846,13 @@ const UpdateForm = () => {
               ))}
             </div>
 
-            <Modal
-              show={selectedImage}
-              onClose={closeModal}
-            >
+            <Modal show={selectedImage} onClose={closeModal}>
               <Modal.Header>Image</Modal.Header>
               <Modal.Body>
-                  <img src={`${BASE_IMAGE_URL}/${selectedImage}`} className="rounded-md" />
+                <img
+                  src={`${BASE_IMAGE_URL}/${selectedImage}`}
+                  className="rounded-md"
+                />
               </Modal.Body>
             </Modal>
           </div>

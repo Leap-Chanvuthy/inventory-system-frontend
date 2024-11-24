@@ -1,60 +1,168 @@
-import { Table } from "flowbite-react";
+// import React, { useEffect } from "react";
+// import { useSelector, useDispatch } from "react-redux";
+// import { toggleSingleSelection, toggleMultipleSelection } from "../redux/slices/selectionSlice";
+
+// const books = [
+//   { id: 1, book: "To Kill a Mockingbird", author: "Harper Lee" },
+//   { id: 2, book: "1984", author: "George Orwell" },
+//   { id: 3, book: "The Great Gatsby", author: "F. Scott Fitzgerald" },
+//   { id: 4, book: "The Catcher in the Rye", author: "J.D. Salinger" },
+// ];
+
+// const Test = () => {
+//   const dispatch = useDispatch();
+//   const ids = books.map((book) => book.id);
+//   console.log(ids);
+//   useEffect(() =>{
+//     dispatch(toggleMultipleSelection(ids));
+//   },[]);
+
+//   const {singleSelection} = useSelector((state) => state.selections);
+//   const {multipleSelection} = useSelector((state) => state.selections);
+
+//   console.log('Single selection :' , singleSelection);
+//   console.log('Multiple selection :' , multipleSelection);
+
+//   const handleSingleSelect = (id) => {
+//     dispatch(toggleSingleSelection(id));
+//   };
+
+//   const handleMultipleSelect = (id) => {
+//     dispatch(toggleMultipleSelection(id));
+//   };
+
+//   return (
+//     <div className="p-4">
+//       <h2 className="text-2xl font-bold mb-4">Book Selection Test</h2>
+
+//       {/* Single Selection */}
+//       <div className="mb-8">
+//         <h3 className="text-xl font-semibold">Single Selection</h3>
+//         <p>Selected Book ID: {singleSelection || "None"}</p>
+//         <ul className="mt-2">
+//           {books.map((book) => (
+//             <li key={book.id} className="flex items-center gap-2">
+//               <input
+//                 type="checkbox"
+//                 checked={singleSelection === book.id}
+//                 onChange={() => handleSingleSelect(book.id)}
+//               />
+//               <span>{book.book} by {book.author}</span>
+//             </li>
+//           ))}
+//         </ul>
+//       </div>
+
+//       {/* Multiple Selection */}
+//       <div>
+//         <h3 className="text-xl font-semibold">Multiple Selection</h3>
+//         <p>Selected Book IDs: {multipleSelection.length ? multipleSelection.join(", ") : "None"}</p>
+//         <ul className="mt-2">
+//           {books.map((book) => (
+//             <li key={book.id} className="flex items-center gap-2">
+//               <input
+//                 type="checkbox"
+//                 checked={multipleSelection.includes(book.id)}
+//                 onChange={() => handleMultipleSelect(book.id)}
+//               />
+//               <span>{book.book} by {book.author}</span>
+//             </li>
+//           ))}
+//         </ul>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Test;
+
+
+
+
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  toggleSingleSelection,
+  toggleMultipleSelection,
+  setSingleSelection,
+  setMultipleSelection,
+} from "../redux/slices/selectionSlice";
+
+const books = [
+  { id: 1, book: "To Kill a Mockingbird", author: "Harper Lee" },
+  { id: 2, book: "1984", author: "George Orwell" },
+  { id: 3, book: "The Great Gatsby", author: "F. Scott Fitzgerald" },
+  { id: 4, book: "The Catcher in the Rye", author: "J.D. Salinger" },
+];
 
 const Test = () => {
+  const dispatch = useDispatch();
+
+  const { singleSelection, multipleSelection } = useSelector((state) => state.selections);
+
+  // Set initial values dynamically (e.g., from API or form state)
+  useEffect(() => {
+    // Example: Single selection starts with ID 2
+    dispatch(setSingleSelection(2));
+    // Example: Multiple selection starts with IDs 1 and 3
+    dispatch(setMultipleSelection([1, 3]));
+  }, [dispatch]);
+
+  const handleSingleSelect = (id) => {
+    dispatch(toggleSingleSelection(id));
+  };
+
+  const handleMultipleSelect = (id) => {
+    dispatch(toggleMultipleSelection(id));
+  };
+
   return (
-      <Table className="max-w-sm"> {/* Corrected the className */}
-        <Table.Head>
-          <Table.HeadCell>Product name</Table.HeadCell>
-          <Table.HeadCell>Color</Table.HeadCell>
-          <Table.HeadCell>Category</Table.HeadCell>
-          <Table.HeadCell>Price</Table.HeadCell>
-          <Table.HeadCell>
-            <span className="sr-only">Edits</span>
-          </Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              {'Apple MacBook Pro 17"'}
-            </Table.Cell>
-            <Table.Cell>Sliver</Table.Cell>
-            <Table.Cell>Laptop</Table.Cell>
-            <Table.Cell>$2999</Table.Cell>
-            <Table.Cell>
-              <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                Edit
-              </a>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              Microsoft Surface Pro
-            </Table.Cell>
-            <Table.Cell>White</Table.Cell>
-            <Table.Cell>Laptop PC</Table.Cell>
-            <Table.Cell>$1999</Table.Cell>
-            <Table.Cell>
-              <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                Edit
-              </a>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              Magic Mouse 2
-            </Table.Cell>
-            <Table.Cell>Black</Table.Cell>
-            <Table.Cell>Accessories</Table.Cell>
-            <Table.Cell>$99</Table.Cell>
-            <Table.Cell>
-              <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                Edit
-              </a>
-            </Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      </Table>
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">Book Selection Test</h2>
+
+      {/* Single Selection */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold">Single Selection</h3>
+        <p>Selected Book ID: {singleSelection || "None"}</p>
+        <ul className="mt-2">
+          {books.map((book) => (
+            <li key={book.id} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={singleSelection === book.id}
+                onChange={() => handleSingleSelect(book.id)}
+              />
+              <span>
+                {book.book} by {book.author}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Multiple Selection */}
+      <div>
+        <h3 className="text-xl font-semibold">Multiple Selection</h3>
+        <p>
+          Selected Book IDs: {multipleSelection.length ? multipleSelection.join(", ") : "None"}
+        </p>
+        <ul className="mt-2">
+          {books.map((book) => (
+            <li key={book.id} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={multipleSelection.includes(book.id)}
+                onChange={() => handleMultipleSelect(book.id)}
+              />
+              <span>
+                {book.book} by {book.author}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
-}
+};
 
 export default Test;
