@@ -714,7 +714,7 @@ const UpdateForm = () => {
                 ) : (
                   <Table.Row>
                     <Table.Cell colSpan="8" className="text-center py-4">
-                      No purchase invoice found.
+                      No raw materials found.
                     </Table.Cell>
                   </Table.Row>
                 )}
