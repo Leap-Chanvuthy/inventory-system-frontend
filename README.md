@@ -73,3 +73,11 @@ Application will run on port 5173 by default
 └── yarn.lock / package-lock.json # Dependency tree lock file
 
 ```
+
+5. **Functionality**
+### Authentication
+![Image Alt Text](/images/1-login.png)
+![Image Alt Text](/images/1-reset-password.png)
+![Image Alt Text](/images/1-forgot-password.png)
+![Image Alt Text](/images/1-profile.png)
+![Image Alt Text](/images/1-profile-password.png)
