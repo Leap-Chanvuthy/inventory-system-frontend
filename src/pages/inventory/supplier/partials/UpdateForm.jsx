@@ -8,6 +8,9 @@ import {
   Select,
   Textarea,
   Spinner,
+  Table,
+  Badge,
+  Checkbox,
 } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -19,12 +22,16 @@ import {
   getSuppliersFailed,
 } from "../../../../redux/slices/supplierSlice";
 import axios from "axios";
-import { BASE_URL , BASE_IMAGE_URL } from "../../../../components/const/constant";
+import {
+  BASE_URL,
+  BASE_IMAGE_URL,
+} from "../../../../components/const/constant";
 import {
   SuccessToast,
   DangerToast,
 } from "../../../../components/ToastNotification";
 import { useParams } from "react-router-dom";
+import { resetMultipleSelectionState, setMultipleSelection, toggleMultipleSelection } from "../../../../redux/slices/selectionSlice";
 import RawMaterialRelationship from "./relationship/RawMaterialRelationship";
 
 const mapContainerStyle = {
@@ -43,90 +50,104 @@ const center = {
 };
 
 const UpdateForm = () => {
+  // diapatch redux action
+  const dispatch = useDispatch();
+  const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [failToastOpen, setFailToastOpen] = useState(false);
+  const { error, status, suppliers } = useSelector((state) => state.suppliers);
+  const {multipleSelection} = useSelector((state) => state.selections);
+  console.log(suppliers);
 
-    // diapatch redux action
-    const dispatch = useDispatch();
-    const [successToastOpen, setSuccessToastOpen] = useState(false);
-    const [failToastOpen, setFailToastOpen] = useState(false);
-    const { error, status , suppliers } = useSelector((state) => state.suppliers);
+  // fetch specific supplier
+  const { id } = useParams();
 
-    // fetch specific supplier
-    const {id} = useParams();
-
-    useEffect(() =>{
-      const getSupplierById = async () =>{
-        dispatch(getSuppliersStart());
-        try {
-          const response = await axios.get(`${BASE_URL}/supplier/${id}`)
-          dispatch(getSupplierSuccess(response.data));
-          console.log('suppliers data response from axios:' , response);
-        }catch (err){
-          console.log(err);
-          dispatch(getSuppliersFailed(err.message || 'Error to get data from server'));
-        }
+  useEffect(() => {
+    const getSupplierById = async () => {
+      dispatch(getSuppliersStart());
+      try {
+        const response = await axios.get(`${BASE_URL}/supplier/${id}`);
+        dispatch(getSupplierSuccess(response.data));
+        console.log("suppliers data response from axios:", response);
+      } catch (err) {
+        console.log(err);
+        dispatch(
+          getSuppliersFailed(err.message || "Error to get data from server")
+        );
       }
-      getSupplierById();
-    },[id , dispatch]);
-  
-    const [values, setValues] = useState({
-      image: "",
-      name: "",
-      phone_number: "",
-      location: "",
-      longitude: "",
-      latitude: "",
-      address: "",
-      email: "",
-      contact_person: "",
-      website: "",                
-      social_media: "",           
-      supplier_category: "",      
-      supplier_status: "",        
-      contract_length: "",        
-      discount_term: "",          
-      payment_term: "",           
-      business_registration_number: "",
-      vat_number: "",
-      bank_account_number: "",
-      bank_account_name: "",
-      bank_name: "",
-      note: "",
-      raw_materials : []
-    });
+    };
+    getSupplierById();
+  }, [id, dispatch]);
 
-    console.log('inital values :' , values)
+  const [values, setValues] = useState({
+    image: "",
+    name: "",
+    phone_number: "",
+    location: "",
+    longitude: "",
+    latitude: "",
+    address: "",
+    email: "",
+    contact_person: "",
+    website: "",
+    social_media: "",
+    supplier_category: "",
+    supplier_status: "",
+    contract_length: "",
+    discount_term: "",
+    payment_term: "",
+    business_registration_number: "",
+    vat_number: "",
+    bank_account_number: "",
+    bank_account_name: "",
+    bank_name: "",
+    note: "",
+    raw_materials: [],
+  });
+
+  console.log('Multiple selection :' , multipleSelection);
 
   useEffect(() => {
     if (suppliers) {
       setValues({
         image: "",
-        // image : suppliers?.image,
         name: suppliers?.name,
-        phone_number: suppliers?.phone_number || '',
-        location: suppliers?.location || '',
-        longitude: suppliers?.longitude || '',
-        latitude: suppliers?.latitude || '',
-        address: suppliers?.address || '',
-        email: suppliers?.email || '',
-        contact_person: suppliers?.contact_person || '',
-        website: suppliers?.website || '',                
-        social_media: suppliers?.social_media || '',           
-        supplier_category: suppliers?.supplier_category || '',      
-        supplier_status: suppliers?.supplier_status || '',        
-        contract_length: suppliers?.contract_length || '',        
-        discount_term: suppliers?.discount_term || '',          
-        payment_term: suppliers?.payment_term || '',           
-        business_registration_number: suppliers?.business_registration_number || '',
-        vat_number: suppliers?.vat_number || '',
-        bank_account_number: suppliers?.bank_account_number || '',
-        bank_account_name: suppliers?.bank_account_name || '',
-        bank_name: suppliers?.bank_name || '',
-        note: suppliers?.note || '',
-        raw_materials  : suppliers?.raw_materials?.map((raw_material) => raw_material.id)
+        phone_number: suppliers?.phone_number || "",
+        location: suppliers?.location || "",
+        longitude: suppliers?.longitude || "",
+        latitude: suppliers?.latitude || "",
+        address: suppliers?.address || "",
+        email: suppliers?.email || "",
+        contact_person: suppliers?.contact_person || "",
+        website: suppliers?.website || "",
+        social_media: suppliers?.social_media || "",
+        supplier_category: suppliers?.supplier_category || "",
+        supplier_status: suppliers?.supplier_status || "",
+        contract_length: suppliers?.contract_length || "",
+        discount_term: suppliers?.discount_term || "",
+        payment_term: suppliers?.payment_term || "",
+        business_registration_number:
+          suppliers?.business_registration_number || "",
+        vat_number: suppliers?.vat_number || "",
+        bank_account_number: suppliers?.bank_account_number || "",
+        bank_account_name: suppliers?.bank_account_name || "",
+        bank_name: suppliers?.bank_name || "",
+        note: suppliers?.note || "",
+        raw_materials: suppliers?.raw_materials?.map(
+          (raw_material) => raw_material.id
+        ),
       });
     }
+    dispatch(setMultipleSelection(suppliers?.raw_materials?.map((raw_material) => raw_material.id)));
   }, [suppliers]);
 
+
+  const handleMultipleSelect = (id) => {
+    dispatch(toggleMultipleSelection(id))
+  };
+
+  useEffect(() => {
+    setValues((prevValues) => ({...prevValues , raw_materials : multipleSelection}));
+  },[multipleSelection])
 
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -166,8 +187,7 @@ const UpdateForm = () => {
     } else {
       alert("Please upload a valid image file.");
     }
-  };  
-
+  };
 
   // handle submit patch request
   const handleSubmit = async (e) => {
@@ -175,8 +195,8 @@ const UpdateForm = () => {
     dispatch(createSupplierStart());
     try {
       const response = await axios.post(`${BASE_URL}/supplier/${id}`, values, {
-        params : {
-          '_method' : 'PATCH',
+        params: {
+          _method: "PATCH",
         },
         headers: {
           "Content-Type": "multipart/form-data",
@@ -185,22 +205,14 @@ const UpdateForm = () => {
       console.log(response);
       dispatch(createSupplierSuccess(response));
       setSuccessToastOpen(true);
-      dispatch(getSupplierSuccess());
+      const updatedSupplier = await axios.get(`${BASE_URL}/supplier/${id}`);
+      dispatch(getSupplierSuccess(updatedSupplier.data));
+      dispatch(resetMultipleSelectionState());
     } catch (error) {
       console.log(error);
       dispatch(createSupplierFailed(error?.response?.data?.errors));
       setFailToastOpen(true);
     }
-  };
-
-
-  // relationship with raw materials
-
-  const handleRawMaterialsChange = (selectedMaterials) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      raw_materials: selectedMaterials,
-    }));
   };
 
 
@@ -237,11 +249,11 @@ const UpdateForm = () => {
               />
             ) : (
               <>
-              <img
-                // src={`${BASE_IMAGE_URL}/${suppliers.image}`}
-                alt="Preview"
-                className="w-[500px] h-full object-cover rounded-full"
-              />
+                <img
+                  // src={`${BASE_IMAGE_URL}/${suppliers.image}`}
+                  alt="Preview"
+                  className="w-[500px] h-full object-cover rounded-full"
+                />
               </>
             )}
             <FileInput
@@ -380,9 +392,9 @@ const UpdateForm = () => {
                 value={values.supplier_category}
                 onChange={handleChange}
               >
-                <option value=''>Select an option</option>
-                <option value='PRODUCT'>Product</option>
-                <option value='SERVICE'>Service</option>
+                <option value="">Select an option</option>
+                <option value="PRODUCT">Product</option>
+                <option value="SERVICE">Service</option>
               </Select>
             </div>
 
@@ -395,10 +407,10 @@ const UpdateForm = () => {
                 value={values.supplier_status}
                 onChange={handleChange}
               >
-                <option value=''>Select an option</option>
-                <option value='ACTIVE'>Active</option>
-                <option value='INACTIVE'>Inactive</option>
-                <option value='SUSPENDED'>Suspended</option>
+                <option value="">Select an option</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+                <option value="SUSPENDED">Suspended</option>
               </Select>
             </div>
           </div>
@@ -470,7 +482,6 @@ const UpdateForm = () => {
         <div className="mb-6">
           <h2 className="text-lg font-semibold my-5">Business Information</h2>
           <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-
             <div className="w-full">
               <Label htmlFor="contract_length" value="Contract Length" />
               <TextInput
@@ -503,7 +514,6 @@ const UpdateForm = () => {
                 onChange={handleChange}
               />
             </div>
-            
 
             <div className="w-full">
               <Label
@@ -582,10 +592,141 @@ const UpdateForm = () => {
           </div>
         </div>
 
+        {/* Notes Section */}
+        <div className="w-full">
+          <h2 className="text-lg font-semibold my-5">Raw Materials</h2>
+          <div className="overflow-x-auto lg:max-w-6xl  my-5">
+            <Table striped>
+              <Table.Head>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Select
+                </Table.HeadCell>
+                <Table.HeadCell>ID</Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Code
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Product Name
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Status
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Category
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Quantity
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Remaining Quantity
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Unit Price in USD
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Total Value in USD
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Unit Price in Riel
+                </Table.HeadCell>
+                <Table.HeadCell className="whitespace-nowrap">
+                  Total Value in Riel
+                </Table.HeadCell>
+              </Table.Head>
+              <Table.Body className="divide-y">
+                {suppliers?.raw_materials?.length > 0 ? (
+                  suppliers?.raw_materials.map((raw_material) => (
+                    <Table.Row
+                      key={raw_material.id}
+                      className="bg-white dark:border-gray-700 dark:bg-gray-800 font-medium text-gray-900 dark:text-white"
+                    >
+                      <Table.Cell>
+                        <Checkbox
+                          checked={multipleSelection?.includes(
+                            raw_material.id
+                          )}
+                          onChange={() =>
+                            handleMultipleSelect(raw_material.id)
+                          }
+                        />
+                      </Table.Cell>
+                      <Table.Cell>{raw_material?.id}</Table.Cell>
+                      <Table.Cell className="whitespace-nowrap">
+                        {raw_material?.material_code}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap">
+                        {raw_material?.name}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <div className="flex flex-wrap gap-2">
+                          {raw_material?.status ===
+                            "IN_STOCK" && (
+                            <Badge color="success">
+                              {raw_material?.status}
+                            </Badge>
+                          )}
+                          {raw_material?.status ===
+                            "OUT_OF_STOCK" && (
+                            <Badge color="failure">
+                              {raw_material?.status}
+                            </Badge>
+                          )}
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        <div className="flex flex-wrap gap-2">
+                          <Badge
+                            color={
+                              raw_material?.category
+                                ? "warning"
+                                : "failure"
+                            }
+                          >
+                            {raw_material?.category
+                              ? raw_material?.category
+                                  ?.category_name
+                              : "NULL"}
+                          </Badge>
+                        </div>
+                      </Table.Cell>
+
+                      <Table.Cell className="whitespace-nowrap">
+                        {raw_material?.quantity}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap">
+                        {raw_material?.remaining_quantity}
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap">
+                        {raw_material?.unit_price_in_usd} ($)
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap">
+                        {raw_material?.total_value_in_usd} ($)
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap">
+                        {raw_material?.unit_price_in_riel} (៛)
+                      </Table.Cell>
+                      <Table.Cell className="whitespace-nowrap">
+                        {raw_material?.total_value_in_riel}
+                        ​​ (​៛)
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+                ) : (
+                  <Table.Row>
+                    <Table.Cell colSpan="8" className="text-center py-4">
+                      No purchase invoice found.
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+          </div>
+        </div>
+
         {/* Raw Materials Relationship */}
         <div className="mb-6">
-          <h2 className="text-lg font-semibold my-5">Raw Materials</h2>
-          <RawMaterialRelationship raw_material_ids={values?.raw_materials} handleRawMaleRawMaterialsChange={handleRawMaterialsChange}  />
+          <h2 className="text-lg font-semibold my-5">Add More Raw Materials</h2>
+          <RawMaterialRelationship createStatus={status} />
         </div>
 
         <div className="w-full mb-4" style={{ height: "400px" }}>
