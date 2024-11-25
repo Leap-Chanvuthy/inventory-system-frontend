@@ -87,6 +87,7 @@ import {
   setSingleSelection,
   setMultipleSelection,
 } from "../redux/slices/selectionSlice";
+import TestMaterialStaging from "./TestMaterialStaging";
 
 const books = [
   { id: 1, book: "To Kill a Mockingbird", author: "Harper Lee" },
@@ -118,10 +119,10 @@ const Test = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Book Selection Test</h2>
+      <h2 className="text-2xl font-bold my-5">Book Selection Test</h2>
 
       {/* Single Selection */}
-      <div className="mb-8">
+      <div className="my-5">
         <h3 className="text-xl font-semibold">Single Selection</h3>
         <p>Selected Book ID: {singleSelection || "None"}</p>
         <ul className="mt-2">
@@ -141,7 +142,7 @@ const Test = () => {
       </div>
 
       {/* Multiple Selection */}
-      <div>
+      <div className="my-5">
         <h3 className="text-xl font-semibold">Multiple Selection</h3>
         <p>
           Selected Book IDs: {multipleSelection.length ? multipleSelection.join(", ") : "None"}
@@ -161,6 +162,13 @@ const Test = () => {
           ))}
         </ul>
       </div>
+
+      
+      <hr/>
+      {/* Test Material Staging    */}
+
+      <TestMaterialStaging />    
+
     </div>
   );
 };

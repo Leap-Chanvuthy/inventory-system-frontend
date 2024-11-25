@@ -12,6 +12,7 @@ import passwordReducer from './slices/passwordSlice';
 import currencyReducer from './slices/currencySlice';
 import invoiceReducer from './slices/invoiceSlice';
 import selectionReducer from './slices/selectionSlice';
+import materialStagingReducer from './slices/materialStagingSlice';
 
 
 const persistConfig = {
@@ -29,7 +30,8 @@ const rootReducer = combineReducers({
     password : passwordReducer,
     currencies : currencyReducer,
     invoices : invoiceReducer,
-    selections : selectionReducer
+    selections : selectionReducer,
+    materialStagings : materialStagingReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

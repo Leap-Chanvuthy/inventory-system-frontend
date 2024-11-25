@@ -49,8 +49,8 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
             {/* Only allow Admin & Stock Controller user */}
             {userRole == 'ADMIN' || userRole == 'STOCK_CONTROLLER' ?
             <Sidebar.Collapse icon={MdOutlineInventory2} label="Inventory" className="font-bold">
-              <Sidebar.Item href="/products" active={pathname === "/products"}>
-                Products
+              <Sidebar.Item active={pathname === "/products"}>
+                <Link to='/products'>Products</Link>
               </Sidebar.Item>
               <Sidebar.Item active={pathname === "/raw-materials"}>
                 <Link to='/raw-materials'>Raw Materials</Link>
