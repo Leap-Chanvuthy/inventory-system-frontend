@@ -17,6 +17,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import Create from "./category/Create";
 import CategoryTable from "./list/CategoryTable";
+import Partial from "../../../../components/Partial";
 
 const CategoryList = () => {
   const [filters, setFilters] = useState({
@@ -79,7 +80,8 @@ const CategoryList = () => {
   return (
     <div>
       <div>
-      <h3 className="text-lg font-bold">Raw Material Category</h3>
+      {/* <h3 className="text-lg font-bold">Raw Material Category</h3> */}
+      <Partial title="Raw Material Categories" link="list" />
         <div className="my-5 flex flex-col lg:md:flex-row gap-3 justify-between">
           <form
             onSubmit={handleSearch}

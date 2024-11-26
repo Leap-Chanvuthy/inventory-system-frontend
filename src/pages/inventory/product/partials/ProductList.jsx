@@ -25,22 +25,22 @@ const RawMaterialList = () => {
 
 
     // // get raw material category
-    // const [categories , setCategories] = useState([]);
-    // console.log(categories)
+    const [categories , setCategories] = useState([]);
+    console.log(categories)
   
-    // useEffect(() =>{
-    //   const getCategory = async (e) =>{
-    //     try {
+    useEffect(() =>{
+      const getCategory = async (e) =>{
+        try {
           
-    //       const response = await axios.get(`${BASE_URL}/non-paginate/raw-material-categories`)
-    //       console.log(response.data);
-    //       setCategories(response.data);
-    //     }catch (err){
-    //       console.log(err);
-    //     }
-    //   }
-    //   getCategory();
-    // } , [])
+          const response = await axios.get(`${BASE_URL}/product-categories/all`)
+          console.log(response.data);
+          setCategories(response.data);
+        }catch (err){
+          console.log(err);
+        }
+      }
+      getCategory();
+    } , [])
 
 
   const handleFilterChange = (e) => {
@@ -144,7 +144,7 @@ const RawMaterialList = () => {
                     </Select>
                   </div>
 
-                  {/* <div>
+                  <div>
                     <Label
                       htmlFor="category_id"
                       value="Category"
@@ -163,8 +163,8 @@ const RawMaterialList = () => {
                           </option>
                         ))}
                     </Select>
-                  </div> */}
-
+                  </div>
+      
                 </div>
               </div>
             </Dropdown>

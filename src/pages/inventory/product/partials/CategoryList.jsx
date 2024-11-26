@@ -13,6 +13,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import CategoryTable from "./list/CategoryTable";
 import Create from "./category/Create";
+import Partial from "../../../../components/Partial";
 
 const CategoryList = () => {
   const [filters, setFilters] = useState({
@@ -72,7 +73,7 @@ const CategoryList = () => {
   return (
     <div>
       <div>
-      <h3 className="text-lg font-bold">Product Category</h3>
+        <Partial title="Product Categories" link="list" />
         <div className="my-5 flex flex-col lg:md:flex-row gap-3 justify-between">
           <form
             onSubmit={handleSearch}
