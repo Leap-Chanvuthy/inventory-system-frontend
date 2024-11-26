@@ -7,6 +7,7 @@ import themeReducer from './slices/themeSlice';
 import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
 import rawMaterialReducer from './slices/rawMaterialSlice';
+import productReducer from './slices/productSlice';
 import supplierReducer from './slices/supplierSlice';
 import passwordReducer from './slices/passwordSlice';
 import currencyReducer from './slices/currencySlice';
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
     auth : authReducer,
     users : userReducer,
     rawMaterials : rawMaterialReducer,
+    products : productReducer,
     suppliers : supplierReducer,
     password : passwordReducer,
     currencies : currencyReducer,
