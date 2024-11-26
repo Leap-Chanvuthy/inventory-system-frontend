@@ -6,7 +6,7 @@ import { DangerToast, SuccessToast } from "../../../../../components/ToastNotifi
 import { FiEdit } from "react-icons/fi";
 
 
-const Update = ({raw_material_category_id}) => {
+const Update = ({product_category_id}) => {
   const [categories , setCategories] = useState([]);
   const [error , setError] = useState(null);
   const [loading , setLoading] = useState(false);
@@ -24,7 +24,7 @@ const Update = ({raw_material_category_id}) => {
   useEffect(() =>{
     const getCategory = async () =>{
         try {
-            const response = await axios.get(`${BASE_URL}/raw-material-category/${raw_material_category_id}`);
+            const response = await axios.get(`${BASE_URL}/product-category/${product_category_id}`);
             //console.log(response);
             setCategories(response.data)
         }catch (err){
@@ -32,7 +32,7 @@ const Update = ({raw_material_category_id}) => {
         }
     }
     getCategory();
-  },[raw_material_category_id]);
+  },[product_category_id]);
 
   useEffect(() => {
     if (categories){
@@ -55,7 +55,7 @@ const Update = ({raw_material_category_id}) => {
     e.preventDefault();
     setLoading(true);
     try {
-        const response = await axios.patch(`${BASE_URL}/raw-material-category/update/${raw_material_category_id}` , values);
+        const response = await axios.patch(`${BASE_URL}/product-category/update/${product_category_id}` , values);
         console.log(response);
         setLoading(false);
         setSuccessToastOpen(true)

@@ -1,13 +1,12 @@
 import { Button, Label, Modal, Spinner, Textarea, TextInput } from "flowbite-react";
-import { useEffect, useState  } from "react";
+import { useState  } from "react";
+import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import { BASE_URL } from "../../../../../components/const/constant";
 import { DangerToast, SuccessToast } from "../../../../../components/ToastNotification";
-import { FiEdit } from "react-icons/fi";
 
 
-const Update = ({raw_material_category_id}) => {
-  const [categories , setCategories] = useState([]);
+const Create = () => {
   const [error , setError] = useState(null);
   const [loading , setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -15,33 +14,11 @@ const Update = ({raw_material_category_id}) => {
   const [failToastOpen , setFailToastOpen] = useState(false);
 
   // initial values
+
   const [values , setValues] = useState({
     category_name : "",
     description : ""
   })
-
-  // get category by id
-  useEffect(() =>{
-    const getCategory = async () =>{
-        try {
-            const response = await axios.get(`${BASE_URL}/raw-material-category/${raw_material_category_id}`);
-            //console.log(response);
-            setCategories(response.data)
-        }catch (err){
-            console.log(err);
-        }
-    }
-    getCategory();
-  },[raw_material_category_id]);
-
-  useEffect(() => {
-    if (categories){
-        setValues({
-            category_name : categories?.category_name ||"",
-            description : categories?.description || ""
-        })
-    }
-    } , [categories])
 
   // function to handle values changing
   const handleChange = (e) =>{
@@ -50,12 +27,12 @@ const Update = ({raw_material_category_id}) => {
     setValues({...values , [key] : value});
   }
 
-  // Sending patch request
+  // Sending post request
   const handleSubmit = async (e) =>{
     e.preventDefault();
     setLoading(true);
     try {
-        const response = await axios.patch(`${BASE_URL}/raw-material-category/update/${raw_material_category_id}` , values);
+        const response = await axios.post (`${BASE_URL}/product-category/create` , values);
         console.log(response);
         setLoading(false);
         setSuccessToastOpen(true)
@@ -69,18 +46,23 @@ const Update = ({raw_material_category_id}) => {
 
   }
 
+
+
   function onCloseModal() {
     setOpenModal(false);
   }
 
   return (
     <>
-      <div className="flex items-center gap-1" onClick={() => setOpenModal(true)}>
-        <FiEdit />
-      </div>
+      <Button onClick={() => setOpenModal(true)}>
+        <div className="flex items-center gap-1">
+            <FaPlus/>
+            Category
+        </div>
+      </Button>
       <Modal show={openModal} size="xl" onClose={onCloseModal} popup>
         <Modal.Header>
-            <h3 className="font-semibold p-4">Update Category</h3>
+            <h3 className="font-semibold p-4">Product Category</h3>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -159,4 +141,4 @@ const Update = ({raw_material_category_id}) => {
 }
 
 
-export default Update;
+export default Create;
