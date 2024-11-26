@@ -194,7 +194,7 @@ const CategoryTable = ({ filters }) => {
         </Modal.Footer>
       </Modal>
 
-      <SuccessToast open={successToastOpen} onClose={() => setSuccessToastOpen(false)} message="Raw material deleted successfully!" />
+      <SuccessToast open={successToastOpen} onClose={() => setSuccessToastOpen(false)} message="Raw material category deleted successfully!" />
     </div>
   );
 };

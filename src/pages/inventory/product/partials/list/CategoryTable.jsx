@@ -9,7 +9,6 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { MdDelete } from "react-icons/md";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
-import { FiEdit } from "react-icons/fi";
 import Update from "../category/Update";
 
 const CategoryTable = ({ filters }) => {
@@ -194,7 +193,7 @@ const CategoryTable = ({ filters }) => {
         </Modal.Footer>
       </Modal>
 
-      <SuccessToast open={successToastOpen} onClose={() => setSuccessToastOpen(false)} message="Raw material deleted successfully!" />
+      <SuccessToast open={successToastOpen} onClose={() => setSuccessToastOpen(false)} message="Product category deleted successfully!" />
     </div>
   );
 };
