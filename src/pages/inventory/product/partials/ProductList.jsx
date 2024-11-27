@@ -183,7 +183,7 @@ const RawMaterialList = () => {
             
           </form>
           <div className="flex gap-3 items-center">
-            <Link to="/raw-materials/create">
+            <Link to="/products/create">
               <Button color="info">Create New</Button>
             </Link>
           </div>

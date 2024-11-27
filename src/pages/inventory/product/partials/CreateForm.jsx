@@ -1,321 +1,88 @@
-// import { Button, FileInput, Label, TextInput } from "flowbite-react";
-// import { useState } from "react";
-// import { SuccessToast } from "../../../../components/ToastNotification";
-// import { MdCancel } from "react-icons/md";
-
-// const CreateForm = () => {
-//   const [values, setValues] = useState({
-//     raw_materials: [
-//       {
-//         product_images: [],
-//         name: "",
-//         quantity: "",
-//         unit_price: "",
-//         total_value: "",
-//         minimum_stock_level: "",
-//         unit: "",
-//         package_size: "",
-//         supplier_id: "",
-//       },
-//     ],
-//   });
-//   console.log(values);
-
-//   const [openSuccess, setOpenSuccess] = useState(false);
-
-//   const handleChange = (index, e) => {
-//     const { id, value } = e.target;
-//     const updatedMaterials = [...values.raw_materials];
-//     updatedMaterials[index][id] = value;
-//     setValues({ raw_materials: updatedMaterials });
-//   };
-
-//   const handleFileChange = (index, e) => {
-//     const files = Array.from(e.target.files);
-//     const validImages = files.filter((file) => file.type.startsWith("image/"));
-
-//     if (validImages.length) {
-//       const newImagePreviews = validImages.map((file) =>
-//         URL.createObjectURL(file)
-//       );
-
-//       const updatedMaterials = [...values.raw_materials];
-//       updatedMaterials[index].product_images = [
-//         ...updatedMaterials[index].product_images,
-//         ...validImages,
-//       ];
-//       setValues({ raw_materials: updatedMaterials });
-//     } else {
-//       alert("Please upload valid image files.");
-//     }
-//   };
-
-//   const handleAddProduct = () => {
-//     setValues((prevValues) => ({
-//       raw_materials: [
-//         ...prevValues.raw_materials,
-//         {
-//           product_images: [],
-//           name: "",
-//           quantity: "",
-//           unit_price: "",
-//           total_value: "",
-//           minimum_stock_level: "",
-//           unit: "",
-//           package_size: "",
-//           supplier_id: "",
-//         },
-//       ],
-//     }));
-//   };
-
-//   const handleRemoveProduct = (index) => {
-//     const updatedMaterials = [...values.raw_materials];
-//     updatedMaterials.splice(index, 1);
-//     setValues({ raw_materials: updatedMaterials });
-//   };
-
-//   const handleRemoveImage = (productIndex, imageIndex) => {
-//     const updatedMaterials = [...values.raw_materials];
-//     updatedMaterials[productIndex].product_images.splice(imageIndex, 1);
-//     setValues({ raw_materials: updatedMaterials });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     setOpenSuccess(true);
-//   };
-
-//   return (
-//     <div className="my-5">
-//       <SuccessToast
-//         open={openSuccess}
-//         onClose={() => setOpenSuccess(false)}
-//         message="Products Created Successfully"
-//       />
-//       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-//         {values.raw_materials.map((material, index) => (
-//           <div key={index} className="border border-dashed border-slate-600 p-4 rounded-md mb-4">
-//             <div className="flex items-center justify-between mb-2">
-//               <h3 className="text-lg font-semibold">Raw Material {index + 1}</h3>
-//               {values.raw_materials.length > 1 && (
-//                 <button
-//                   type="button"
-//                   className="text-red-500"
-//                   onClick={() => handleRemoveProduct(index)}
-//                 >
-//                   <MdCancel className="text-red text-xl" />
-//                 </button>
-//               )}
-//             </div>
-
-//             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//   <div>
-//     <Label htmlFor="name" value="Material Name" />
-//     <TextInput
-//       id="name"
-//       placeholder="Enter material name"
-//       required
-//       value={material.name}
-//       onChange={(e) => handleChange(index, e)}
-//     />
-//   </div>
-
-//   <div>
-//     <Label htmlFor="quantity" value="Quantity" />
-//     <TextInput
-//       id="quantity"
-//       type="number"
-//       placeholder="Enter quantity"
-//       required
-//       value={material.quantity}
-//       onChange={(e) => handleChange(index, e)}
-//     />
-//   </div>
-
-//   <div>
-//     <Label htmlFor="unit_price" value="Unit Price" />
-//     <TextInput
-//       id="unit_price"
-//       type="text"
-//       placeholder="Enter unit price"
-//       required
-//       value={material.unit_price}
-//       onChange={(e) => handleChange(index, e)}
-//     />
-//   </div>
-
-//   <div>
-//     <Label htmlFor="total_value" value="Total Value" />
-//     <TextInput
-//       id="total_value"
-//       type="text"
-//       placeholder="Enter total value"
-//       required
-//       value={material.total_value}
-//       onChange={(e) => handleChange(index, e)}
-//     />
-//   </div>
-
-//   <div>
-//     <Label htmlFor="minimum_stock_level" value="Minimum Stock Level" />
-//     <TextInput
-//       id="minimum_stock_level"
-//       type="number"
-//       placeholder="Enter minimum stock level"
-//       required
-//       value={material.minimum_stock_level}
-//       onChange={(e) => handleChange(index, e)}
-//     />
-//   </div>
-
-//   <div>
-//     <Label htmlFor="unit" value="Unit" />
-//     <TextInput
-//       id="unit"
-//       type="text"
-//       placeholder="Enter unit (e.g., kg)"
-//       required
-//       value={material.unit}
-//       onChange={(e) => handleChange(index, e)}
-//     />
-//   </div>
-
-//   <div>
-//     <Label htmlFor="package_size" value="Package Size" />
-//     <TextInput
-//       id="package_size"
-//       type="text"
-//       placeholder="Enter package size (e.g., 10kg)"
-//       required
-//       value={material.package_size}
-//       onChange={(e) => handleChange(index, e)}
-//     />
-//   </div>
-
-//   <div>
-//     <Label htmlFor="supplier_id" value="Supplier ID" />
-//     <TextInput
-//       id="supplier_id"
-//       type="number"
-//       placeholder="Enter supplier ID"
-//       required
-//       value={material.supplier_id}
-//       onChange={(e) => handleChange(index, e)}
-//     />
-//   </div>
-// </div>
-
-// <div className="flex items-center justify-center mt-4 mb-4">
-//   <Label
-//     htmlFor={`image_${index}`}
-//     className="flex items-center justify-center cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 p-4 w-full"
-//   >
-//     <div className="flex flex-col items-center justify-center">
-//       <svg
-//         className="h-8 w-8 text-gray-500 mb-2"
-//         xmlns="http://www.w3.org/2000/svg"
-//         fill="none"
-//         viewBox="0 0 24 24"
-//         strokeWidth="1.5"
-//         stroke="currentColor"
-//       >
-//         <path
-//           strokeLinecap="round"
-//           strokeLinejoin="round"
-//           d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-//         />
-//       </svg>
-//       <span>Upload Image</span>
-//     </div>
-//     <FileInput
-//       id={`image_${index}`}
-//       className="hidden"
-//       onChange={(e) => handleFileChange(index, e)}
-//     />
-//   </Label>
-// </div>
-
-//             <div className="grid grid-cols-4 gap-4">
-//               {material.product_images.map((file, imgIndex) => (
-//                 <div key={imgIndex} className="relative">
-//                   <img
-//                     src={URL.createObjectURL(file)}
-//                     alt={`Preview ${imgIndex}`}
-//                     className="w-full h-[8rem] object-cover rounded-md border-2 border-slate-800 dark:bg-slate-300"
-//                   />
-//                   <button
-//                     type="button"
-//                     className="absolute top-1 right-1 bg-red-600 h-8 w-8 rounded-full bg-slate-800 text-white p-1"
-//                     onClick={() => handleRemoveImage(index, imgIndex)}
-//                   >
-//                     &times;
-//                   </button>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//         ))}
-
-//         <div className="flex justify-between items-center">
-//           <Button type="button" onClick={handleAddProduct}>
-//             Add Another Product
-//           </Button>
-//           <Button type="submit">Submit</Button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default CreateForm;
-
-
-
-
-import { Button, FileInput, Label, TextInput } from "flowbite-react";
-import { useState } from "react";
-import { SuccessToast } from "../../../../components/ToastNotification";
+import {
+  Alert,
+  Badge,
+  Button,
+  Checkbox,
+  Label,
+  Select,
+  Table,
+  Textarea,
+  TextInput,
+  Timeline,
+} from "flowbite-react";
+import { useState, useEffect } from "react";
+import {
+  DangerToast,
+  SuccessToast,
+} from "../../../../components/ToastNotification";
 import { MdCancel } from "react-icons/md";
+import axios from "axios";
+import { BASE_URL } from "../../../../components/const/constant";
+import {
+  addProductStart,
+  addProductSuccess,
+  addProductFailure,
+} from "../../../../redux/slices/productSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Spinner } from "flowbite-react";
+import { HiCalendar } from "react-icons/hi";
+import { CgInsights } from "react-icons/cg";
+import RawMaterialRelationship from "./relationships/RawMaterialRelationship";
+import { toggleMultipleSelection } from "../../../../redux/slices/selectionSlice";
+import { addToCart, removeFromCart } from "../../../../redux/slices/cartSlice";
 
 const CreateForm = () => {
+  const { status, error } = useSelector((state) => state.products);
+  const { multipleSelection } = useSelector((state) => state.selections);
+  const { cartItems } = useSelector((state) => state.carts);
+  console.log('Cart Items in CrateForm : ' , cartItems);
+  console.log(multipleSelection);
+  const dispatch = useDispatch();
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [failedToastOpen, setFailToastOpen] = useState(false);
+
   const [values, setValues] = useState({
-    raw_materials: [
-      {
-        product_images: [],
-        name: "",
-        quantity: "",
-        unit_price: "",
-        total_value: "",
-        minimum_stock_level: "",
-        unit: "",
-        package_size: "",
-        supplier_id: "",
-      },
-    ],
-    payment_method: "",
+    image: [],
+    product_name: "",
+    product_code: "",
+    quantity: "",
+    remaining_quantity: "",
+    unit_price_in_usd: "",
+    total_value_in_usd: "",
+    exchange_rate_from_usd_to_riel: "",
+    unit_price_in_riel: "",
+    total_value_in_riel: "",
+    exchange_rate_from_riel_to_usd: "",
+    minimum_stock_level: "",
+    product_category_id: "",
+    unit_of_measurement: "",
+    package_size: "",
     status: "",
-    discount_percentage: 0,
-    tax_percentage: 0,
-    clearing_payable: 0,
-    indebted: 0,
+    warehouse_location: "",
+    description: "",
+    staging_date: "",
+    raw_materials: [],
   });
+
   console.log(values);
 
-  const [openSuccess, setOpenSuccess] = useState(false);
-
-  const handleChange = (index, e) => {
+  const handleChange = (e) => {
     const { id, value } = e.target;
-    if (index === null) {
-      setValues((prevValues) => ({ ...prevValues, [id]: value }));
-    } else {
-      const updatedMaterials = [...values.raw_materials];
-      updatedMaterials[index][id] = value;
-      setValues({ ...values, raw_materials: updatedMaterials });
-    }
+    setValues((prevValues) => ({ ...prevValues, [id]: value }));
   };
 
-  const handleFileChange = (index, e) => {
+
+  const handleMultipleSelect = (id , material) => {
+    dispatch(toggleMultipleSelection(id));
+    if (multipleSelection.includes(id)) {
+        dispatch(removeFromCart({ id }));
+      } else {
+        dispatch(addToCart(material));
+      }
+  };
+
+
+  const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const validImages = files.filter((file) => file.type.startsWith("image/"));
 
@@ -324,52 +91,75 @@ const CreateForm = () => {
         URL.createObjectURL(file)
       );
 
-      const updatedMaterials = [...values.raw_materials];
-      updatedMaterials[index].product_images = [
-        ...updatedMaterials[index].product_images,
-        ...validImages,
-      ];
-      setValues({ ...values, raw_materials: updatedMaterials });
+      setValues((prevValues) => ({
+        ...prevValues,
+        image: [...prevValues.image, ...validImages],
+      }));
     } else {
       alert("Please upload valid image files.");
     }
   };
 
-  const handleAddProduct = () => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      raw_materials: [
-        ...prevValues.raw_materials,
-        {
-          product_images: [],
-          name: "",
-          quantity: "",
-          unit_price: "",
-          total_value: "",
-          minimum_stock_level: "",
-          unit: "",
-          package_size: "",
-          supplier_id: "",
-        },
-      ],
-    }));
+  const handleRemoveImage = (imageIndex) => {
+    const updatedImages = [...values.image];
+    updatedImages.splice(imageIndex, 1);
+    setValues({ ...values, image: updatedImages });
   };
 
-  const handleRemoveProduct = (index) => {
-    const updatedMaterials = [...values.raw_materials];
-    updatedMaterials.splice(index, 1);
-    setValues({ ...values, raw_materials: updatedMaterials });
-  };
+  // get raw material category
+  const [categories, setCategories] = useState([]);
+  console.log(categories);
 
-  const handleRemoveImage = (productIndex, imageIndex) => {
-    const updatedMaterials = [...values.raw_materials];
-    updatedMaterials[productIndex].product_images.splice(imageIndex, 1);
-    setValues({ ...values, raw_materials: updatedMaterials });
-  };
+  useEffect(() => {
+    const getCategory = async (e) => {
+      try {
+        const response = await axios.get(`${BASE_URL}/product-categories/all`);
+        console.log(response.data);
+        setCategories(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getCategory();
+  }, []);
 
-  const handleSubmit = (e) => {
+  // Submit post request to backend
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setOpenSuccess(true);
+    dispatch(addProductStart());
+    try {
+      const response = await axios.post(`${BASE_URL}/product`, values, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      dispatch(addProductSuccess(response.data));
+      setOpenSuccess(true);
+      setValues({
+        image: [],
+        product_name: "",
+        product_code: "",
+        quantity: "",
+        remaining_quantity: "",
+        unit_price_in_usd: "",
+        total_value_in_usd: "",
+        unit_price_in_riel: "",
+        total_value_in_riel: "",
+        minimum_stock_level: "",
+        product_category_id: "",
+        unit_of_measurement: "",
+        package_size: "",
+        status: "",
+        warehouse_location: "",
+        description: "",
+        staging_date: "",
+        barcode: "",
+        raw_materials: [],
+      });
+    } catch (error) {
+      console.error("Error submitting the form:", error);
+      setFailToastOpen(true);
+      dispatch(addProductFailure(error?.response?.data?.errors));
+    }
   };
 
   return (
@@ -377,258 +167,701 @@ const CreateForm = () => {
       <SuccessToast
         open={openSuccess}
         onClose={() => setOpenSuccess(false)}
-        message="Products Created Successfully"
+        message="Product Created Successfully"
       />
+
+      <DangerToast
+        open={failedToastOpen}
+        onClose={() => setFailToastOpen(false)}
+        message="Something went wrong."
+      />
+
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="payment_method" value="Payment Method" />
-            <TextInput
-              id="payment_method"
-              placeholder="Enter payment method"
-              required
-              value={values.payment_method}
-              onChange={(e) => handleChange(null, e)}
-            />
+        <div>
+          <div className="flex flex-col gap-5">
+            <Timeline>
+              <Timeline.Item>
+                <Timeline.Point icon={HiCalendar} />
+                <Timeline.Content>
+                  <Timeline.Title>General Info</Timeline.Title>
+                  <Timeline.Body>
+                    <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-5">
+                      <div>
+                        <Label htmlFor="product_name" value="Product Name" />
+                        <TextInput
+                          id="product_name"
+                          placeholder="Enter product name"
+                          value={values.product_name}
+                          onChange={handleChange}
+                          className={`${
+                            error?.product_name
+                              ? "border-[1.5px] border-red-400 rounded-md"
+                              : ""
+                          } `}
+                          helperText={
+                            error?.product_name && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.product_name}
+                                </span>
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label
+                          htmlFor="product_code"
+                          value="Product Code (Auto Generated)"
+                        />
+                        <TextInput
+                          id="product_code"
+                          placeholder="Enter product code"
+                          value={values.product_code}
+                          onChange={handleChange}
+                          disabled
+                          className={`${
+                            error?.product_code
+                              ? "border-[1.5px] border-red-400 rounded-md"
+                              : ""
+                          } `}
+                          helperText={
+                            error?.product_code && (
+                              <>
+                                <span class="font-medium text-red-400">
+                                  {error.product_code}
+                                </span>
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="staging_date" value="Staging Date" />
+                        <TextInput
+                          id="staging_date"
+                          type="date"
+                          value={values.staging_date}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+                  </Timeline.Body>
+                </Timeline.Content>
+              </Timeline.Item>
+
+              <Timeline.Item>
+                <Timeline.Point icon={CgInsights} />
+                <Timeline.Content>
+                  <Timeline.Title>Stock Info</Timeline.Title>
+                  <Timeline.Body>
+                    {/* <h2 className="text-md font-semibold">Stock Info</h2> */}
+                    <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-5">
+                      <div>
+                        <Label htmlFor="quantity" value="Quantity" />
+                        <TextInput
+                          id="quantity"
+                          type="number"
+                          placeholder="Enter quantity"
+                          value={values.quantity}
+                          onChange={handleChange}
+                          className={`${
+                            error?.quantity
+                              ? "border-[1.5px] border-red-400 rounded-md"
+                              : ""
+                          } `}
+                          helperText={
+                            error?.quantity && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.quantity}
+                                </span>
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="remaing_quantity"
+                          value="Remainig Quantity"
+                        />
+                        <TextInput
+                          id="remaining_quantity"
+                          type="number"
+                          placeholder="Enter remaining quantity"
+                          value={values.remaining_quantity}
+                          onChange={handleChange}
+                          className={`${
+                            error?.remaining_quantity
+                              ? "border-[1.5px] border-red-400 rounded-md"
+                              : ""
+                          } `}
+                          helperText={
+                            error?.remaining_quantity && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.remaining_quantity}
+                                </span>
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="minimum_stock_level"
+                          value="Minimum Stock Level"
+                        />
+                        <TextInput
+                          id="minimum_stock_level"
+                          type="number"
+                          placeholder="Enter minimum stock level"
+                          value={values.minimum_stock_level}
+                          onChange={handleChange}
+                          className={`${
+                            error?.minimum_stock_level
+                              ? "border-[1.5px] border-red-400 rounded-md"
+                              : ""
+                          } `}
+                          helperText={
+                            error?.minimum_stock_level && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.minimum_stock_level}
+                                </span>
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                  </Timeline.Body>
+                </Timeline.Content>
+              </Timeline.Item>
+
+              <Timeline.Item>
+                <Timeline.Point icon={HiCalendar} />
+                <Timeline.Content>
+                  <Timeline.Title>Currency Info</Timeline.Title>
+                  <Timeline.Body>
+                    {/* <h2 className="text-md font-semibold">Currency Info</h2> */}
+                    <div className="flex flex-col gap-3">
+                      <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-5">
+                        <div>
+                          <Label
+                            htmlFor="unit_price_in_usd"
+                            value="Unit Price in USD"
+                          />
+                          <TextInput
+                            id="unit_price_in_usd"
+                            type="number"
+                            placeholder="Unit price in USD"
+                            value={values.unit_price_in_usd}
+                            onChange={handleChange}
+                            className={`${
+                              error?.unit_price_in_usd
+                                ? "border-[1.5px] border-red-400 rounded-md"
+                                : ""
+                            } `}
+                            helperText={
+                              error?.unit_price_in_usd && (
+                                <>
+                                  <span className="font-medium text-red-400">
+                                    {error.unit_price_in_usd}
+                                  </span>
+                                </>
+                              )
+                            }
+                          />
+                        </div>
+                        <div>
+                          <Label
+                            htmlFor="total_value_in_usd"
+                            value="Total Value in USD"
+                          />
+                          <TextInput
+                            id="total_value_in_usd"
+                            type="text"
+                            placeholder="Enter total value"
+                            value={values.total_value_in_usd}
+                            onChange={handleChange}
+                            className={`${
+                              error?.total_value_in_usd
+                                ? "border-[1.5px] border-red-400 rounded-md"
+                                : ""
+                            } `}
+                            helperText={
+                              error?.total_value_in_usd && (
+                                <>
+                                  <span className="font-medium text-red-400">
+                                    {error.total_value_in_usd}
+                                  </span>
+                                </>
+                              )
+                            }
+                          />
+                        </div>
+                        <div>
+                          <Label
+                            htmlFor="exchange_rate_from_usd_to_riel"
+                            value="Exchange Rate From USD to Riel"
+                          />
+                          <TextInput
+                            id="exchange_rate_from_usd_to_riel"
+                            type="text"
+                            placeholder="Enter total value"
+                            value={values.exchange_rate_from_usd_to_riel}
+                            onChange={handleChange}
+                            className={`${
+                              error?.exchange_rate_from_usd_to_riel
+                                ? "border-[1.5px] border-red-400 rounded-md"
+                                : ""
+                            } `}
+                            helperText={
+                              error?.exchange_rate_from_usd_to_riel && (
+                                <>
+                                  <span className="font-medium text-red-400">
+                                    {error.exchange_rate_from_usd_to_riel}
+                                  </span>
+                                </>
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+                        <div>
+                          <Label
+                            htmlFor="unit_price_in_riel"
+                            value="Unit Price in Riel"
+                          />
+                          <TextInput
+                            id="unit_price_in_riel"
+                            type="text"
+                            placeholder="Enter total value"
+                            value={values.unit_price_in_riel}
+                            onChange={handleChange}
+                            className={`${
+                              error?.unit_price_in_riel
+                                ? "border-[1.5px] border-red-400 rounded-md"
+                                : ""
+                            } `}
+                            helperText={
+                              error?.unit_price_in_riel && (
+                                <>
+                                  <span className="font-medium text-red-400">
+                                    {error.unit_price_in_riel}
+                                  </span>
+                                </>
+                              )
+                            }
+                          />
+                        </div>
+                        <div>
+                          <Label
+                            htmlFor="total_value_in_riel"
+                            value="Total Value in Riel"
+                          />
+                          <TextInput
+                            id="total_value_in_riel"
+                            type="text"
+                            placeholder="Enter total value"
+                            value={values.total_value_in_riel}
+                            onChange={handleChange}
+                            className={`${
+                              error?.total_value_in_riel
+                                ? "border-[1.5px] border-red-400 rounded-md"
+                                : ""
+                            } `}
+                            helperText={
+                              error?.total_value_in_riel && (
+                                <>
+                                  <span className="font-medium text-red-400">
+                                    {error.total_value_in_riel}
+                                  </span>
+                                </>
+                              )
+                            }
+                          />
+                        </div>
+                        <div>
+                          <Label
+                            htmlFor="exchange_rate_from_riel_to_usd"
+                            value="Exchange Rate From Riel to USD"
+                          />
+                          <TextInput
+                            id="exchange_rate_from_riel_to_usd"
+                            type="text"
+                            placeholder="Enter total value"
+                            value={values.exchange_rate_from_riel_to_usd}
+                            onChange={handleChange}
+                            className={`${
+                              error?.exchange_rate_from_riel_to_usd
+                                ? "border-[1.5px] border-red-400 rounded-md"
+                                : ""
+                            } `}
+                            helperText={
+                              error?.exchange_rate_from_riel_to_usd && (
+                                <>
+                                  <span className="font-medium text-red-400">
+                                    {error.exchange_rate_from_riel_to_usd}
+                                  </span>
+                                </>
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </Timeline.Body>
+                </Timeline.Content>
+              </Timeline.Item>
+
+              <Timeline.Item>
+                <Timeline.Point icon={HiCalendar} />
+                <Timeline.Content>
+                  <Timeline.Title>Additional</Timeline.Title>
+                  <Timeline.Body>
+                    {/* <h2 className="text-md font-semibold">Additional</h2> */}
+                    <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-5">
+                      <div>
+                        <Label
+                          htmlFor="product_category_id"
+                          value="Raw Material Category"
+                        />
+                        <Select
+                          id="product_category_id"
+                          placeholder="Enter raw material category"
+                          value={values.product_category_id}
+                          onChange={handleChange}
+                          helperText={
+                            error?.product_category_id && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.product_category_id}
+                                </span>
+                              </>
+                            )
+                          }
+                        >
+                          <option value="">Select an option</option>
+                          {categories &&
+                            categories.map((category) => (
+                              <option value={category.id}>
+                                {category.category_name}
+                              </option>
+                            ))}
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="status" value="Status" />
+                        <Select
+                          id="status"
+                          placeholder="Enter status"
+                          value={values.status}
+                          onChange={handleChange}
+                          helperText={
+                            error?.status && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.status}
+                                </span>
+                              </>
+                            )
+                          }
+                        >
+                          <option value="">Select an option</option>
+                          <option value="IN_STOCK">In stock</option>
+                          <option value="OUT_OF_STOCK">Out of stock</option>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="unit_of_measurement"
+                          value="Unit of Measurement"
+                        />
+                        <TextInput
+                          id="unit_of_measurement"
+                          placeholder="Enter unit of measurement"
+                          value={values.unit_of_measurement}
+                          onChange={handleChange}
+                          className={`${
+                            error?.unit_of_measurement
+                              ? "border-[1.5px] border-red-400 rounded-md"
+                              : ""
+                          } `}
+                          helperText={
+                            error?.unit_of_measurement && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.unit_of_measurement}
+                                </span>
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="package_size" value="Package Size" />
+                        <TextInput
+                          id="package_size"
+                          placeholder="Enter package size"
+                          value={values.package_size}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="warehouse_location"
+                          value="warehouse_location"
+                        />
+                        <TextInput
+                          id="warehouse_location"
+                          placeholder="Enter warehouse_location"
+                          value={values.warehouse_location}
+                          onChange={handleChange}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="my-5">
+                      <Label htmlFor="description" value="Description" />
+                      <Textarea
+                        cols={4}
+                        id="description"
+                        placeholder="Enter description"
+                        value={values.description}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </Timeline.Body>
+                </Timeline.Content>
+              </Timeline.Item>
+            </Timeline>
           </div>
 
-          <div>
-            <Label htmlFor="status" value="Status" />
-            <TextInput
-              id="status"
-              placeholder="Enter status"
-              required
-              value={values.status}
-              onChange={(e) => handleChange(null, e)}
-            />
+          <div className="flex flex-col gap-3">
+            <Timeline>
+              <Timeline.Item>
+                <Timeline.Point icon={HiCalendar} />
+                <Timeline.Content>
+                  <Timeline.Title>Move Raw Material to Product</Timeline.Title>
+                  <Timeline.Body>
+                    <div className="overflow-x-auto lg:max-w-6xl  my-5">
+                      <Table striped>
+                        <Table.Head>
+                          <Table.HeadCell>Select</Table.HeadCell>
+                          <Table.HeadCell>ID</Table.HeadCell>
+                          <Table.HeadCell>Code</Table.HeadCell>
+                          <Table.HeadCell className="whitespace-nowrap">
+                            Product Name
+                          </Table.HeadCell>
+                          <Table.HeadCell>Status</Table.HeadCell>
+                          <Table.HeadCell>Category</Table.HeadCell>
+                          <Table.HeadCell>Quantity</Table.HeadCell>
+                          <Table.HeadCell className="whitespace-nowrap">
+                            Remaining Quantity
+                          </Table.HeadCell>
+                          {/* <Table.HeadCell className="whitespace-nowrap">
+                            Unit Price in USD
+                          </Table.HeadCell>
+                          <Table.HeadCell className="whitespace-nowrap">
+                            Total Value in USD
+                          </Table.HeadCell>
+                          <Table.HeadCell className="whitespace-nowrap">
+                            Unit Price in Riel
+                          </Table.HeadCell>
+                          <Table.HeadCell className="whitespace-nowrap">
+                            Total Value in Riel
+                          </Table.HeadCell> */}
+                          <Table.HeadCell className="whitespace-nowrap">
+                            Minimum Stock
+                          </Table.HeadCell>
+                          <Table.HeadCell>location</Table.HeadCell>
+                        </Table.Head>
+                        <Table.Body className="divide-y">
+                          {cartItems.length > 0 ? (
+                            cartItems.map((material) => (
+                              <Table.Row
+                                key={material.id}
+                                className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                              >
+                                <Table.Cell>
+                                  <Checkbox
+                                    checked={multipleSelection?.includes(
+                                      material.id
+                                    )}
+                                    onChange={() =>
+                                      handleMultipleSelect(material.id , material)
+                                    }
+                                  />
+                                </Table.Cell>
+                                <Table.Cell>{material.id}</Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  {material.material_code}
+                                </Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  {material.name}
+                                </Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  <div className="flex flex-wrap gap-2">
+                                    {material.status === "IN_STOCK" && (
+                                      <Badge color="success">
+                                        {material.status}
+                                      </Badge>
+                                    )}
+                                    {material.status === "OUT_OF_STOCK" && (
+                                      <Badge color="failure">
+                                        {material.status}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </Table.Cell>
+
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  <div className="flex flex-wrap gap-2">
+                                    <Badge
+                                      color={
+                                        material.category
+                                          ? "warning"
+                                          : "failure"
+                                      }
+                                    >
+                                      {material.category
+                                        ? material.category.category_name
+                                        : "NULL"}
+                                    </Badge>
+                                  </div>
+                                </Table.Cell>
+
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  {material.quantity}
+                                </Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  {material.remaining_quantity}
+                                </Table.Cell>
+                                {/* <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  $ {material.unit_price_in_usd}
+                                </Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  $ {material.total_value_in_usd}
+                                </Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  {material.unit_price_in_riel} ​៛
+                                </Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  {material.total_value_in_riel} ​៛
+                                </Table.Cell> */}
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  {material.minimum_stock_level}
+                                </Table.Cell>
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                  {material.location}
+                                </Table.Cell>
+                              </Table.Row>
+                            ))
+                          ) : (
+                            <Table.Row>
+                              <Table.Cell
+                                colSpan="8"
+                                className="text-center py-4"
+                              >
+                                No raw materials found.
+                              </Table.Cell>
+                            </Table.Row>
+                          )}
+                        </Table.Body>
+                      </Table>
+                    </div>
+                  </Timeline.Body>
+                  <RawMaterialRelationship />
+                </Timeline.Content>
+              </Timeline.Item>
+            </Timeline>
+            {/* {error?.supplier_id &&
+                <Alert color="failure" icon={HiInformationCircle}>
+                  <span className="font-medium">{error?.supplier_id}</span>
+                </Alert>
+              } */}
           </div>
 
-          <div>
-            <Label htmlFor="discount_percentage" value="Discount Percentage" />
-            <TextInput
-              id="discount_percentage"
-              type="number"
-              placeholder="Enter discount percentage"
-              required
-              value={values.discount_percentage}
-              onChange={(e) => handleChange(null, e)}
-            />
-          </div>
+          <Timeline>
+            <Timeline.Item>
+              <Timeline.Point icon={HiCalendar} />
+              <Timeline.Content>
+                <Timeline.Title>Images</Timeline.Title>
+                <Timeline.Body>
+                  <div className="flex items-center justify-center mt-4 mb-4">
+                    <Label
+                      htmlFor="image_upload"
+                      className="flex items-center justify-center cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 p-4 w-full"
+                    >
+                      <div className="flex flex-col items-center justify-center">
+                        <svg
+                          className="mb-3 w-10 h-10 text-gray-400 dark:text-gray-500"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M16 5a2 2 0 00-1.5.654L9.828 10.832A3.5 3.5 0 1112.5 13H17a2 2 0 002-2V7a2 2 0 00-2-2H16z" />
+                        </svg>
+                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="font-semibold">Click to upload</span>{" "}
+                          or drag and drop
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          PNG, JPG or GIF (max. 2MB)
+                        </p>
+                      </div>
+                      <input
+                        id="image_upload"
+                        type="file"
+                        className="hidden"
+                        multiple
+                        onChange={handleFileChange}
+                      />
+                    </Label>
+                  </div>
+                </Timeline.Body>
+              </Timeline.Content>
+            </Timeline.Item>
+          </Timeline>
 
-          <div>
-            <Label htmlFor="tax_percentage" value="Tax Percentage" />
-            <TextInput
-              id="tax_percentage"
-              type="number"
-              placeholder="Enter tax percentage"
-              required
-              value={values.tax_percentage}
-              onChange={(e) => handleChange(null, e)}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="clearing_payable" value="Clearing Payable" />
-            <TextInput
-              id="clearing_payable"
-              type="number"
-              placeholder="Enter clearing payable amount"
-              required
-              value={values.clearing_payable}
-              onChange={(e) => handleChange(null, e)}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="indebted" value="Indebted" />
-            <TextInput
-              id="indebted"
-              type="number"
-              placeholder="Enter indebted amount"
-              required
-              value={values.indebted}
-              onChange={(e) => handleChange(null, e)}
-            />
-          </div>
-        </div>
-
-        {values.raw_materials.map((material, index) => (
-          <div
-            key={index}
-            className="border border-dashed border-slate-600 p-4 rounded-md mb-4"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold">
-                Raw Material {index + 1}
-              </h3>
-              {values.raw_materials.length > 1 && (
-                <button
-                  type="button"
-                  className="text-red-500"
-                  onClick={() => handleRemoveProduct(index)}
-                >
-                  <MdCancel className="text-red text-xl" />
-                </button>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="name" value="Material Name" />
-                <TextInput
-                  id="name"
-                  placeholder="Enter material name"
-                  required
-                  value={material.name}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="quantity" value="Quantity" />
-                <TextInput
-                  id="quantity"
-                  type="number"
-                  placeholder="Enter quantity"
-                  required
-                  value={material.quantity}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="unit_price" value="Unit Price" />
-                <TextInput
-                  id="unit_price"
-                  type="text"
-                  placeholder="Enter unit price"
-                  required
-                  value={material.unit_price}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="total_value" value="Total Value" />
-                <TextInput
-                  id="total_value"
-                  type="text"
-                  placeholder="Enter total value"
-                  required
-                  value={material.total_value}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-
-              <div>
-                <Label
-                  htmlFor="minimum_stock_level"
-                  value="Minimum Stock Level"
-                />
-                <TextInput
-                  id="minimum_stock_level"
-                  type="number"
-                  placeholder="Enter minimum stock level"
-                  required
-                  value={material.minimum_stock_level}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="unit" value="Unit" />
-                <TextInput
-                  id="unit"
-                  type="text"
-                  placeholder="Enter unit (e.g., kg)"
-                  required
-                  value={material.unit}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="package_size" value="Package Size" />
-                <TextInput
-                  id="package_size"
-                  type="text"
-                  placeholder="Enter package size (e.g., 10kg)"
-                  required
-                  value={material.package_size}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="supplier_id" value="Supplier ID" />
-                <TextInput
-                  id="supplier_id"
-                  type="number"
-                  placeholder="Enter supplier ID"
-                  required
-                  value={material.supplier_id}
-                  onChange={(e) => handleChange(index, e)}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center mt-4 mb-4">
-              <Label
-                htmlFor={`image_${index}`}
-                className="flex items-center justify-center cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 p-4 w-full"
-              >
-                <div className="flex flex-col items-center justify-center">
-                  <svg
-                    className="h-8 w-8 text-gray-500 mb-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          <div className="flex flex-col gap-4 mt-2">
+            {values.image.length > 0 && (
+              <div className="flex flex-wrap">
+                {values.image.map((img, index) => (
+                  <div key={index} className="relative mr-2 mb-2">
+                    <img
+                      src={URL.createObjectURL(img)}
+                      alt={`Product Preview ${index + 1}`}
+                      className="w-[18rem] h-40 object-cover rounded-md"
                     />
-                  </svg>
-                  <span>Upload Image</span>
-                </div>
-                <FileInput
-                  id={`image_${index}`}
-                  className="hidden"
-                  onChange={(e) => handleFileChange(index, e)}
-                />
-              </Label>
-            </div>
-
-            <div className="grid grid-cols-4 gap-4">
-              {material.product_images.map((file, imgIndex) => (
-                <div key={imgIndex} className="relative">
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt={`Preview ${imgIndex}`}
-                    className="w-full h-[8rem] object-cover rounded-md border-2 border-slate-800 dark:bg-slate-300"
-                  />
-                  <button
-                    type="button"
-                    className="absolute top-1 right-1 bg-red-600 h-8 w-8 rounded-full bg-slate-800 text-white p-1"
-                    onClick={() => handleRemoveImage(index, imgIndex)}
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <button
+                      type="button"
+                      className="absolute top-0 right-0 p-1 text-white bg-red-500 rounded-full"
+                      onClick={() => handleRemoveImage(index)}
+                    >
+                      <MdCancel />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        ))}
-
-        <div className="flex justify-between items-center">
-          <Button type="button" onClick={handleAddProduct}>
-            Add Another Product
-          </Button>
-          <Button type="submit">Submit</Button>
         </div>
+
+        <Button type="submit" className="w-full">
+          {status === "loading" ? <Spinner /> : "Save"}
+        </Button>
       </form>
     </div>
   );
