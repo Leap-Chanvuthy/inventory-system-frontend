@@ -25,18 +25,24 @@ import {
 } from "../../../../redux/slices/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
-import { HiCalendar } from "react-icons/hi";
+import { HiCalendar, HiInformationCircle, HiOutlineCurrencyDollar } from "react-icons/hi";
 import { CgInsights } from "react-icons/cg";
 import RawMaterialRelationship from "./relationships/RawMaterialRelationship";
-import { toggleMultipleSelection } from "../../../../redux/slices/selectionSlice";
-import { addToCart, removeFromCart } from "../../../../redux/slices/cartSlice";
+import { resetMultipleSelectionState, toggleMultipleSelection } from "../../../../redux/slices/selectionSlice";
+import { addToCart, removeFromCart , resetCartItems } from "../../../../redux/slices/cartSlice";
+import { FaFileImage, FaPlus } from "react-icons/fa";
+import { resetMaterials, updateQuantity } from "../../../../redux/slices/materialStagingSlice";
 
 const CreateForm = () => {
   const { status, error } = useSelector((state) => state.products);
+  console.log("Create Error:" , error);
   const { multipleSelection } = useSelector((state) => state.selections);
   const { cartItems } = useSelector((state) => state.carts);
-  console.log('Cart Items in CrateForm : ' , cartItems);
+  const { selectedMaterials } = useSelector((state) => state.materialStagings);
+
   console.log(multipleSelection);
+  console.log("Select material stagging:", selectedMaterials);
+
   const dispatch = useDispatch();
   const [openSuccess, setOpenSuccess] = useState(false);
   const [failedToastOpen, setFailToastOpen] = useState(false);
@@ -61,6 +67,7 @@ const CreateForm = () => {
     warehouse_location: "",
     description: "",
     staging_date: "",
+    barcode: "123456789",
     raw_materials: [],
   });
 
@@ -71,16 +78,25 @@ const CreateForm = () => {
     setValues((prevValues) => ({ ...prevValues, [id]: value }));
   };
 
-
-  const handleMultipleSelect = (id , material) => {
+  // raw material selection phase
+  const handleMultipleSelect = (id, material) => {
     dispatch(toggleMultipleSelection(id));
     if (multipleSelection.includes(id)) {
-        dispatch(removeFromCart({ id }));
-      } else {
-        dispatch(addToCart(material));
-      }
+      dispatch(removeFromCart({ id }));
+    } else {
+      dispatch(addToCart(material));
+    }
   };
 
+  // stagging phase
+  const handleQuantityChange = (id, quantity) => {
+    const parsedQuantity = parseInt(quantity);
+    dispatch(updateQuantity({ id, quantity_used: parsedQuantity }));
+  };
+
+  useEffect(() =>{
+    setValues((prevValues) => ({...prevValues , raw_materials : selectedMaterials}))
+  },[selectedMaterials])
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -108,8 +124,6 @@ const CreateForm = () => {
 
   // get raw material category
   const [categories, setCategories] = useState([]);
-  console.log(categories);
-
   useEffect(() => {
     const getCategory = async (e) => {
       try {
@@ -133,6 +147,9 @@ const CreateForm = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       dispatch(addProductSuccess(response.data));
+      dispatch(resetMaterials());
+      dispatch(resetMultipleSelectionState());
+      dispatch(resetCartItems());
       setOpenSuccess(true);
       setValues({
         image: [],
@@ -144,6 +161,8 @@ const CreateForm = () => {
         total_value_in_usd: "",
         unit_price_in_riel: "",
         total_value_in_riel: "",
+        exchange_rate_from_usd_to_riel: "",
+        exchange_rate_from_riel_to_usd: "",
         minimum_stock_level: "",
         product_category_id: "",
         unit_of_measurement: "",
@@ -152,7 +171,7 @@ const CreateForm = () => {
         warehouse_location: "",
         description: "",
         staging_date: "",
-        barcode: "",
+        barcode: "123456789",
         raw_materials: [],
       });
     } catch (error) {
@@ -344,7 +363,7 @@ const CreateForm = () => {
               </Timeline.Item>
 
               <Timeline.Item>
-                <Timeline.Point icon={HiCalendar} />
+                <Timeline.Point icon={HiOutlineCurrencyDollar} />
                 <Timeline.Content>
                   <Timeline.Title>Currency Info</Timeline.Title>
                   <Timeline.Body>
@@ -651,10 +670,17 @@ const CreateForm = () => {
           <div className="flex flex-col gap-3">
             <Timeline>
               <Timeline.Item>
-                <Timeline.Point icon={HiCalendar} />
+                <Timeline.Point icon={FaPlus} />
                 <Timeline.Content>
                   <Timeline.Title>Move Raw Material to Product</Timeline.Title>
                   <Timeline.Body>
+                    <div className="my-5">
+                      {error?.raw_materials ?  
+                          <Alert color="failure" icon={HiInformationCircle}>
+                              <span className="font-medium">Raw Material Cannot be empty !</span> Please select at least one raw material to create product.
+                          </Alert> : <></>
+                      }  
+                    </div>
                     <div className="overflow-x-auto lg:max-w-6xl  my-5">
                       <Table striped>
                         <Table.Head>
@@ -664,12 +690,15 @@ const CreateForm = () => {
                           <Table.HeadCell className="whitespace-nowrap">
                             Product Name
                           </Table.HeadCell>
-                          <Table.HeadCell>Status</Table.HeadCell>
-                          <Table.HeadCell>Category</Table.HeadCell>
-                          <Table.HeadCell>Quantity</Table.HeadCell>
+                          {/* <Table.HeadCell>Quantity</Table.HeadCell> */}
                           <Table.HeadCell className="whitespace-nowrap">
                             Remaining Quantity
                           </Table.HeadCell>
+                          <Table.HeadCell className="whitespace-nowrap">
+                            Quantity Used
+                          </Table.HeadCell>
+                          <Table.HeadCell>Status</Table.HeadCell>
+                          <Table.HeadCell>Category</Table.HeadCell>
                           {/* <Table.HeadCell className="whitespace-nowrap">
                             Unit Price in USD
                           </Table.HeadCell>
@@ -689,91 +718,77 @@ const CreateForm = () => {
                         </Table.Head>
                         <Table.Body className="divide-y">
                           {cartItems.length > 0 ? (
-                            cartItems.map((material) => (
-                              <Table.Row
-                                key={material.id}
-                                className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                              >
-                                <Table.Cell>
-                                  <Checkbox
-                                    checked={multipleSelection?.includes(
-                                      material.id
-                                    )}
-                                    onChange={() =>
-                                      handleMultipleSelect(material.id , material)
-                                    }
-                                  />
-                                </Table.Cell>
-                                <Table.Cell>{material.id}</Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  {material.material_code}
-                                </Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  {material.name}
-                                </Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  <div className="flex flex-wrap gap-2">
-                                    {material.status === "IN_STOCK" && (
-                                      <Badge color="success">
-                                        {material.status}
-                                      </Badge>
-                                    )}
-                                    {material.status === "OUT_OF_STOCK" && (
-                                      <Badge color="failure">
-                                        {material.status}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </Table.Cell>
+                            cartItems.map((material) => {
+                              // Find the quantity_used for this material in selectedMaterials
+                              const selectedMaterial = selectedMaterials.find(
+                                (item) => item.id === material.id
+                              );
+                              const quantityUsed = selectedMaterial?.quantity_used;
 
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  <div className="flex flex-wrap gap-2">
-                                    <Badge
-                                      color={
-                                        material.category
-                                          ? "warning"
-                                          : "failure"
+                              return (
+                                <Table.Row
+                                  key={material.id}
+                                  className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                                >
+                                  <Table.Cell>
+                                    <Checkbox
+                                      checked={multipleSelection?.includes(material.id)}
+                                      onChange={() => handleMultipleSelect(material.id, material)}
+                                    />
+                                  </Table.Cell>
+                                  <Table.Cell>{material.id}</Table.Cell>
+                                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    {material.material_code}
+                                  </Table.Cell>
+                                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    {material.name}
+                                  </Table.Cell>
+                                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    {material.remaining_quantity}
+                                  </Table.Cell>
+                                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    <TextInput
+                                      type="number"
+                                      min="1"
+                                      value={quantityUsed} // Display the quantity_used
+                                      onChange={(e) =>
+                                        handleQuantityChange(material.id, e.target.value)
                                       }
-                                    >
-                                      {material.category
-                                        ? material.category.category_name
-                                        : "NULL"}
-                                    </Badge>
-                                  </div>
-                                </Table.Cell>
-
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  {material.quantity}
-                                </Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  {material.remaining_quantity}
-                                </Table.Cell>
-                                {/* <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  $ {material.unit_price_in_usd}
-                                </Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  $ {material.total_value_in_usd}
-                                </Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  {material.unit_price_in_riel} ​៛
-                                </Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  {material.total_value_in_riel} ​៛
-                                </Table.Cell> */}
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  {material.minimum_stock_level}
-                                </Table.Cell>
-                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                  {material.location}
-                                </Table.Cell>
-                              </Table.Row>
-                            ))
+                                    />
+                                  </Table.Cell>
+                                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    <div className="flex flex-wrap gap-2">
+                                      {material.status === "IN_STOCK" && (
+                                        <Badge color="success">{material.status}</Badge>
+                                      )}
+                                      {material.status === "OUT_OF_STOCK" && (
+                                        <Badge color="failure">{material.status}</Badge>
+                                      )}
+                                    </div>
+                                  </Table.Cell>
+                                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    <div className="flex flex-wrap gap-2">
+                                      <Badge
+                                        color={material.category ? "warning" : "failure"}
+                                      >
+                                        {material.category
+                                          ? material.category.category_name
+                                          : "NULL"}
+                                      </Badge>
+                                    </div>
+                                  </Table.Cell>
+                                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    {material.minimum_stock_level}
+                                  </Table.Cell>
+                                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    {material.location}
+                                  </Table.Cell>
+                                </Table.Row>
+                              );
+                            })
                           ) : (
                             <Table.Row>
-                              <Table.Cell
-                                colSpan="8"
-                                className="text-center py-4"
-                              >
+                              <Table.Cell colSpan="8" className="text-center py-4">
                                 No raw materials found.
                               </Table.Cell>
                             </Table.Row>
@@ -782,20 +797,22 @@ const CreateForm = () => {
                       </Table>
                     </div>
                   </Timeline.Body>
+                    <div className="my-5">
+                      {error ?  
+                          <Alert color="failure" icon={HiInformationCircle}>
+                              <span className="font-medium">{error}</span>
+                          </Alert> : <></>
+                      }  
+                    </div>
                   <RawMaterialRelationship />
                 </Timeline.Content>
               </Timeline.Item>
             </Timeline>
-            {/* {error?.supplier_id &&
-                <Alert color="failure" icon={HiInformationCircle}>
-                  <span className="font-medium">{error?.supplier_id}</span>
-                </Alert>
-              } */}
           </div>
 
           <Timeline>
             <Timeline.Item>
-              <Timeline.Point icon={HiCalendar} />
+              <Timeline.Point icon={FaFileImage} />
               <Timeline.Content>
                 <Timeline.Title>Images</Timeline.Title>
                 <Timeline.Body>

@@ -56,7 +56,7 @@ const RawMaterialRelationship = ({ createStatus }) => {
       <Button onClick={() => setOpenModal(true)}>
         <div className="flex items-center gap-1">
           <FaPlus />
-          Raw Materials
+          {/* Raw Materials */}
         </div>
       </Button>
       <Modal size="6xl" show={openModal} onClose={() => setOpenModal(false)}>

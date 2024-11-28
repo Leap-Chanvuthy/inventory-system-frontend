@@ -15,29 +15,25 @@ const materialStagingSlice = createSlice({
       );
 
       if (existingIndex >= 0) {
-        // Remove if material already exists
         state.selectedMaterials.splice(existingIndex, 1);
       } else {
-        // Add material with default quantity of 1
-        state.selectedMaterials.push({ id, quantity: 1 });
+        state.selectedMaterials.push({ id, quantity_used: 1 });
       }
     },
     updateQuantity(state, action) {
-      const { id, quantity } = action.payload;
+      const { id, quantity_used } = action.payload;
       const material = state.selectedMaterials.find(
         (material) => material.id === id
       );
 
       if (material) {
-        material.quantity = quantity;
+        material.quantity_used = quantity_used;
       }
     },
     setMaterials(state, action) {
-      // Replace the current state with a new array of items
       state.selectedMaterials = action.payload;
     },
     resetMaterials(state) {
-      // Clear the selected materials
       state.selectedMaterials = [];
     },
   },

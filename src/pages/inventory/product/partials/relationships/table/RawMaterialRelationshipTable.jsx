@@ -15,6 +15,7 @@ import { SuccessToast } from "../../../../../../components/ToastNotification";
 import { HiInformationCircle } from "react-icons/hi";
 import { toggleMultipleSelection } from "../../../../../../redux/slices/selectionSlice";
 import { addToCart, removeFromCart } from "../../../../../../redux/slices/cartSlice";
+import { setMaterials, toggleMaterial } from "../../../../../../redux/slices/materialStagingSlice";
 
 const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   const dispatch = useDispatch();
@@ -53,12 +54,14 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   // Function to hanlde selected id change of raw materials
   const handleMultipleSelect = (id , material) => {
     dispatch(toggleMultipleSelection(id));
+    dispatch(toggleMaterial({ id }));
     if (multipleSelection.includes(id)) {
         dispatch(removeFromCart({ id }));
       } else {
         dispatch(addToCart(material));
       }
   };
+
 
 
   // Fetch data when filters or page changes
