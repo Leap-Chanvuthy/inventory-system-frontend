@@ -37,6 +37,10 @@ const Create = () => {
         setLoading(false);
         setSuccessToastOpen(true)
         setOpenModal(false);
+        setValues({
+          category_name : "",
+          description : ""
+        });
     }catch (err){
         console.log(err);
         setError(err?.response?.data?.errors);

@@ -35,7 +35,6 @@ import { resetMaterials, updateQuantity } from "../../../../redux/slices/materia
 
 const CreateForm = () => {
   const { status, error } = useSelector((state) => state.products);
-  console.log("Create Error:" , error);
   const { multipleSelection } = useSelector((state) => state.selections);
   const { cartItems } = useSelector((state) => state.carts);
   const { selectedMaterials } = useSelector((state) => state.materialStagings);
@@ -46,6 +45,8 @@ const CreateForm = () => {
   const dispatch = useDispatch();
   const [openSuccess, setOpenSuccess] = useState(false);
   const [failedToastOpen, setFailToastOpen] = useState(false);
+  const [overQuantityError , setOverQuantityError] = useState(null);
+  console.log(overQuantityError);
 
   const [values, setValues] = useState({
     image: [],
@@ -176,6 +177,7 @@ const CreateForm = () => {
       });
     } catch (error) {
       console.error("Error submitting the form:", error);
+      setOverQuantityError(error?.response?.data?.error);
       setFailToastOpen(true);
       dispatch(addProductFailure(error?.response?.data?.errors));
     }
@@ -192,7 +194,7 @@ const CreateForm = () => {
       <DangerToast
         open={failedToastOpen}
         onClose={() => setFailToastOpen(false)}
-        message="Something went wrong."
+        message={"Something went wrong."}
       />
 
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -749,7 +751,7 @@ const CreateForm = () => {
                                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                     <TextInput
                                       type="number"
-                                      min="1"
+                                      min={material.remaining_quantity}
                                       value={quantityUsed} // Display the quantity_used
                                       onChange={(e) =>
                                         handleQuantityChange(material.id, e.target.value)
@@ -798,9 +800,9 @@ const CreateForm = () => {
                     </div>
                   </Timeline.Body>
                     <div className="my-5">
-                      {error ?  
+                      {overQuantityError ?
                           <Alert color="failure" icon={HiInformationCircle}>
-                              <span className="font-medium">{error}</span>
+                              <span className="font-medium">{overQuantityError}</span>
                           </Alert> : <></>
                       }  
                     </div>

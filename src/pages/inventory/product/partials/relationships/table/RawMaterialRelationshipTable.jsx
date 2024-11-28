@@ -32,7 +32,7 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   const fetchRawMaterials = async (page = 1) => {
     dispatch(fetchRawMaterialsStart());
     try {
-      const response = await axios.get(`${BASE_URL}/raw-materials/no-supplier`, {
+      const response = await axios.get(`${BASE_URL}/raw-materials`, {
         params: {
           page,
           "filter[search]": filters.query,
