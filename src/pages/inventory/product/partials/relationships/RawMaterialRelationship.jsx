@@ -1,4 +1,4 @@
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   TextInput,
@@ -13,8 +13,16 @@ import { IoSearchOutline } from "react-icons/io5";
 import RawMaterialRelationshipTable from "./table/RawMaterialRelationshipTable";
 import { FaPlus } from "react-icons/fa";
 import { BASE_URL } from "../../../../../components/const/constant";
+import { useDispatch, useSelector } from "react-redux";
+import { resetMultipleSelectionState } from "../../../../../redux/slices/selectionSlice";
+import { resetCartItems } from "../../../../../redux/slices/cartSlice";
+import { resetMaterials } from "../../../../../redux/slices/materialStagingSlice";
 
 const RawMaterialRelationship = ({ createStatus }) => {
+  const dispatch = useDispatch();
+  const { multipleSelection } = useSelector((state) => state.selections);
+  const {selectedMaterials} = useSelector((state) => state.materialStagings);
+  console.log("Material Stage : " , selectedMaterials);
   const [openModal, setOpenModal] = useState(false);
   const [filters, setFilters] = useState({
     query: "",
@@ -49,10 +57,21 @@ const RawMaterialRelationship = ({ createStatus }) => {
     });
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+  };
+
+  // clear selections state
+  const clearMultipleSelections = () =>{
+    dispatch(resetMultipleSelectionState());
+    dispatch(resetCartItems());
+    dispatch(resetMaterials());
+  }
+
+
+
   // get raw material category
   const [categories, setCategories] = useState([]);
-  console.log(categories);
-
   useEffect(() => {
     const getCategory = async (e) => {
       try {
@@ -67,10 +86,6 @@ const RawMaterialRelationship = ({ createStatus }) => {
     };
     getCategory();
   }, []);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-  };
 
   return (
     <div>
@@ -155,11 +170,21 @@ const RawMaterialRelationship = ({ createStatus }) => {
                             ))}
                         </Select>
                       </div>
-
                     </div>
                   </div>
                 </Dropdown>
               </form>
+              <div className="flex gap-2">
+                { multipleSelection.length > 0 ?
+                  <Button color="failure" onClick={clearMultipleSelections}>
+                    Unselect All
+                  </Button>
+                  : <></>
+                }
+                <Button color="success" onClick={() => setOpenModal(false)}>
+                  Add Item
+                </Button>
+              </div>
             </div>
 
             <RawMaterialRelationshipTable

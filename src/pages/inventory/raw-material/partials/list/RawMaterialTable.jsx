@@ -112,6 +112,8 @@ const RawMaterialTable = ({ filters }) => {
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Code</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Supplier Code</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Supplier Name</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Quantity</Table.HeadCell>
@@ -154,6 +156,12 @@ const RawMaterialTable = ({ filters }) => {
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.name}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.supplier.supplier_code}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.supplier.name}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">

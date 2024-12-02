@@ -751,7 +751,7 @@ const CreateForm = () => {
                                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                     <TextInput
                                       type="number"
-                                      min={material.remaining_quantity}
+                                      min="0"
                                       value={quantityUsed} // Display the quantity_used
                                       onChange={(e) =>
                                         handleQuantityChange(material.id, e.target.value)

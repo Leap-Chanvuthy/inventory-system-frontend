@@ -110,6 +110,7 @@ const Product = ({ filters }) => {
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
+            <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Product Code</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
@@ -145,6 +146,9 @@ const Product = ({ filters }) => {
                     ) : (
                       ""
                     )}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {product.id}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {product.product_code}
