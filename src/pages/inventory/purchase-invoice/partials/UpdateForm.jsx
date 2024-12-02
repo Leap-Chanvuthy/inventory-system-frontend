@@ -12,7 +12,7 @@ import {
   Checkbox,
   Badge,
 } from "flowbite-react";
-import { IoCartOutline} from "react-icons/io5";
+import { IoCartOutline } from "react-icons/io5";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import {
   fetchInvoiceStart,
@@ -32,7 +32,11 @@ import {
 import { HiInformationCircle } from "react-icons/hi";
 import { useParams } from "react-router-dom";
 import { MdOutlineAdd } from "react-icons/md";
-import { resetMultipleSelectionState, setMultipleSelection, toggleMultipleSelection } from "../../../../redux/slices/selectionSlice";
+import {
+  resetMultipleSelectionState,
+  setMultipleSelection,
+  toggleMultipleSelection,
+} from "../../../../redux/slices/selectionSlice";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -44,10 +48,10 @@ const payment_methods = [
 const UpdateForm = () => {
   const dispatch = useDispatch();
   const { error, status, invoices } = useSelector((state) => state.invoices);
-  const {multipleSelection} = useSelector((state) => state.selections);
-  console.log(multipleSelection);
+  const { multipleSelection } = useSelector((state) => state.selections);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
+  const [supplierMisMatchError, setSupplierMisMatchError] = useState(null);
 
   // Fetch invoice by id
   const { id } = useParams();
@@ -87,13 +91,21 @@ const UpdateForm = () => {
         payment_date: invoices?.payment_date || "",
         discount_percentage: invoices?.discount_percentage || "",
         tax_percentage: invoices?.tax_percentage || "",
-        clearing_payable_percentage: invoices?.clearing_payable_percentage || "",
-        raw_materials: invoices?.purchase_invoice_details?.map((detail) => detail.raw_material_id)
-        
+        clearing_payable_percentage:
+          invoices?.clearing_payable_percentage || "",
+        raw_materials: invoices?.purchase_invoice_details?.map(
+          (detail) => detail.raw_material_id
+        ),
       });
-    }    dispatch(setMultipleSelection(invoices?.purchase_invoice_details?.map((detail) => detail.raw_material_id)));
+    }
+    dispatch(
+      setMultipleSelection(
+        invoices?.purchase_invoice_details?.map(
+          (detail) => detail.raw_material_id
+        )
+      )
+    );
   }, [invoices]);
-  
 
   // handle values change
   const handleChange = (e) => {
@@ -105,29 +117,38 @@ const UpdateForm = () => {
   const handleMultipleSelect = (id) => {
     dispatch(toggleMultipleSelection(id));
   };
-  
+
   // handle selected raw material ids changes
-  useEffect(() =>{
-    setValues((prevValues) => ({...prevValues , raw_materials : multipleSelection}))
-  },[multipleSelection]);
-  
+  useEffect(() => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      raw_materials: multipleSelection,
+    }));
+  }, [multipleSelection]);
+
   // handle update invoice function
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(updateInvoiceStart());
     try {
-      const response = await axios.patch(`${BASE_URL}/purchase-invoice/${id}`, values);
+      const response = await axios.patch(
+        `${BASE_URL}/purchase-invoice/${id}`,
+        values
+      );
       console.log(response);
       dispatch(updateInvoiceSuccess(response));
       setSuccessToastOpen(true);
       // Fetch the updated invoice details to ensure data consistency
-      const updatedInvoice = await axios.get(`${BASE_URL}/purchase-invoice/${id}`);
+      const updatedInvoice = await axios.get(
+        `${BASE_URL}/purchase-invoice/${id}`
+      );
       dispatch(fetchInvoiceSuccess(updatedInvoice.data));
       dispatch(resetMultipleSelectionState());
     } catch (err) {
       console.log(err);
       dispatch(updateInvoiceFailure(err?.response?.data?.errors));
       setFailToastOpen(true);
+      setSupplierMisMatchError(err?.response?.data?.error);
     }
   };
 
@@ -294,7 +315,15 @@ const UpdateForm = () => {
                       <Table.HeadCell className="whitespace-nowrap">
                         Code
                       </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Product Name
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Supplier Code
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Supplier Name
+                      </Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
                         Status
                       </Table.HeadCell>
@@ -336,16 +365,30 @@ const UpdateForm = () => {
                                   onChange={() =>handleMultipleSelect(invoiceDetail?.map((detail) => detail?.raw_material_id))}
                                 /> */}
                                 <Checkbox
-                                  checked={multipleSelection?.includes(invoiceDetail.raw_material_id)}
-                                  onChange={() => handleMultipleSelect(invoiceDetail.raw_material_id)}
+                                  checked={multipleSelection?.includes(
+                                    invoiceDetail.raw_material_id
+                                  )}
+                                  onChange={() =>
+                                    handleMultipleSelect(
+                                      invoiceDetail.raw_material_id
+                                    )
+                                  }
                                 />
                               </Table.Cell>
-                              <Table.Cell>{invoiceDetail?.raw_material?.id}</Table.Cell>
+                              <Table.Cell>
+                                {invoiceDetail?.raw_material?.id}
+                              </Table.Cell>
                               <Table.Cell className="whitespace-nowrap">
                                 {invoiceDetail?.raw_material?.material_code}
                               </Table.Cell>
                               <Table.Cell className="whitespace-nowrap">
                                 {invoiceDetail?.raw_material?.name}
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {invoiceDetail?.raw_material?.supplier?.supplier_code}
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {invoiceDetail?.raw_material?.supplier?.name}
                               </Table.Cell>
                               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                 <div className="flex flex-wrap gap-2">
@@ -446,9 +489,17 @@ const UpdateForm = () => {
                 ) : (
                   <></>
                 )}
+
+                {supplierMisMatchError ? (
+                  <Alert color="failure" icon={HiInformationCircle}>
+                    <span className="font-medium">{supplierMisMatchError}</span>
+                  </Alert>
+                ) : (
+                  <></>
+                )}
               </div>
               <Timeline.Body>
-                <RawMaterialRelationship createStatus={status}/>
+                <RawMaterialRelationship createStatus={status} />
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>

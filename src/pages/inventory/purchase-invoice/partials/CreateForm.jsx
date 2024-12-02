@@ -29,9 +29,9 @@ const CreateForm = () => {
   const dispatch = useDispatch();
   const { error, status } = useSelector((state) => state.invoices);
   const { multipleSelection } = useSelector((state) => state.selections);
-  console.log(multipleSelection)
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
+  const [supplierMisMatchError , setSupplierMisMatchError] = useState(null);
 
   //initial values
   const [values, setValues] = useState({
@@ -77,6 +77,7 @@ const CreateForm = () => {
       console.log(err);
       dispatch(addInvoiceFailure(err?.response?.data?.errors));
       setFailToastOpen(true);
+      setSupplierMisMatchError(err?.response?.data?.error);
     }
   };
 
@@ -239,6 +240,12 @@ const CreateForm = () => {
                     {error?.raw_materials ?  
                         <Alert color="failure" icon={HiInformationCircle}>
                             <span className="font-medium">Raw Material Cannot be NULL !</span> Please select at least one raw material to create invoice.
+                        </Alert> : <></>
+                    }  
+
+                    {supplierMisMatchError ?  
+                        <Alert color="failure" icon={HiInformationCircle}>
+                            <span className="font-medium">{supplierMisMatchError}</span>
                         </Alert> : <></>
                     }  
                 </div>
