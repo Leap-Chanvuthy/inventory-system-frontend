@@ -137,6 +137,7 @@ const SupplierTable = ({ filters }) => {
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
+            <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Name / Company</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Phone Number</Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
@@ -164,6 +165,9 @@ const SupplierTable = ({ filters }) => {
                     <Avatar
                       img={supplier.image ? `${BASE_IMAGE_URL}/${supplier.image}` : ""}
                     />
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.id}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {supplier.name}

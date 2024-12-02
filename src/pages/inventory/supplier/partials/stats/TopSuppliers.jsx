@@ -33,7 +33,7 @@ const TopSupplier = () => {
 
   return (
     <div className="w-full">
-      <BarChartComponent title="Top 10 Suppliers" dataset={data} />
+      <BarChartComponent title="Top 5 Suppliers" dataset={data} />
     </div>
   );
 };

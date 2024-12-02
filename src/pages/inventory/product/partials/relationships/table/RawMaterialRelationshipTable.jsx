@@ -181,6 +181,9 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                       {material.status === "IN_STOCK" && (
                         <Badge color="success">{material.status}</Badge>
                       )}
+                      {material.status === "LOW_STOCK" && (
+                        <Badge color="warning">{material.status}</Badge>
+                      )}
                       {material.status === "OUT_OF_STOCK" && (
                         <Badge color="failure">{material.status}</Badge>
                       )}

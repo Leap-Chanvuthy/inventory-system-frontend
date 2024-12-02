@@ -109,6 +109,7 @@ const RawMaterialTable = ({ filters }) => {
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Image</Table.HeadCell>
+            <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Code</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
@@ -146,6 +147,9 @@ const RawMaterialTable = ({ filters }) => {
                     )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.id}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.material_code}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -155,6 +159,9 @@ const RawMaterialTable = ({ filters }) => {
                     <div className="flex flex-wrap gap-2">
                       {material.status === "IN_STOCK" && (
                         <Badge color="success">{material.status}</Badge>
+                      )}
+                      {material.status === "LOW_STOCK" && (
+                        <Badge color="warning">{material.status}</Badge>
                       )}
                       {material.status === "OUT_OF_STOCK" && (
                         <Badge color="failure">{material.status}</Badge>
