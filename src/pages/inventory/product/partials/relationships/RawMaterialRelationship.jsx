@@ -22,7 +22,6 @@ const RawMaterialRelationship = ({ createStatus }) => {
   const dispatch = useDispatch();
   const { multipleSelection } = useSelector((state) => state.selections);
   const {selectedMaterials} = useSelector((state) => state.materialStagings);
-  console.log("Material Stage : " , selectedMaterials);
   const [openModal, setOpenModal] = useState(false);
   const [filters, setFilters] = useState({
     query: "",
@@ -78,7 +77,7 @@ const RawMaterialRelationship = ({ createStatus }) => {
         const response = await axios.get(
           `${BASE_URL}/non-paginate/raw-material-categories`
         );
-        console.log(response.data);
+        // console.log(response.data);
         setCategories(response.data);
       } catch (err) {
         console.log(err);
@@ -175,11 +174,10 @@ const RawMaterialRelationship = ({ createStatus }) => {
                 </Dropdown>
               </form>
               <div className="flex gap-2">
-                { multipleSelection.length > 0 ?
+                { multipleSelection?.length > 0 ?
                   <Button color="failure" onClick={clearMultipleSelections}>
                     Unselect All
-                  </Button>
-                  : <></>
+                  </Button> : <></>
                 }
                 <Button color="success" onClick={() => setOpenModal(false)}>
                   Add Item
