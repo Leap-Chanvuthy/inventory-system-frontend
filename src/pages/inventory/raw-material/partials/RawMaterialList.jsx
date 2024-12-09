@@ -142,6 +142,7 @@ const RawMaterialList = () => {
                     >
                       <option value="">Select Status</option>
                       <option value="IN_STOCK">In stock</option>
+                      <option value="LOW_STOCK">Low StockS</option>
                       <option value="OUT_OF_STOCK">Out of stock</option>
                     </Select>
                   </div>

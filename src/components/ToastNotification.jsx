@@ -9,6 +9,7 @@ export const SuccessToast = ({ open, onClose, message }) => {
       open={open}
       onClose={onClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      // anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
       <Alert
         onClose={onClose}

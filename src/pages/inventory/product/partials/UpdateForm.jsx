@@ -51,9 +51,10 @@ import { FaFileImage, FaPlus } from "react-icons/fa";
 import {
   resetMaterials,
   setMaterials,
+  toggleMaterial,
   updateQuantity,
 } from "../../../../redux/slices/materialStagingSlice";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 const UpdateForm = () => {
   const { id } = useParams();
@@ -165,6 +166,7 @@ const UpdateForm = () => {
   // raw material selection phase
   const handleMultipleSelect = (id, material) => {
     dispatch(toggleMultipleSelection(id));
+    dispatch(toggleMaterial({ id }));
     if (multipleSelection.includes(id)) {
       dispatch(removeFromCart({ id }));
     } else {
@@ -181,6 +183,16 @@ const UpdateForm = () => {
   useEffect(() =>{
     setValues((prevValues) => ({...prevValues , raw_materials : selectedMaterials}))
   },[selectedMaterials])
+
+  // reset set state when component is unmounted
+  useEffect(() => {
+    return () => {
+        dispatch(resetMaterials());
+        dispatch(resetMultipleSelectionState());
+        dispatch(resetCartItems());
+    };
+  }, [location.pathname, dispatch]);
+
 
   // file upload (images)
   const handleFileChange = (e) => {
@@ -241,14 +253,18 @@ const UpdateForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(updateProductStart());
+    setOverQuantityError(null);
     try {
-      const response = await axios.post(`${BASE_URL}/product`, values, {
+      const response = await axios.post(`${BASE_URL}/product/${id}`, values, {
+        params : {
+            _method : "PATCH"
+        },
         headers: { "Content-Type": "multipart/form-data" },
       });
       dispatch(updateProductSuccess(response.data));
-      dispatch(resetMaterials());
-      dispatch(resetMultipleSelectionState());
-      dispatch(resetCartItems());
+      const updatedProduct = await axios.get(`${BASE_URL}/product/${id}`);
+    //   console.log("updated material:", updatedProduct)
+      dispatch(fetchProductsSuccess(updatedProduct.data));
       setOpenSuccess(true);
     } catch (error) {
       console.error("Error submitting the form:", error);
@@ -263,7 +279,7 @@ const UpdateForm = () => {
       <SuccessToast
         open={openSuccess}
         onClose={() => setOpenSuccess(false)}
-        message="Product Created Successfully"
+        message="Product Updated Successfully"
       />
 
       <DangerToast
@@ -432,6 +448,109 @@ const UpdateForm = () => {
                               </>
                             )
                           }
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="product_category_id"
+                          value="Raw Material Category"
+                        />
+                        <Select
+                          id="product_category_id"
+                          placeholder="Enter raw material category"
+                          value={values.product_category_id}
+                          onChange={handleChange}
+                          helperText={
+                            error?.product_category_id && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.product_category_id}
+                                </span>
+                              </>
+                            )
+                          }
+                        >
+                          <option value="">Select an option</option>
+                          {categories &&
+                            categories.map((category) => (
+                              <option value={category.id}>
+                                {category.category_name}
+                              </option>
+                            ))}
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="status" value="Status" />
+                        <Select
+                          id="status"
+                          placeholder="Enter status"
+                          value={values.status}
+                          onChange={handleChange}
+                          helperText={
+                            error?.status && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.status}
+                                </span>
+                              </>
+                            )
+                          }
+                        >
+                          <option value="">Select an option</option>
+                          <option value="IN_STOCK">In stock</option>
+                          <option value="OUT_OF_STOCK">Out of stock</option>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="unit_of_measurement"
+                          value="Unit of Measurement"
+                        />
+                        <TextInput
+                          id="unit_of_measurement"
+                          placeholder="Enter unit of measurement"
+                          value={values.unit_of_measurement}
+                          onChange={handleChange}
+                          className={`${
+                            error?.unit_of_measurement
+                              ? "border-[1.5px] border-red-400 rounded-md"
+                              : ""
+                          } `}
+                          helperText={
+                            error?.unit_of_measurement && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.unit_of_measurement}
+                                </span>
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="package_size" value="Package Size" />
+                        <TextInput
+                          id="package_size"
+                          placeholder="Enter package size"
+                          value={values.package_size}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="warehouse_location"
+                          value="Warehouse Location"
+                        />
+                        <TextInput
+                          id="warehouse_location"
+                          placeholder="Enter warehouse_location"
+                          value={values.warehouse_location}
+                          onChange={handleChange}
                         />
                       </div>
                     </div>
@@ -622,112 +741,6 @@ const UpdateForm = () => {
                 <Timeline.Content>
                   <Timeline.Title>Additional</Timeline.Title>
                   <Timeline.Body>
-                    {/* <h2 className="text-md font-semibold">Additional</h2> */}
-                    <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-5">
-                      <div>
-                        <Label
-                          htmlFor="product_category_id"
-                          value="Raw Material Category"
-                        />
-                        <Select
-                          id="product_category_id"
-                          placeholder="Enter raw material category"
-                          value={values.product_category_id}
-                          onChange={handleChange}
-                          helperText={
-                            error?.product_category_id && (
-                              <>
-                                <span className="font-medium text-red-400">
-                                  {error.product_category_id}
-                                </span>
-                              </>
-                            )
-                          }
-                        >
-                          <option value="">Select an option</option>
-                          {categories &&
-                            categories.map((category) => (
-                              <option value={category.id}>
-                                {category.category_name}
-                              </option>
-                            ))}
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="status" value="Status" />
-                        <Select
-                          id="status"
-                          placeholder="Enter status"
-                          value={values.status}
-                          onChange={handleChange}
-                          helperText={
-                            error?.status && (
-                              <>
-                                <span className="font-medium text-red-400">
-                                  {error.status}
-                                </span>
-                              </>
-                            )
-                          }
-                        >
-                          <option value="">Select an option</option>
-                          <option value="IN_STOCK">In stock</option>
-                          <option value="OUT_OF_STOCK">Out of stock</option>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label
-                          htmlFor="unit_of_measurement"
-                          value="Unit of Measurement"
-                        />
-                        <TextInput
-                          id="unit_of_measurement"
-                          placeholder="Enter unit of measurement"
-                          value={values.unit_of_measurement}
-                          onChange={handleChange}
-                          className={`${
-                            error?.unit_of_measurement
-                              ? "border-[1.5px] border-red-400 rounded-md"
-                              : ""
-                          } `}
-                          helperText={
-                            error?.unit_of_measurement && (
-                              <>
-                                <span className="font-medium text-red-400">
-                                  {error.unit_of_measurement}
-                                </span>
-                              </>
-                            )
-                          }
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="package_size" value="Package Size" />
-                        <TextInput
-                          id="package_size"
-                          placeholder="Enter package size"
-                          value={values.package_size}
-                          onChange={handleChange}
-                        />
-                      </div>
-
-                      <div>
-                        <Label
-                          htmlFor="warehouse_location"
-                          value="warehouse_location"
-                        />
-                        <TextInput
-                          id="warehouse_location"
-                          placeholder="Enter warehouse_location"
-                          value={values.warehouse_location}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-
                     <div className="my-5">
                       <Label htmlFor="description" value="Description" />
                       <Textarea
@@ -839,20 +852,19 @@ const UpdateForm = () => {
                                   </Table.Cell>
                                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white w-[300px]">
                                     <div className="flex items-center gap-3">
-                                        <TextInput
-                                          className="w-[100px]"
-                                          type="number"
-                                          min="0"
-                                          value={quantityUsed}
-                                          onChange={(e) =>
-                                            handleQuantityChange(
-                                              material.id,
-                                              e.target.value
-                                            )
-                                          }
-                                        />
+                                      <TextInput
+                                        className="w-[100px]"
+                                        type="number"
+                                        min="0"
+                                        value={quantityUsed}
+                                        onChange={(e) =>
+                                          handleQuantityChange(
+                                            material.id,
+                                            e.target.value
+                                          )
+                                        }
+                                      />
                                     </div>
-                                    
                                   </Table.Cell>
                                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                     <div className="flex flex-wrap gap-2">
@@ -915,7 +927,7 @@ const UpdateForm = () => {
                       <></>
                     )}
                   </div>
-                  <RawMaterialRelationship />
+                  <RawMaterialRelationship createStatus={status} />
                 </Timeline.Content>
               </Timeline.Item>
             </Timeline>
@@ -928,26 +940,28 @@ const UpdateForm = () => {
                 <Timeline.Title>Images</Timeline.Title>
 
                 <div className="my-5">
-                    <div className="flex flex-wrap gap-3">
-                        {oldImages.map((img, index) => (
-                            <img
-                            key={index}
-                            src={`${BASE_IMAGE_URL}/${img.image}`}
-                            className="w-16 h-16 object-cover rounded-md cursor-pointer"
-                            onClick={() => handleImageClick(img.image)}
-                            alt={`Thumbnail of ${img.image}`}
-                            />
-                        ))}
-                    </div>
-                    <Modal show={selectedImage} onClose={closeModal}>
-                    <Modal.Header><span className="font-bold">Product Image</span></Modal.Header>
+                  <div className="flex flex-wrap gap-3">
+                    {oldImages.map((img, index) => (
+                      <img
+                        key={index}
+                        src={`${BASE_IMAGE_URL}/${img.image}`}
+                        className="w-16 h-16 object-cover rounded-md cursor-pointer"
+                        onClick={() => handleImageClick(img.image)}
+                        alt={`Thumbnail of ${img.image}`}
+                      />
+                    ))}
+                  </div>
+                  <Modal show={selectedImage} onClose={closeModal}>
+                    <Modal.Header>
+                      <span className="font-bold">Product Image</span>
+                    </Modal.Header>
                     <Modal.Body>
-                        <img
+                      <img
                         src={`${BASE_IMAGE_URL}/${selectedImage}`}
                         className="rounded-md"
-                        />
+                      />
                     </Modal.Body>
-                    </Modal>
+                  </Modal>
                 </div>
 
                 <Timeline.Body>
