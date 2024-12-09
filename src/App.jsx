@@ -77,6 +77,7 @@ import UpdateUser from "./pages/users/Update";
 import Profile from "./pages/profile/Profile";
 import CreateProduct from "./pages/inventory/product/Create";
 import UpdateProduct from "./pages/inventory/product/Update";
+import RecoverProduct from "./pages/inventory/product/RecoverProduct";
 import RawMaterial from "./pages/inventory/raw-material/RawMaterial";
 import CreateRawMaterial from "./pages/inventory/raw-material/Create";
 import UpdateRawMaterial from "./pages/inventory/raw-material/Update";
@@ -111,7 +112,8 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={['VENDOR']} />}>
           <Route path="/products" element={<Layout><Product /></Layout>} />
           <Route path="/products/create" element={<Layout><CreateProduct /></Layout>} />
-          <Route path="/product/update/:id" element={<Layout><UpdateProduct /></Layout>} />          
+          <Route path="/product/update/:id" element={<Layout><UpdateProduct /></Layout>} /> 
+          <Route path="/products/recover" element={<Layout><RecoverProduct /></Layout>} />                   
 
         </Route>
 

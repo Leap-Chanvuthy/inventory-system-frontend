@@ -1,45 +1,23 @@
 import { useState , useEffect } from "react";
 import {
   TextInput,
-  Button,
   Select,
   Dropdown,
   Checkbox,
   Label,
-  Tooltip,
 } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
-import {TbRestore} from 'react-icons/tb';
-import { Link } from "react-router-dom";
-import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
-import ProductTable from "./list/ProductTable";
+import axios from "axios";
+import RecoverProductTable from "./list/RecoverProductTable";
 
-const RawMaterialList = () => {
+const RecoverProductList = () => {
   const [filters, setFilters] = useState({
     query: "",
     category_id: "",
     status: "",
     sort: [],
   });
-
-
-    // // get raw material category
-    const [categories , setCategories] = useState([]);
-    useEffect(() =>{
-      const getCategory = async (e) =>{
-        try {
-          
-          const response = await axios.get(`${BASE_URL}/product-categories/all`)
-          console.log(response.data);
-          setCategories(response.data);
-        }catch (err){
-          console.log(err);
-        }
-      }
-      getCategory();
-    } , [])
-
 
   const handleFilterChange = (e) => {
     const { id, value } = e.target;
@@ -57,6 +35,21 @@ const RawMaterialList = () => {
       });
     }
   };
+
+  const [categories , setCategories] = useState([]);
+  useEffect(() =>{
+    const getCategory = async (e) =>{
+      try {
+        
+        const response = await axios.get(`${BASE_URL}/product-categories/all`)
+        console.log(response.data);
+        setCategories(response.data);
+      }catch (err){
+        console.log(err);
+      }
+    }
+    getCategory();
+  } , [])
 
   const resetFilters = () => {
     setFilters({
@@ -106,11 +99,11 @@ const RawMaterialList = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Checkbox
-                    id="product_code"
+                    id="material_code"
                     onChange={handleSortChange}
-                    checked={filters.sort.includes("product_code")}
+                    checked={filters.sort.includes("material_code")}
                   />
-                  <label htmlFor="product_code">Product Code</label>
+                  <label htmlFor="material_code">Material Code</label>
                 </div>
               </div>
             </Dropdown>
@@ -139,6 +132,7 @@ const RawMaterialList = () => {
                       <option value="">Select Status</option>
                       <option value="IN_STOCK">In stock</option>
                       <option value="OUT_OF_STOCK">Out of stock</option>
+                      <option value="LOW_STOCK">Low stock</option>
                     </Select>
                   </div>
 
@@ -162,35 +156,33 @@ const RawMaterialList = () => {
                         ))}
                     </Select>
                   </div>
-      
+
+                  <div>
+                    <Label
+                      htmlFor="category"
+                      value="Category"
+                      className="mb-2 block"
+                    />
+                    <Select
+                      id="category"
+                      value={filters.category}
+                      onChange={handleFilterChange}
+                    >
+                      <option value="">Select Category</option>
+                      <option value="SERVICE">Service</option>
+                      <option value="PRODUCT">Product</option>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </Dropdown>
-
-            <div className="flex gap-3 items-center">
-              {/* <RawMaterialExport /> */}
-              <Link to='/products/recover'>
-                <Tooltip content="Recover">
-                  <Button color="success" className="flex justify-center items-center">
-                    <TbRestore className="text-xl" />{" "}
-                  </Button>
-                </Tooltip>
-              </Link>
-            </div>
-
-            
           </form>
-          <div className="flex gap-3 items-center">
-            <Link to="/products/create">
-              <Button color="info">Create New</Button>
-            </Link>
-          </div>
         </div>
       </div>
 
-      <ProductTable filters={filters} />
+      <RecoverProductTable filters={filters} />
     </div>
   );
 };
 
-export default RawMaterialList;
+export default RecoverProductList;
