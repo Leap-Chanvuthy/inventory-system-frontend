@@ -67,7 +67,7 @@ const Product = ({ filters }) => {
     }
     dispatch(deleteProductStart());
     try {
-      const response = await axios.delete(`${BASE_URL}/raw-material/${selectedId}`);
+      const response = await axios.delete(`${BASE_URL}/product/${selectedId}`);
       console.log(response);
       if (response.status === 200) {
         dispatch(deleteProductSuccess(selectedId));
@@ -255,7 +255,7 @@ const Product = ({ filters }) => {
       <SuccessToast
         open={successToastOpen}
         onClose={() => setSuccessToastOpen(false)}
-        message="Raw material deleted successfully!"
+        message="Product deleted successfully!"
       />
     </div>
   );
