@@ -6,16 +6,14 @@ import {
   Dropdown,
   Select,
   Label,
-  Tooltip,
 } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import CustomerTable from "./list/CustomerTable";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
-import { TbRestore } from "react-icons/tb";
+import RecoverCustomerTable from "./list/RecoverCustomerTable";
 
-const CustomerList = () => {
+const RecoverCustomerList = () => {
   const [filters, setFilters] = useState({
     search: "",
     status: "",
@@ -173,22 +171,6 @@ const CustomerList = () => {
               </Dropdown>
             </form>
 
-            {/* export */}
-
-
-            <div className="flex gap-3 items-center">
-              <Link to="/customers/recover">
-                <Tooltip content="Recover">
-                  <Button
-                    color="success"
-                    className="flex justify-center items-center"
-                  >
-                    <TbRestore className="text-xl" />{" "}
-                  </Button>
-                </Tooltip>
-              </Link>
-            </div>
-
           </div>
           <Link to="/customers/create">
             <Button color="info">Create New</Button>
@@ -196,9 +178,10 @@ const CustomerList = () => {
         </div>
       </div>
 
-      <CustomerTable filters={filters} />
+      <RecoverCustomerTable filters={filters} />
+      
     </div>
   );
 };
 
-export default CustomerList;
+export default RecoverCustomerList;

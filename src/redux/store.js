@@ -9,6 +9,7 @@ import userReducer from './slices/userSlice';
 import rawMaterialReducer from './slices/rawMaterialSlice';
 import productReducer from './slices/productSlice';
 import supplierReducer from './slices/supplierSlice';
+import customerReducer from './slices/customerSlice';
 import passwordReducer from './slices/passwordSlice';
 import currencyReducer from './slices/currencySlice';
 import invoiceReducer from './slices/invoiceSlice';
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
     rawMaterials : rawMaterialReducer,
     products : productReducer,
     suppliers : supplierReducer,
+    customers : customerReducer,
     password : passwordReducer,
     currencies : currencyReducer,
     invoices : invoiceReducer,

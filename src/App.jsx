@@ -95,6 +95,8 @@ import RecoverPurchaseInvoice from "./pages/inventory/purchase-invoice/RecoverPu
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import NotFound from "./components/NotFound";
+import Customer from "./pages/sale/customer/Customer";
+import RecoverCustomer from "./pages/sale/customer/RecoverCustomer";
 
 function App() {
 
@@ -110,10 +112,9 @@ function App() {
 
         {/* Admin and Vendor Routes */}
         <Route element={<ProtectedRoute allowedRoles={['VENDOR']} />}>
-          <Route path="/products" element={<Layout><Product /></Layout>} />
-          <Route path="/products/create" element={<Layout><CreateProduct /></Layout>} />
-          <Route path="/product/update/:id" element={<Layout><UpdateProduct /></Layout>} /> 
-          <Route path="/products/recover" element={<Layout><RecoverProduct /></Layout>} />                   
+          <Route path="/customers" element={<Layout><Customer /></Layout>} />
+          <Route path="/customers/recover" element={<Layout><RecoverCustomer /></Layout>} />
+          
 
         </Route>
 
@@ -130,6 +131,12 @@ function App() {
           <Route path="/purchase-invoices/recover" element={<Layout><RecoverPurchaseInvoice /></Layout>} />
           <Route path="/purchase-invoice/create" element={<Layout><CreatePurchaseInvoice /></Layout>} />
           <Route path="/purchase-invoice/update/:id" element={<Layout><UpdatePurchaseInvoice /></Layout>} />
+
+
+          <Route path="/products" element={<Layout><Product /></Layout>} />
+          <Route path="/products/create" element={<Layout><CreateProduct /></Layout>} />
+          <Route path="/product/update/:id" element={<Layout><UpdateProduct /></Layout>} /> 
+          <Route path="/products/recover" element={<Layout><RecoverProduct /></Layout>} />  
 
         </Route>
 
