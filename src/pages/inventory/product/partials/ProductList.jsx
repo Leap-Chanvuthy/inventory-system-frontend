@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import ProductTable from "./list/ProductTable";
+import ProductExport from "./export/ProductExport";
 
 const RawMaterialList = () => {
   const [filters, setFilters] = useState({
@@ -166,6 +167,8 @@ const RawMaterialList = () => {
                 </div>
               </div>
             </Dropdown>
+
+            <ProductExport />
 
             <div className="flex gap-3 items-center">
               {/* <RawMaterialExport /> */}

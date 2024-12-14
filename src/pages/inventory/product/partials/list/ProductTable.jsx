@@ -161,6 +161,9 @@ const Product = ({ filters }) => {
                       {product.status === "IN_STOCK" && (
                         <Badge color="success">{product.status}</Badge>
                       )}
+                      {product.status === "LOW_STOCK" && (
+                        <Badge color="warning">{product.status}</Badge>
+                      )}
                       {product.status === "OUT_OF_STOCK" && (
                         <Badge color="failure">{product.status}</Badge>
                       )}
