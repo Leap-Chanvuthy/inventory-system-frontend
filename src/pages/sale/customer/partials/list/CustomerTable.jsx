@@ -187,8 +187,8 @@ const CustomerTable = ({ filters }) => {
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
-                      <Badge color="warning">
-                        {customer.category.category_name}
+                      <Badge color={customer.category ? "warning" : "failure"}>
+                        {customer.category ? customer.category.category_name : 'N/A'}
                       </Badge>
                     </div>
                   </Table.Cell>

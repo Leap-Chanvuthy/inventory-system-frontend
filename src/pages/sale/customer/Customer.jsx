@@ -1,4 +1,5 @@
 import Partial from "../../../components/Partial";
+import CategoryList from "./partials/CategoryList";
 import CustomerList from "./partials/CustomerList";
 
 const Customer = () => {
@@ -6,6 +7,7 @@ const Customer = () => {
     <div className="w-full ">
       <Partial title="customer" link="list" />
       <CustomerList />
+      <CategoryList />
     </div>
   );
 };
