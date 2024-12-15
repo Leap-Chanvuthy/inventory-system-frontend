@@ -70,8 +70,8 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
             <Sidebar.Collapse href="#" icon={BsCart3} label="Sale" className="font-bold">
               <Sidebar.Item href="#">Sale Order</Sidebar.Item>
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
-              <Sidebar.Item href="/customer" active={pathname === "/customer"}>
-                Customer
+              <Sidebar.Item active={pathname === "/customers"}>
+                <Link to='/customers'>Customers</Link>
               </Sidebar.Item>
             </Sidebar.Collapse>
             : <></>
