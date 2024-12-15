@@ -5,17 +5,44 @@ import {
   Select,
   Timeline,
   Textarea,
+  Spinner,
 } from "flowbite-react";
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { useState, useEffect } from "react";
 import { HiCalendar } from "react-icons/hi";
-import { SuccessToast } from "../../../../components/ToastNotification";
-import { useSelector } from "react-redux";
+import { DangerToast, SuccessToast } from "../../../../components/ToastNotification";
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../../../../components/const/constant";
 import axios from "axios";
 import { MdCancel } from "react-icons/md";
+import {
+  createCustomerFailed,
+  createCustomerStart,
+  createCustomerSuccess,
+} from "../../../../redux/slices/customerSlice";
+
+const mapContainerStyle = {
+  width: "100%",
+  height: "400px",
+};
+
+const options = {
+  disableDefaultUI: true,
+  zoomControl: true,
+};
+
+const center = {
+  lat: 12.5657,
+  lng: 104.991,
+};
 
 const CreateForm = () => {
-  const { error, status , customers } = useSelector((state) => state.customers);
+  const { error, status, customers } = useSelector((state) => state.customers);
+  const dispatch = useDispatch();
+  const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [failToastOpen, setFailToastOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [openSuccess, setOpenSuccess] = useState(false);
 
   const [values, setValues] = useState({
     image: "",
@@ -46,9 +73,24 @@ const CreateForm = () => {
     getCategory();
   }, []);
 
-  const [imagePreview, setImagePreview] = useState(null);
-  const [openSuccess, setOpenSuccess] = useState(false);
+  // Map selection
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "AIzaSyAd4rEAQqf58fCJGABqW99teDP9BcuyN08",
+  });
 
+  const handleMapClick = (event) => {
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+    setSelectedLocation({ lat, lng });
+
+    setValues((prevValues) => ({
+      ...prevValues,
+      latitude: JSON.stringify(lat),
+      longitude: JSON.stringify(lng),
+    }));
+  };
+
+  // Handle values change
   const handleChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
@@ -74,14 +116,56 @@ const CreateForm = () => {
     }));
   };
 
+  // Handle submit function
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(createCustomerStart());
+    try {
+      const response = await axios.post(`${BASE_URL}/customer`, values, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response);
+      dispatch(createCustomerSuccess(response.data));
+      setSuccessToastOpen(true);
+      setValues({
+        image: "",
+        fullname: "",
+        email_address: "",
+        phone_number: "",
+        social_media: "",
+        shipping_address: "",
+        longitude: "",
+        latitude: "",
+        customer_status: "",
+        customer_category_id: "",
+        customer_note: "",
+      });
+    } catch (err) {
+      console.log(err.response);
+      setFailToastOpen(true);
+      dispatch(createCustomerFailed(err?.response?.data?.errors));
+    }
+  };
+
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading Maps...</div>;
+
   return (
     <div className="my-5">
       <SuccessToast
-        open={openSuccess}
+        open={successToastOpen}
         onClose={() => setOpenSuccess(false)}
         message="Customer created Successfully"
       />
-      <form className="flex flex-col gap-4">
+
+      <DangerToast
+        open={failToastOpen}
+        onClose={() => setFailToastOpen(false)}
+        message="Something Went Wrong!"
+      />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Timeline>
           <Timeline.Item>
             <Timeline.Point icon={HiCalendar} />
@@ -182,66 +266,6 @@ const CreateForm = () => {
           <Timeline.Item>
             <Timeline.Point icon={HiCalendar} />
             <Timeline.Content>
-              <Timeline.Title>Location</Timeline.Title>
-              <Timeline.Body>
-                <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-3">
-                  <div className="w-full">
-                    <Label
-                      htmlFor="shipping_address"
-                      value="Customer Address"
-                    />
-                    <TextInput
-                      id="shipping_address"
-                      type="text"
-                      placeholder="Address"
-                      className={`${
-                        error?.shipping_address
-                          ? "border-[1.5px] border-red-400 rounded-md"
-                          : ""
-                      } `}
-                      value={values.shipping_address}
-                      onChange={handleChange}
-                      helperText={
-                        error?.shipping_address && (
-                          <>
-                            <span className="font-medium text-red-400">
-                              {error.shipping_address}
-                            </span>
-                          </>
-                        )
-                      }
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Label htmlFor="longitude" value="Longitude" />
-                    <TextInput
-                      id="longitude"
-                      type="text"
-                      disabled
-                      value={values.longitude}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="w-full">
-                    <Label htmlFor="latitude" value="Latitude" />
-                    <TextInput
-                      id="latitude"
-                      type="text"
-                      disabled
-                      value={values.latitude}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </Timeline.Body>
-            </Timeline.Content>
-          </Timeline.Item>
-
-          <Timeline.Item>
-            <Timeline.Point icon={HiCalendar} />
-            <Timeline.Content>
               <Timeline.Title>Status & Category</Timeline.Title>
               <Timeline.Body>
                 <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-3">
@@ -296,6 +320,78 @@ const CreateForm = () => {
                         ))}
                     </Select>
                   </div>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Title>Location</Timeline.Title>
+              <Timeline.Body>
+                <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-3">
+                  <div className="w-full">
+                    <Label
+                      htmlFor="shipping_address"
+                      value="Customer Address"
+                    />
+                    <TextInput
+                      id="shipping_address"
+                      type="text"
+                      placeholder="Address"
+                      className={`${
+                        error?.shipping_address
+                          ? "border-[1.5px] border-red-400 rounded-md"
+                          : ""
+                      } `}
+                      value={values.shipping_address}
+                      onChange={handleChange}
+                      helperText={
+                        error?.shipping_address && (
+                          <>
+                            <span className="font-medium text-red-400">
+                              {error.shipping_address}
+                            </span>
+                          </>
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Label htmlFor="longitude" value="Longitude" />
+                    <TextInput
+                      id="longitude"
+                      type="text"
+                      disabled
+                      value={values.longitude}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Label htmlFor="latitude" value="Latitude" />
+                    <TextInput
+                      id="latitude"
+                      type="text"
+                      disabled
+                      value={values.latitude}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full my-5" style={{ height: "400px" }}>
+                  <GoogleMap
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={10}
+                    center={center}
+                    options={options}
+                    onClick={handleMapClick}
+                  >
+                    {selectedLocation && <Marker position={selectedLocation} />}
+                  </GoogleMap>
                 </div>
               </Timeline.Body>
             </Timeline.Content>
@@ -378,8 +474,8 @@ const CreateForm = () => {
             </Timeline.Content>
           </Timeline.Item>
         </Timeline>
-        <Button type="submit" onClick={() => setOpenSuccess(true)}>
-          Submit
+        <Button disabled={status == 'loading'} type="submit" onClick={() => setOpenSuccess(true)}>
+          {status == 'loading' ? <Spinner /> : 'Save'}
         </Button>
       </form>
     </div>
