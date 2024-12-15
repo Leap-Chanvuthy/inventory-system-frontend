@@ -1,4 +1,3 @@
-import GlobalPagination from "../../../components/Pagination";
 import Partial from "../../../components/Partial";
 import CreateForm from "./partials/CreateForm";
 

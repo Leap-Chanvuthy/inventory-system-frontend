@@ -1,34 +1,77 @@
-import { Button, FileInput, Label, TextInput, Select } from "flowbite-react";
-import { useState } from "react";
-import { MdOutlineMarkEmailUnread, MdLockOpen } from "react-icons/md";
+import {
+  Button,
+  Label,
+  TextInput,
+  Select,
+  Timeline,
+  Textarea,
+} from "flowbite-react";
+import { useState, useEffect } from "react";
+import { HiCalendar } from "react-icons/hi";
 import { SuccessToast } from "../../../../components/ToastNotification";
+import { useSelector } from "react-redux";
+import { BASE_URL } from "../../../../components/const/constant";
+import axios from "axios";
+import { MdCancel } from "react-icons/md";
 
 const CreateForm = () => {
+  const { error, status , customers } = useSelector((state) => state.customers);
+
   const [values, setValues] = useState({
-    profile_picture: null,
-    email: "",
-    password: "",
-    password_confirmation: "",
-    role: "",
+    image: "",
+    fullname: "",
+    email_address: "",
+    phone_number: "",
+    social_media: "",
+    shipping_address: "",
+    longitude: "",
+    latitude: "",
+    customer_status: "",
+    customer_category_id: "",
+    customer_note: "",
   });
+
+  // // get customer category
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    const getCategory = async (e) => {
+      try {
+        const response = await axios.get(`${BASE_URL}/customer-categories/all`);
+        console.log(response.data);
+        setCategories(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getCategory();
+  }, []);
 
   const [imagePreview, setImagePreview] = useState(null);
   const [openSuccess, setOpenSuccess] = useState(false);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const value = e.target.value;
     const key = e.target.id;
     setValues({ ...values, [key]: value });
   };
 
-  const handleFileChange = e => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
-      setValues({ ...values, profile_picture: file });
-      setImagePreview(URL.createObjectURL(file));
+      setValues((prevValues) => ({
+        ...prevValues,
+        image: file,
+      }));
     } else {
       alert("Please upload a valid image file.");
     }
+  };
+
+  const handleRemoveImage = () => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      image: null,
+    }));
   };
 
   return (
@@ -36,103 +79,305 @@ const CreateForm = () => {
       <SuccessToast
         open={openSuccess}
         onClose={() => setOpenSuccess(false)}
-        message="User Created Successfully"
+        message="Customer created Successfully"
       />
       <form className="flex flex-col gap-4">
-        <div className="relative flex items-center justify-center">
-          <Label
-            htmlFor="profile_picture"
-            className={`flex items-center justify-center cursor-pointer rounded-full border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 ${
-              imagePreview ? "p-0" : "p-10"
-            }`}
-            style={{ width: "200px", height: "200px" }}
-          >
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full h-full object-cover rounded-full"
-              />
-            ) : (
-              <>
-                <svg
-                  className="h-[100%] text-gray-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+        <Timeline>
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Title>Customer Info</Timeline.Title>
+              <Timeline.Body>
+                <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-3">
+                  <div className="w-full">
+                    <Label htmlFor="fullname" value="Customer Name" />
+                    <TextInput
+                      id="fullname"
+                      type="text"
+                      placeholder="Customer Name"
+                      className={`${
+                        error?.fullname
+                          ? "border-[1.5px] border-red-400 rounded-md"
+                          : ""
+                      } `}
+                      value={values.fullname}
+                      onChange={handleChange}
+                      helperText={
+                        error?.fullname && (
+                          <>
+                            <span className="font-medium text-red-400">
+                              {error.fullname}
+                            </span>
+                          </>
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Label htmlFor="phone_number" value="Phone Number" />
+                    <TextInput
+                      id="phone_number"
+                      type="text"
+                      placeholder="Phone Number"
+                      className={`${
+                        error?.phone_number
+                          ? "border-[1.5px] border-red-400 rounded-md"
+                          : ""
+                      } `}
+                      value={values.phone_number}
+                      onChange={handleChange}
+                      helperText={
+                        error?.phone_number && (
+                          <>
+                            <span className="font-medium text-red-400">
+                              {error.phone_number}
+                            </span>
+                          </>
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Label htmlFor="email" value="Email Address" />
+                    <TextInput
+                      id="email_address"
+                      type="text"
+                      placeholder="Email Address"
+                      className={`${
+                        error?.email_address
+                          ? "border-[1.5px] border-red-400 rounded-md"
+                          : ""
+                      } `}
+                      value={values.email_address}
+                      onChange={handleChange}
+                      helperText={
+                        error?.email_address && (
+                          <>
+                            <span className="font-medium text-red-400">
+                              {error.email_address}
+                            </span>
+                          </>
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Label htmlFor="social_media" value="Socail Media" />
+                    <TextInput
+                      id="social_media"
+                      type="text"
+                      placeholder="eg, facebook, telegram"
+                      value={values.social_media}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Title>Location</Timeline.Title>
+              <Timeline.Body>
+                <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-3">
+                  <div className="w-full">
+                    <Label
+                      htmlFor="shipping_address"
+                      value="Customer Address"
+                    />
+                    <TextInput
+                      id="shipping_address"
+                      type="text"
+                      placeholder="Address"
+                      className={`${
+                        error?.shipping_address
+                          ? "border-[1.5px] border-red-400 rounded-md"
+                          : ""
+                      } `}
+                      value={values.shipping_address}
+                      onChange={handleChange}
+                      helperText={
+                        error?.shipping_address && (
+                          <>
+                            <span className="font-medium text-red-400">
+                              {error.shipping_address}
+                            </span>
+                          </>
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Label htmlFor="longitude" value="Longitude" />
+                    <TextInput
+                      id="longitude"
+                      type="text"
+                      disabled
+                      value={values.longitude}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="w-full">
+                    <Label htmlFor="latitude" value="Latitude" />
+                    <TextInput
+                      id="latitude"
+                      type="text"
+                      disabled
+                      value={values.latitude}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Title>Status & Category</Timeline.Title>
+              <Timeline.Body>
+                <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-3">
+                  <div className="w-full">
+                    <Label htmlFor="customer_status" value="Customer Status" />
+                    <Select
+                      id="customer_status"
+                      type="text"
+                      placeholder="Website"
+                      value={values.customer_status}
+                      onChange={handleChange}
+                      helperText={
+                        error?.customer_status && (
+                          <>
+                            <span className="font-medium text-red-400">
+                              {error.customer_status}
+                            </span>
+                          </>
+                        )
+                      }
+                    >
+                      <option value="">Select an option</option>
+                      <option value="ACTIVE">Active</option>
+                      <option value="INACTIVE">Inactive</option>
+                      <option value="SUSPENDED">Suspended</option>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="customer_category_id" value="Category" />
+                    <Select
+                      id="customer_category_id"
+                      placeholder="Choose category"
+                      value={values.customer_category_id}
+                      onChange={handleChange}
+                      helperText={
+                        error?.customer_category_id && (
+                          <>
+                            <span className="font-medium text-red-400">
+                              {error.customer_category_id}
+                            </span>
+                          </>
+                        )
+                      }
+                    >
+                      <option value="">Select an option</option>
+                      {categories &&
+                        categories.map((category) => (
+                          <option value={category.id}>
+                            {category.category_name}
+                          </option>
+                        ))}
+                    </Select>
+                  </div>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Title>Additional</Timeline.Title>
+              <Timeline.Body>
+                <div className="my-5">
+                  <Label htmlFor="customer_note" value="Note" />
+                  <Textarea
+                    cols={4}
+                    id="customer_note"
+                    placeholder="Write your note"
+                    value={values.customer_note}
+                    onChange={handleChange}
                   />
-                </svg>
-              </>
-            )}
-            <FileInput
-              id="profile_picture"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </Label>
-        </div>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
 
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="email" value="Your email" />
-          </div>
-          <TextInput
-            id="email"
-            type="email"
-            placeholder="name@flowbite.com"
-            required
-            rightIcon={MdOutlineMarkEmailUnread}
-            onChange={handleChange}
-          />
-        </div>
+          <Timeline.Item>
+            <Timeline.Point icon={HiCalendar} />
+            <Timeline.Content>
+              <Timeline.Title>Image</Timeline.Title>
+              <Timeline.Body>
+                <div className="flex items-center justify-center mt-4 mb-4">
+                  <Label
+                    htmlFor="image_upload"
+                    className="flex items-center justify-center cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 p-4 w-full"
+                  >
+                    <div className="flex flex-col items-center justify-center">
+                      <svg
+                        className="mb-3 w-10 h-10 text-gray-400 dark:text-gray-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M16 5a2 2 0 00-1.5.654L9.828 10.832A3.5 3.5 0 1112.5 13H17a2 2 0 002-2V7a2 2 0 00-2-2H16z" />
+                      </svg>
+                      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                        <span className="font-semibold">Click to upload</span>{" "}
+                        or drag and drop
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        PNG, JPG or GIF (max. 2MB)
+                      </p>
+                    </div>
+                    <input
+                      id="image_upload"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileChange}
+                    />
+                  </Label>
+                </div>
 
-        <div className="w-full flex flex-col lg:md:flex-row gap-3">
-          <div className="w-full">
-            <div className="mb-2 block">
-              <Label value="Password" />
-            </div>
-            <TextInput
-              id="password"
-              type="password"
-              rightIcon={MdLockOpen}
-              required
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full">
-            <div className="mb-2 block">
-              <Label value="Password Confirmation" />
-            </div>
-            <TextInput
-              id="password_confirmation"
-              rightIcon={MdLockOpen}
-              type="password"
-              required
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div>
-          <div className="mb-2 block">
-            <Label value="Role" />
-          </div>
-          <Select id="role" required onChange={handleChange}>
-            <option value="">Select Role</option>
-            <option value="Admin">Admin</option>
-            <option value="Stock Controller">Stock Controller</option>
-            <option value="Saler">Saler</option>
-          </Select>
-        </div>
-
+                <div className="flex flex-col gap-4 mt-2">
+                  {values.image && (
+                    <div className="relative mr-2 mb-2">
+                      <img
+                        src={URL.createObjectURL(values.image)}
+                        alt="Image Preview"
+                        className="w-[18rem] h-40 object-cover rounded-md"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-0 right-0 p-1 text-white bg-red-500 rounded-full"
+                        onClick={handleRemoveImage}
+                      >
+                        <MdCancel />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+        </Timeline>
         <Button type="submit" onClick={() => setOpenSuccess(true)}>
           Submit
         </Button>

@@ -97,6 +97,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import NotFound from "./components/NotFound";
 import Customer from "./pages/sale/customer/Customer";
 import RecoverCustomer from "./pages/sale/customer/RecoverCustomer";
+import CreateCustomer from "./pages/sale/customer/Create";
 
 function App() {
 
@@ -114,7 +115,7 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={['VENDOR']} />}>
           <Route path="/customers" element={<Layout><Customer /></Layout>} />
           <Route path="/customers/recover" element={<Layout><RecoverCustomer /></Layout>} />
-          
+          <Route path="/customers/create" element={<Layout><CreateCustomer /></Layout>} />
 
         </Route>
 
