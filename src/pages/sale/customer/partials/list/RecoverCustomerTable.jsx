@@ -184,8 +184,8 @@ const RecoverCustomerTable = ({ filters }) => {
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
-                      <Badge color="warning">
-                        {customer.category.category_name}
+                      <Badge color={customer.category ? "warning" : "failure"}>
+                        {customer.category ? customer.category.category_name : 'N/A'}
                       </Badge>
                     </div>
                   </Table.Cell>
@@ -293,7 +293,7 @@ const RecoverCustomerTable = ({ filters }) => {
       <SuccessToast
         open={successToastOpen}
         onClose={() => setSuccessToastOpen(false)}
-        message="Customer deleted successfully!"
+        message="Customer recovered successfully!"
       />
     </div>
   );
