@@ -58,7 +58,7 @@ const CategoryList = () => {
             className="flex flex-col lg:md:flex-row gap-3"
           >
             <TextInput
-              placeholder="Search product"
+              placeholder="Search"
               id="query"
               value={filters.query}
               onChange={handleFilterChange}

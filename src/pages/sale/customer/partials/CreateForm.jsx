@@ -249,7 +249,7 @@ const CreateForm = () => {
                   </div>
 
                   <div className="w-full">
-                    <Label htmlFor="social_media" value="Socail Media" />
+                    <Label htmlFor="social_media" value="Social Media" />
                     <TextInput
                       id="social_media"
                       type="text"

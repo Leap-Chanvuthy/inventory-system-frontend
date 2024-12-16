@@ -11,7 +11,6 @@ import GlobalPagination from "../../../../../components/Pagination";
 import { FiEdit } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import LoadingState from "./LoadingState";
-// import SupplierMap from "../map/SupplierMap";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { Button, Modal } from "flowbite-react";
 import { SuccessToast } from "../../../../../components/ToastNotification";
@@ -24,6 +23,7 @@ import {
   fetchCustomerStart,
   fetchCustomerSuccess,
 } from "../../../../../redux/slices/customerSlice";
+import CustomerMap from "../map/CustomerMap";
 
 const CustomerTable = ({ filters }) => {
   const { customers, error, status } = useSelector((state) => state.customers);
@@ -121,13 +121,13 @@ const CustomerTable = ({ filters }) => {
     );
   }
 
-  //   const locations = suppliers.map((supplier) => ({
-  //     id: supplier.id,
-  //     image : supplier.image,
-  //     name: supplier.name,
-  //     latitude: parseFloat(supplier.latitude),
-  //     longitude: parseFloat(supplier.longitude),
-  //   }));
+    const locations = customers.map((customer) => ({
+      id: customer.id,
+      image : customer.image,
+      name: customer.fullname,
+      latitude: parseFloat(customer.latitude),
+      longitude: parseFloat(customer.longitude),
+    }));
 
   if (status === "failed")
     return <div className="text-center py-5 text-red-500">Oops! {error}</div>;
@@ -273,10 +273,10 @@ const CustomerTable = ({ filters }) => {
           onPageChange={handlePageChange}
         />
       </div>
-      {/* <div className="my-5 flex flex-col gap-3">
-        <SupplierMap locations={locations} />
-      </div> */}
-      map here
+      
+      <div className="my-5 flex flex-col gap-3">
+        <CustomerMap locations={locations} />
+      </div>
       <>
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
           <Modal.Header>

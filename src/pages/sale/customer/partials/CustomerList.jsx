@@ -79,7 +79,7 @@ const CustomerList = () => {
               className="flex flex-col lg:md:flex-row gap-3"
             >
               <TextInput
-                placeholder="Search supplier"
+                placeholder="Search"
                 id="search"
                 value={filters.search}
                 onChange={handleFilterChange}
