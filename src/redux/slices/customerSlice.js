@@ -40,6 +40,20 @@ const supplierSlice = createSlice({
         (state.status = "succeeded"),
         (state.customers = action.payload);
     },
+    updateCustomerStart: (state) => {
+      (state.error = null), (state.loading = true), (state.status = "loading");
+    },
+    updateCustomerFailed: (state, action) => {
+      (state.error = action.payload),
+        (state.loading = false),
+        (state.status = "failed");
+    },
+    updateCustomerSuccess: (state, action) => {
+      (state.error = null),
+        (state.loading = false),
+        (state.status = "succeeded"),
+        (state.customers = action.payload);
+    },
     deleteCustomerStart: (state) => {
       (state.error = null), (state.loading = true), (state.status = "loading");
     },
@@ -81,6 +95,9 @@ export const {
   createCustomerStart,
   createCustomerFailed,
   createCustomerSuccess,
+  updateCustomerStart,
+  updateCustomerSuccess,
+  updateCustomerFailed,
   deleteCustomerStart,
   deleteCustomerSuccess,
   deleteCustomerFailed,

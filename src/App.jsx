@@ -98,6 +98,7 @@ import NotFound from "./components/NotFound";
 import Customer from "./pages/sale/customer/Customer";
 import RecoverCustomer from "./pages/sale/customer/RecoverCustomer";
 import CreateCustomer from "./pages/sale/customer/Create";
+import UpdateCustomer from "./pages/sale/customer/Update";
 
 function App() {
 
@@ -116,6 +117,7 @@ function App() {
           <Route path="/customers" element={<Layout><Customer /></Layout>} />
           <Route path="/customers/recover" element={<Layout><RecoverCustomer /></Layout>} />
           <Route path="/customers/create" element={<Layout><CreateCustomer /></Layout>} />
+          <Route path="/customer/update/:id" element={<Layout><UpdateCustomer /></Layout>} />
 
         </Route>
 
