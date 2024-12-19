@@ -68,7 +68,9 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
             {/* Only allow Admin & Vender user */}
             {userRole == 'ADMIN' || userRole == 'VENDER' ?
             <Sidebar.Collapse href="#" icon={BsCart3} label="Sale" className="font-bold">
-              <Sidebar.Item href="#">Sale Order</Sidebar.Item>
+              <Sidebar.Item active={pathname === "sale-orders"} >
+                <Link to='/sale-orders'>Sale Order</Link>
+              </Sidebar.Item>
               <Sidebar.Item href="#">Invoice</Sidebar.Item>
               <Sidebar.Item active={pathname === "/customers"}>
                 <Link to='/customers'>Customers</Link>

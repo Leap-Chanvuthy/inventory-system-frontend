@@ -99,6 +99,7 @@ import Customer from "./pages/sale/customer/Customer";
 import RecoverCustomer from "./pages/sale/customer/RecoverCustomer";
 import CreateCustomer from "./pages/sale/customer/Create";
 import UpdateCustomer from "./pages/sale/customer/Update";
+import SaleOrder from "./pages/sale/sale-order/SaleOrder";
 
 function App() {
 
@@ -118,6 +119,8 @@ function App() {
           <Route path="/customers/recover" element={<Layout><RecoverCustomer /></Layout>} />
           <Route path="/customers/create" element={<Layout><CreateCustomer /></Layout>} />
           <Route path="/customer/update/:id" element={<Layout><UpdateCustomer /></Layout>} />
+
+          <Route path="/sale-orders" element={<Layout><SaleOrder /></Layout>} />
 
         </Route>
 
