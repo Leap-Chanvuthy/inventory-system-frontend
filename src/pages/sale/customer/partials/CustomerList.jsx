@@ -14,6 +14,7 @@ import CustomerTable from "./list/CustomerTable";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import { TbRestore } from "react-icons/tb";
+import CustomerExport from "./export/CustomerExport";
 
 const CustomerList = () => {
   const [filters, setFilters] = useState({
@@ -174,6 +175,7 @@ const CustomerList = () => {
             </form>
 
             {/* export */}
+            <CustomerExport />
 
 
             <div className="flex gap-3 items-center">
