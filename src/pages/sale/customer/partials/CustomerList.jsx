@@ -155,24 +155,26 @@ const CustomerList = () => {
                   </div>
                 </div>
               </Dropdown>
+            {/* export */}
+            <div className="flex gap-3 items-center">
+              <CustomerExport />
+              <div className="flex gap-3 items-center">
+                <Link to="/customers/recover">
+                  <Tooltip content="Recover">
+                    <Button
+                      color="success"
+                      className="flex justify-center items-center"
+                    >
+                      <TbRestore className="text-xl" />{" "}
+                    </Button>
+                  </Tooltip>
+                </Link>
+              </div>
+            </div>
             </form>
 
-            {/* export */}
-            <CustomerExport />
 
 
-            <div className="flex gap-3 items-center">
-              <Link to="/customers/recover">
-                <Tooltip content="Recover">
-                  <Button
-                    color="success"
-                    className="flex justify-center items-center"
-                  >
-                    <TbRestore className="text-xl" />{" "}
-                  </Button>
-                </Tooltip>
-              </Link>
-            </div>
 
           </div>
           <Link to="/customers/create">
