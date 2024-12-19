@@ -70,7 +70,7 @@ const CustomerTable = ({ filters }) => {
         params: {
           page,
             "filter[search]": filters?.search,
-            "filter[customer_category]" : filters?.category ,
+            "filter[customer_category_id]" : filters?.category ,
             "filter[customer_status]" : filters?.status ,
           sort: filters?.sort,
         },

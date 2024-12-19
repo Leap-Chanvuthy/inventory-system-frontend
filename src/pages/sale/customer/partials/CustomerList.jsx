@@ -136,23 +136,6 @@ const CustomerList = () => {
                     </div>
 
                     <div>
-                      <Label
-                        htmlFor="category"
-                        value="Category"
-                        className="mb-2 block"
-                      />
-                      <Select
-                        id="category"
-                        value={filters.category}
-                        onChange={handleFilterChange}
-                      >
-                        <option value="">Select Category</option>
-                        <option value="SERVICE">Service</option>
-                        <option value="PRODUCT">Product</option>
-                      </Select>
-                    </div>
-
-                    <div>
                       <Label htmlFor="category" value="Category" />
                       <Select
                         id="category"
