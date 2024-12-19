@@ -80,6 +80,21 @@ const UpdateForm = () => {
     tax_percentage: "",
     clearing_payable_percentage: "",
     raw_materials: [],
+    // invoice details
+    invoice_number : "",
+    status : "",
+    discount_value_in_riel : "",
+    discount_value_in_usd : "",
+    tax_value_in_riel : "",
+    tax_value_in_usd : "",
+    sub_total_in_riel : "",
+    sub_total_in_usd : "",
+    grand_total_without_tax_in_riel : "",
+    grand_total_without_tax_in_usd : "",
+    grand_total_with_tax_in_riel : "",
+    grand_total_with_tax_in_usd : "",
+    indebted_in_riel : "",
+    indebted_in_usd : ""
   });
 
   console.log(values);
@@ -96,6 +111,21 @@ const UpdateForm = () => {
         raw_materials: invoices?.purchase_invoice_details?.map(
           (detail) => detail.raw_material_id
         ),
+        // invoice detail 
+        invoice_number : invoices?.invoice_number,
+        status : invoices?.status,
+        discount_value_in_riel : invoices?.discount_value_in_riel,
+        discount_value_in_usd : invoices?.discount_value_in_usd,
+        tax_value_in_riel : invoices?.tax_value_in_riel,
+        tax_value_in_usd : invoices?.tax_value_in_usd,
+        sub_total_in_riel : invoices?.sub_total_in_riel,
+        sub_total_in_usd : invoices?.sub_total_in_riel,
+        grand_total_without_tax_in_riel : invoices?.grand_total_without_tax_in_riel,
+        grand_total_without_tax_in_usd : invoices?.grand_total_without_tax_in_usd,
+        grand_total_with_tax_in_riel : invoices?.grand_total_with_tax_in_riel,
+        grand_total_with_tax_in_usd : invoices?.grand_total_with_tax_in_usd,
+        indebted_in_riel : invoices?.indebted_in_riel,
+        indebted_in_usd : invoices?.indebted_in_usd
       });
     }
     dispatch(
@@ -295,6 +325,211 @@ const UpdateForm = () => {
                       }
                     />
                   </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Invoice No." />
+                    </div>
+                    <TextInput
+                      id="invoice_number"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.invoice_number}
+                    />
+                  </div>
+                  
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Invoice Status." />
+                    </div>
+                    <TextInput
+                      id="status"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.status}
+                    />
+                  </div>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
+          <Timeline.Item>
+            <Timeline.Point icon={IoCartOutline} />
+            <Timeline.Content>
+              <Timeline.Title>Invoice Value in Riel</Timeline.Title>
+              <Timeline.Body>
+              <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-5 my-5">
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Discount Value (៛)" />
+                    </div>
+                    <TextInput
+                      id="discount_value_in_riel"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.discount_value_in_riel}
+                    />
+                  </div>
+                  
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Tax Value (៛)" />
+                    </div>
+                    <TextInput
+                      id="tax_value_in_riel"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.tax_value_in_riel}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Sub Total (៛)" />
+                    </div>
+                    <TextInput
+                      id="sub_total_in_riel"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.sub_total_in_riel}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Grand Total (No Tax Included)" />
+                    </div>
+                    <TextInput
+                      id="grand_total_without_tax_in_riel"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.grand_total_without_tax_in_riel}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Grand Total (Tax Included)" />
+                    </div>
+                    <TextInput
+                      id="grand_total_with_tax_in_riel"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.grand_total_with_tax_in_riel}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Indebted (៛)" />
+                    </div>
+                    <TextInput
+                      id="indebted_in_riel"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.indebted_in_riel}
+                    />
+                  </div>
+
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
+
+          <Timeline.Item>
+            <Timeline.Point icon={IoCartOutline} />
+            <Timeline.Content>
+              <Timeline.Title>Invoice Value in USD</Timeline.Title>
+              <Timeline.Body>
+                <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-5 my-5">
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Discount Value ($)" />
+                    </div>
+                    <TextInput
+                      id="discount_value_in_usd"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.discount_value_in_usd}
+                    />
+                  </div>
+                  
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Tax Value ($)" />
+                    </div>
+                    <TextInput
+                      id="tax_value_in_usd"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.tax_value_in_usd}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Sub Total ($)" />
+                    </div>
+                    <TextInput
+                      id="sub_total_in_usd"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.sub_total_in_usd}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Grand Total (No Tax Included)" />
+                    </div>
+                    <TextInput
+                      id="grand_total_without_tax_in_usd"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.grand_total_without_tax_in_usd}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Grand Total (Tax Included)" />
+                    </div>
+                    <TextInput
+                      id="grand_total_with_tax_in_usd"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.grand_total_with_tax_in_usd}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Indebted ($)" />
+                    </div>
+                    <TextInput
+                      id="indebted_in_usd"
+                      disabled
+                      type="text"
+                      onChange={handleChange}
+                      value={values.indebted_in_usd}
+                    />
+                  </div>
+
                 </div>
               </Timeline.Body>
             </Timeline.Content>
