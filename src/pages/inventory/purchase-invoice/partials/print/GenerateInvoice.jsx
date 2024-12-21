@@ -12,17 +12,14 @@ const GenerateInvoice = ({ invoice }) => (
 
     <h2 className="section-title">Invoice Summary</h2>
     <ul className="invoice-summary">
-      {/* <li><strong>Subtotal (Riel):</strong> {invoice.sub_total_in_riel.toFixed(2)} ៛</li>
-      <li><strong>Subtotal (USD):</strong> ${invoice.sub_total_in_usd.toFixed(2)}</li> */}
       <li><strong>Discount ({invoice.discount_percentage}%):</strong> -{invoice.discount_value_in_usd.toFixed(2)} $ / -{invoice.discount_value_in_riel.toFixed(2)} ៛</li>
       <li><strong>Tax ({invoice.tax_percentage}%):</strong> +{invoice.tax_value_in_usd.toFixed(2)} $ / +{invoice.tax_value_in_riel.toFixed(2)} ៛</li>
-      {/* <li><strong>Grand Total Without Tax (Riel):</strong> {invoice.grand_total_without_tax_in_riel.toFixed(2)} ៛</li>
-      <li><strong>Grand Total Without Tax (USD):</strong> ${invoice.grand_total_without_tax_in_usd.toFixed(2)}</li>
-      <li><strong>Grand Total With Tax (Riel):</strong> {invoice.grand_total_with_tax_in_riel.toFixed(2)} ៛</li>
-      <li><strong>Grand Total With Tax (USD):</strong> ${invoice.grand_total_with_tax_in_usd.toFixed(2)}</li> */}
       <li><strong>Clearing Payable Percentage:</strong> {invoice.clearing_payable_percentage}%</li>
       <li><strong>Indebted (Riel):</strong> {invoice.indebted_in_riel.toFixed(2)} ៛</li>
       <li><strong>Indebted (USD):</strong> ${invoice.indebted_in_usd.toFixed(2)}</li>
+      <li><strong>Supplier: </strong>{invoice.supplier.name}</li>
+      <li><strong>Supplier Code: </strong>{invoice.supplier.supplier_code}</li>
+      <li><strong>Email: </strong>{invoice.supplier.email}</li>
     </ul>
 
     <h2 className="section-title">Invoice Details</h2>
@@ -31,7 +28,6 @@ const GenerateInvoice = ({ invoice }) => (
         <tr>
           <th>Qty</th>
           <th>Item Name</th>
-          <th>Supplier</th>
           <th>Unit Price (Riel)</th>
           <th>Total Price (Riel)</th>
           <th>Unit Price (USD)</th>
@@ -43,11 +39,6 @@ const GenerateInvoice = ({ invoice }) => (
           <tr key={item.id}>
             <td>{item.quantity}</td>
             <td>{item.raw_material.name}</td>
-            { item.raw_material.supplier ? 
-              <td>{item.raw_material.supplier.name}</td>
-              :
-              <td>Not available</td>
-            }
             <td>{item.raw_material.unit_price_in_riel.toFixed(2)} ៛</td>
             <td>{item.total_price_in_riel.toFixed(2)} ៛</td>
             <td>${item.raw_material.unit_price_in_usd.toFixed(2)}</td>
@@ -61,11 +52,8 @@ const GenerateInvoice = ({ invoice }) => (
     <div className="invoice-totals">
       <h2 className="section-title">Totals</h2>
       <p><strong>Subtotal :</strong> {invoice.sub_total_in_riel.toFixed(2)} ៛ / $ {invoice.sub_total_in_usd.toFixed(2)}</p>
-      {/* <p><strong>Subtotal (USD):</strong> ${invoice.sub_total_in_usd.toFixed(2)}</p> */}
       <p><strong>Grand Total Without Tax (Riel):</strong> {invoice.grand_total_without_tax_in_riel.toFixed(2)} ៛ / $ {invoice.grand_total_without_tax_in_usd.toFixed(2)}</p>
-      {/* <p><strong>Grand Total Without Tax (USD):</strong> ${invoice.grand_total_without_tax_in_usd.toFixed(2)}</p> */}
       <p><strong>Grand Total With Tax (Riel):</strong> {invoice.grand_total_with_tax_in_riel.toFixed(2)} ៛ / $ {invoice.grand_total_with_tax_in_usd.toFixed(2)}</p>
-      {/* <p><strong>Grand Total With Tax (USD):</strong> ${invoice.grand_total_with_tax_in_usd.toFixed(2)}</p> */}
     </div>
 
     <p className="thank-you">Thank you for your business!</p>

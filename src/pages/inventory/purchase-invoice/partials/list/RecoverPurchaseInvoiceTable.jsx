@@ -120,6 +120,9 @@ const RecoverPurchaseInvoiceTable = ({ filters }) => {
             <Table.HeadCell className="whitespace-nowrap">Payment Method</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Payment Date</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Supplier Name</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Supplier Code</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Supplier Email</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Subtotal (Riel)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Subtotal (USD)</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Tax Amount (Riel)</Table.HeadCell>
@@ -172,6 +175,13 @@ const RecoverPurchaseInvoiceTable = ({ filters }) => {
                           )}
                         </div>
                   </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge color="purple">{invoice.supplier.name}</Badge>
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>{invoice.supplier.supplier_code}</Table.Cell>
+                  <Table.Cell>{invoice.supplier.email}</Table.Cell>
                   <Table.Cell>{invoice.sub_total_in_riel} ៛</Table.Cell>
                   <Table.Cell>{invoice.sub_total_in_usd} $</Table.Cell>
                   <Table.Cell>{invoice.tax_value_in_riel} ៛</Table.Cell>

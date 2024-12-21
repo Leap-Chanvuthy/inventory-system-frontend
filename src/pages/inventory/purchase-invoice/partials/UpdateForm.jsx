@@ -11,8 +11,10 @@ import {
   Table,
   Checkbox,
   Badge,
+  Avatar,
 } from "flowbite-react";
 import { IoCartOutline } from "react-icons/io5";
+import { GrUserWorker } from "react-icons/gr";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import {
   fetchInvoiceStart,
@@ -23,7 +25,7 @@ import {
   updateInvoiceFailure,
 } from "../../../../redux/slices/invoiceSlice";
 import axios from "axios";
-import { BASE_URL } from "../../../../components/const/constant";
+import { BASE_URL , BASE_IMAGE_URL } from "../../../../components/const/constant";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DangerToast,
@@ -48,6 +50,7 @@ const payment_methods = [
 const UpdateForm = () => {
   const dispatch = useDispatch();
   const { error, status, invoices } = useSelector((state) => state.invoices);
+  console.log(invoices);
   const { multipleSelection } = useSelector((state) => state.selections);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
@@ -357,6 +360,279 @@ const UpdateForm = () => {
           </Timeline.Item>
 
           <Timeline.Item>
+            <Timeline.Point icon={GrUserWorker} />
+            <Timeline.Content>
+              <Timeline.Title>Supplier</Timeline.Title>
+              <Timeline.Body>
+                <div className="overflow-x-auto lg:max-w-6xl  my-5">
+                  <Table striped>
+                    <Table.Head>
+                      <Table.HeadCell>Image</Table.HeadCell>
+                      <Table.HeadCell>ID</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Name / Company</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Phone Number</Table.HeadCell>
+                      <Table.HeadCell>Category</Table.HeadCell>
+                      <Table.HeadCell>Status</Table.HeadCell>
+                      <Table.HeadCell>Location</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Contact Person</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Business Reg. No.</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Bank Account No.</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Bank Name</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Supplier Code</Table.HeadCell>
+                      <Table.HeadCell >Address</Table.HeadCell>
+                      <Table.HeadCell>Email</Table.HeadCell>
+                      <Table.HeadCell>Website</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">Social Media</Table.HeadCell>
+
+                    </Table.Head>
+                    <Table.Body className="divide-y">
+                      {invoices.supplier ?
+                          <Table.Row
+                            key={invoices.supplier.id}
+                            className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                          >
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              <Avatar
+                                img={invoices.supplier.image ? `${BASE_IMAGE_URL}/${invoices.supplier.image}` : ""}
+                              />
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.id}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.name}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.phone_number}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.supplier_category === 'PRODUCT' && (
+                                <Badge color="success">{invoices.supplier.supplier_category}</Badge>
+                              )}
+                              {invoices.supplier.supplier_category === 'SERVICE' && (
+                                <Badge color="warning">{invoices.supplier.supplier_category}</Badge>
+                              )}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              <div className="flex flex-wrap gap-2">
+                                {invoices.supplier.supplier_status === 'ACTIVE' && (
+                                  <Badge color="success">{invoices.supplier.supplier_status}</Badge>
+                                )}
+                                {invoices.supplier.supplier_status === 'INACTIVE' && (
+                                  <Badge color="warning">{invoices.supplier.supplier_status}</Badge>
+                                )}
+                                {invoices.supplier.supplier_status === 'SUSPENDED' && (
+                                  <Badge color="failure">{invoices.supplier.supplier_status}</Badge>
+                                )}
+                              </div>
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.location}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.contact_person}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.business_registration_number}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.bank_account_number}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.bank_name}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.supplier_code}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.address}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {invoices.supplier.email}
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              <a href={invoices.supplier.website} target="_blank" rel="noopener noreferrer">
+                                {invoices.supplier.website}
+                              </a>
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              <a href={invoices.supplier.social_media} target="_blank" rel="noopener noreferrer">
+                                {invoices.supplier.social_media}
+                              </a>
+                            </Table.Cell>
+
+                          </Table.Row>
+                        : (
+                        <Table.Row>
+                          <Table.Cell colSpan="16" className="text-center py-4">
+                            No suppliers.
+                          </Table.Cell>
+                        </Table.Row>
+                      )}
+                    </Table.Body>
+                  </Table>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
+          <Timeline.Item>
+            <Timeline.Point icon={IoCartOutline} />
+            <Timeline.Content>
+              <Timeline.Title>Invoice Details</Timeline.Title>
+              <Timeline.Body>
+                <div className="overflow-x-auto lg:max-w-6xl  my-5">
+                  <Table striped>
+                    <Table.Head>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Select
+                      </Table.HeadCell>
+                      <Table.HeadCell>ID</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Code
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Product Name
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Status
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Category
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Quantity
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Remaining Quantity
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Unit Price in USD
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Total Value in USD
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Unit Price in Riel
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Total Value in Riel
+                      </Table.HeadCell>
+                    </Table.Head>
+                    <Table.Body className="divide-y">
+                      {invoices?.purchase_invoice_details?.length > 0 ? (
+                        invoices?.purchase_invoice_details.map(
+                          (invoiceDetail) => (
+                            <Table.Row
+                              key={invoiceDetail.id}
+                              className="bg-white dark:border-gray-700 dark:bg-gray-800 font-medium text-gray-900 dark:text-white"
+                            >
+                              <Table.Cell>
+                                <Checkbox
+                                  checked={multipleSelection?.includes(
+                                    invoiceDetail.raw_material_id
+                                  )}
+                                  onChange={() =>
+                                    handleMultipleSelect(
+                                      invoiceDetail.raw_material_id
+                                    )
+                                  }
+                                />
+                              </Table.Cell>
+                              <Table.Cell>
+                                {invoiceDetail?.raw_material?.id}
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {invoiceDetail?.raw_material?.material_code}
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {invoiceDetail?.raw_material?.name}
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                <div className="flex flex-wrap gap-2">
+                                  {invoiceDetail?.raw_material?.status ===
+                                    "IN_STOCK" && (
+                                    <Badge color="success">
+                                      {invoiceDetail?.raw_material?.status}
+                                    </Badge>
+                                  )}
+                                  {invoiceDetail?.raw_material?.status ===
+                                    "OUT_OF_STOCK" && (
+                                    <Badge color="failure">
+                                      {invoiceDetail?.raw_material?.status}
+                                    </Badge>
+                                  )}
+                                </div>
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                <div className="flex flex-wrap gap-2">
+                                  <Badge
+                                    color={
+                                      invoiceDetail?.raw_material?.category
+                                        ? "warning"
+                                        : "failure"
+                                    }
+                                  >
+                                    {invoiceDetail?.raw_material?.category
+                                      ? invoiceDetail?.raw_material?.category
+                                          ?.category_name
+                                      : "NULL"}
+                                  </Badge>
+                                </div>
+                              </Table.Cell>
+
+                              <Table.Cell className="whitespace-nowrap">
+                                {invoiceDetail?.raw_material?.quantity}
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {
+                                  invoiceDetail?.raw_material
+                                    ?.remaining_quantity
+                                }
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {invoiceDetail?.raw_material?.unit_price_in_usd}{" "}
+                                ($)
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {
+                                  invoiceDetail?.raw_material
+                                    ?.total_value_in_usd
+                                }{" "}
+                                ($)
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {
+                                  invoiceDetail?.raw_material
+                                    ?.unit_price_in_riel
+                                }{" "}
+                                (៛)
+                              </Table.Cell>
+                              <Table.Cell className="whitespace-nowrap">
+                                {
+                                  invoiceDetail?.raw_material
+                                    ?.total_value_in_riel
+                                }
+                                ​​ (​៛)
+                              </Table.Cell>
+                            </Table.Row>
+                          )
+                        )
+                      ) : (
+                        <Table.Row>
+                          <Table.Cell colSpan="8" className="text-center py-4">
+                            No purchase invoice found.
+                          </Table.Cell>
+                        </Table.Row>
+                      )}
+                    </Table.Body>
+                  </Table>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
+          <Timeline.Item>
             <Timeline.Point icon={IoCartOutline} />
             <Timeline.Content>
               <Timeline.Title>Invoice Value in Riel</Timeline.Title>
@@ -530,180 +806,6 @@ const UpdateForm = () => {
                     />
                   </div>
 
-                </div>
-              </Timeline.Body>
-            </Timeline.Content>
-          </Timeline.Item>
-
-          <Timeline.Item>
-            <Timeline.Point icon={IoCartOutline} />
-            <Timeline.Content>
-              <Timeline.Title>Invoice Details</Timeline.Title>
-              <Timeline.Body>
-                <div className="overflow-x-auto lg:max-w-6xl  my-5">
-                  <Table striped>
-                    <Table.Head>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Select
-                      </Table.HeadCell>
-                      <Table.HeadCell>ID</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Code
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Product Name
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Supplier Code
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Supplier Name
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Status
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Category
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Quantity
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Remaining Quantity
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Unit Price in USD
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Total Value in USD
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Unit Price in Riel
-                      </Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Total Value in Riel
-                      </Table.HeadCell>
-                    </Table.Head>
-                    <Table.Body className="divide-y">
-                      {invoices?.purchase_invoice_details?.length > 0 ? (
-                        invoices?.purchase_invoice_details.map(
-                          (invoiceDetail) => (
-                            <Table.Row
-                              key={invoiceDetail.id}
-                              className="bg-white dark:border-gray-700 dark:bg-gray-800 font-medium text-gray-900 dark:text-white"
-                            >
-                              <Table.Cell>
-                                {/* <Checkbox
-                                  checked={multipleSelection?.includes(
-                                    invoiceDetail?.map((detail) => detail?.raw_material_id)
-                                  )}
-                                  onChange={() =>handleMultipleSelect(invoiceDetail?.map((detail) => detail?.raw_material_id))}
-                                /> */}
-                                <Checkbox
-                                  checked={multipleSelection?.includes(
-                                    invoiceDetail.raw_material_id
-                                  )}
-                                  onChange={() =>
-                                    handleMultipleSelect(
-                                      invoiceDetail.raw_material_id
-                                    )
-                                  }
-                                />
-                              </Table.Cell>
-                              <Table.Cell>
-                                {invoiceDetail?.raw_material?.id}
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {invoiceDetail?.raw_material?.material_code}
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {invoiceDetail?.raw_material?.name}
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {invoiceDetail?.raw_material?.supplier?.supplier_code}
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {invoiceDetail?.raw_material?.supplier?.name}
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                <div className="flex flex-wrap gap-2">
-                                  {invoiceDetail?.raw_material?.status ===
-                                    "IN_STOCK" && (
-                                    <Badge color="success">
-                                      {invoiceDetail?.raw_material?.status}
-                                    </Badge>
-                                  )}
-                                  {invoiceDetail?.raw_material?.status ===
-                                    "OUT_OF_STOCK" && (
-                                    <Badge color="failure">
-                                      {invoiceDetail?.raw_material?.status}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                <div className="flex flex-wrap gap-2">
-                                  <Badge
-                                    color={
-                                      invoiceDetail?.raw_material?.category
-                                        ? "warning"
-                                        : "failure"
-                                    }
-                                  >
-                                    {invoiceDetail?.raw_material?.category
-                                      ? invoiceDetail?.raw_material?.category
-                                          ?.category_name
-                                      : "NULL"}
-                                  </Badge>
-                                </div>
-                              </Table.Cell>
-
-                              <Table.Cell className="whitespace-nowrap">
-                                {invoiceDetail?.raw_material?.quantity}
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {
-                                  invoiceDetail?.raw_material
-                                    ?.remaining_quantity
-                                }
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {invoiceDetail?.raw_material?.unit_price_in_usd}{" "}
-                                ($)
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {
-                                  invoiceDetail?.raw_material
-                                    ?.total_value_in_usd
-                                }{" "}
-                                ($)
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {
-                                  invoiceDetail?.raw_material
-                                    ?.unit_price_in_riel
-                                }{" "}
-                                (៛)
-                              </Table.Cell>
-                              <Table.Cell className="whitespace-nowrap">
-                                {
-                                  invoiceDetail?.raw_material
-                                    ?.total_value_in_riel
-                                }
-                                ​​ (​៛)
-                              </Table.Cell>
-                            </Table.Row>
-                          )
-                        )
-                      ) : (
-                        <Table.Row>
-                          <Table.Cell colSpan="8" className="text-center py-4">
-                            No purchase invoice found.
-                          </Table.Cell>
-                        </Table.Row>
-                      )}
-                    </Table.Body>
-                  </Table>
                 </div>
               </Timeline.Body>
             </Timeline.Content>
