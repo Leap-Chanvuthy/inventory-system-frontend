@@ -89,14 +89,6 @@ const PurchaseInvoiceList = () => {
                   />
                   <label htmlFor="updated_at">Updated At</label>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    id="material_code"
-                    onChange={handleSortChange}
-                    checked={filters.sort.includes("material_code")}
-                  />
-                  <label htmlFor="material_code">Material Code</label>
-                </div>
               </div>
             </Dropdown>
 
