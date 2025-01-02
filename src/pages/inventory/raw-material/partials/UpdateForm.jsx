@@ -892,10 +892,6 @@ const UpdateForm = () => {
                       <FaTrashCan className="mr-3" />
                       {status === "loading" ? <Spinner /> : "Remove"}
                     </Button>
-                    <Button onClick={closeModal}>
-                      <MdFileDownload className="mr-2" />
-                      Download
-                    </Button>
                   </div>
                 </div>
               </Modal.Footer>
