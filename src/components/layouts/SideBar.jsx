@@ -79,16 +79,25 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
             : <></>
             }
 
-            <Sidebar.Collapse
+
+            {userRole == 'ADMIN' || userRole == 'VENDER' ?
+              <Sidebar.Collapse
               href="#"
               icon={TbBrandGoogleAnalytics}
-              label="Report Analytics"
+              label="Accounting"
               className="font-bold"
             >
-              <Sidebar.Item href="#">Sale Order</Sidebar.Item>
-              <Sidebar.Item href="#">Invoice</Sidebar.Item>
-              <Sidebar.Item href="#">Customer</Sidebar.Item>
+              <Sidebar.Item href="#">Incomes</Sidebar.Item>
+              <Sidebar.Item href="#">Expenses</Sidebar.Item>
             </Sidebar.Collapse>
+            : <></>
+            }
+            <Sidebar.Item
+              active={pathname === "/reports-analytics"}
+              icon={TbBrandGoogleAnalytics}
+            >
+              <Link to='/report-analytics'><span className="font-bold">Report Analytics</span></Link>
+            </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>
