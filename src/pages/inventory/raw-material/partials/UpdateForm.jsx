@@ -28,6 +28,9 @@ import {
   fetchRawMaterialsStart,
   fetchRawMaterialsSuccess,
   fetchRawMaterialsFailure,
+  deleteRawMaterialStart,
+  deleteRawMaterialSuccess,
+  deleteRawMaterialFailure,
 } from "../../../../redux/slices/rawMaterialSlice";
 import {
   setSingleSelection,
@@ -35,9 +38,12 @@ import {
 } from "../../../../redux/slices/selectionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { HiInformationCircle } from "react-icons/hi";
 import SupplierRelationship from "./relationships/SupplierRelationship";
+import { IoIosArrowBack } from "react-icons/io";
+import { FaTrashCan } from "react-icons/fa6";
+import { MdFileDownload } from "react-icons/md";
 
 const UpdateForm = () => {
   const [openSuccess, setOpenSuccess] = useState(false);
@@ -47,7 +53,6 @@ const UpdateForm = () => {
     (state) => state.rawMaterials
   );
   const { singleSelection } = useSelector((state) => state.selections);
-  console.log(singleSelection);
   const { id } = useParams();
 
   // get specific material by id
@@ -70,9 +75,11 @@ const UpdateForm = () => {
   // list of images from API
   const [oldImages, setOldImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imageId, setImageId] = useState(null);
 
-  const handleImageClick = (img) => {
+  const handleImageClick = (img, id) => {
     setSelectedImage(img);
+    setImageId(id);
   };
 
   const closeModal = () => {
@@ -87,11 +94,7 @@ const UpdateForm = () => {
     quantity: "",
     remaining_quantity: "",
     unit_price_in_usd: "",
-    total_value_in_usd: "",
     exchange_rate_from_usd_to_riel: "",
-    unit_price_in_riel: "",
-    total_value_in_riel: "",
-    exchange_rate_from_riel_to_usd: "",
     minimum_stock_level: "",
     raw_material_category_id: "",
     unit_of_measurement: "",
@@ -103,7 +106,6 @@ const UpdateForm = () => {
     supplier_id: "",
   });
 
-
   useEffect(() => {
     if (rawMaterials) {
       setValues({
@@ -113,13 +115,8 @@ const UpdateForm = () => {
         quantity: rawMaterials?.quantity || "",
         remaining_quantity: rawMaterials?.remaining_quantity || "",
         unit_price_in_usd: rawMaterials?.unit_price_in_usd || "",
-        total_value_in_usd: rawMaterials?.total_value_in_usd || "",
         exchange_rate_from_usd_to_riel:
           rawMaterials?.exchange_rate_from_usd_to_riel || "",
-        unit_price_in_riel: rawMaterials?.unit_price_in_riel || "",
-        total_value_in_riel: rawMaterials?.total_value_in_riel || "",
-        exchange_rate_from_riel_to_usd:
-          rawMaterials?.exchange_rate_from_riel_to_usd || "",
         minimum_stock_level: rawMaterials?.minimum_stock_level || "",
         raw_material_category_id: rawMaterials?.raw_material_category_id || "",
         unit_of_measurement: rawMaterials?.unit_of_measurement || "",
@@ -135,6 +132,8 @@ const UpdateForm = () => {
       dispatch(setSingleSelection(rawMaterials?.supplier?.id));
     }
   }, [rawMaterials]);
+
+  console.log("values of raw materials:", rawMaterials);
 
   // handle values change
   const handleChange = (e) => {
@@ -195,6 +194,29 @@ const UpdateForm = () => {
     getCategory();
   }, []);
 
+  // Handle delete image
+  const handleDeleteImage = async (e) => {
+    e.preventDefault();
+    dispatch(deleteRawMaterialStart());
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/raw-material/${id}/images/${imageId}`
+      );
+      console.log(response);
+      dispatch(deleteRawMaterialSuccess(id));
+      setOpenModal(false);
+      const updatedMaterial = await axios.get(`${BASE_URL}/raw-material/${id}`);
+      dispatch(fetchRawMaterialsSuccess(updatedMaterial.data));
+    } catch (err) {
+      console.log(err.response);
+      dispatch(
+        deleteRawMaterialFailure(
+          err.message || "Error deleting image from the server."
+        )
+      );
+    }
+  };
+
   // Submit patch request to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -212,7 +234,7 @@ const UpdateForm = () => {
       );
       dispatch(updateRawMaterialSuccess(response));
       const updatedMaterial = await axios.get(`${BASE_URL}/raw-material/${id}`);
-      console.log("updated material:", updatedMaterial)
+      console.log("updated material:", updatedMaterial);
       dispatch(fetchRawMaterialsSuccess(updatedMaterial.data));
       // dispatch(fetchRawMaterialsSuccess());
       setOpenSuccess(true);
@@ -381,6 +403,108 @@ const UpdateForm = () => {
                   }
                 />
               </div>
+
+              <div>
+                <Label
+                  htmlFor="raw_material_category_id"
+                  value="Raw Material Category"
+                />
+                <Select
+                  id="raw_material_category_id"
+                  placeholder="Enter raw material category"
+                  value={values.raw_material_category_id}
+                  onChange={handleChange}
+                  helperText={
+                    error?.raw_material_category_id && (
+                      <>
+                        <span className="font-medium text-red-400">
+                          {error.raw_material_category_id}
+                        </span>
+                      </>
+                    )
+                  }
+                >
+                  <option value="">Select an option</option>
+                  {categories &&
+                    categories.map((category) => (
+                      <option value={category.id}>
+                        {category.category_name}
+                      </option>
+                    ))}
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="status" value="Status" />
+                <Select
+                  id="status"
+                  placeholder="Enter status"
+                  value={values.status}
+                  onChange={handleChange}
+                  disabled
+                  helperText={
+                    error?.status && (
+                      <>
+                        <span className="font-medium text-red-400">
+                          {error.status}
+                        </span>
+                      </>
+                    )
+                  }
+                >
+                  <option value="">Select an option</option>
+                  <option value="IN_STOCK">In stock</option>
+                  <option value="OUT_OF_STOCK">Out of stock</option>
+                  <option value="LOW_STOCK">Low Stock</option>
+                </Select>
+              </div>
+
+              <div>
+                <Label
+                  htmlFor="unit_of_measurement"
+                  value="Unit of Measurement"
+                />
+                <TextInput
+                  id="unit_of_measurement"
+                  placeholder="Enter unit of measurement"
+                  value={values.unit_of_measurement}
+                  onChange={handleChange}
+                  className={`${
+                    error?.unit_of_measurement
+                      ? "border-[1.5px] border-red-400 rounded-md"
+                      : ""
+                  } `}
+                  helperText={
+                    error?.unit_of_measurement && (
+                      <>
+                        <span className="font-medium text-red-400">
+                          {error.unit_of_measurement}
+                        </span>
+                      </>
+                    )
+                  }
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="package_size" value="Package Size" />
+                <TextInput
+                  id="package_size"
+                  placeholder="Enter package size"
+                  value={values.package_size}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="location" value="Location" />
+                <TextInput
+                  id="location"
+                  placeholder="Enter location"
+                  value={values.location}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
             <h2 className="text-md font-semibold">Currency Info</h2>
@@ -416,14 +540,15 @@ const UpdateForm = () => {
                 <div>
                   <Label
                     htmlFor="total_value_in_usd"
-                    value="Total Value in USD"
+                    value="Total Value in USD (Auto Calculated)"
                   />
                   <TextInput
-                    id="total_value_in_usd"
+                    // id="total_value_in_usd"
                     type="text"
                     placeholder="Enter total value"
-                    value={values.total_value_in_usd}
+                    value={rawMaterials.total_value_in_usd}
                     onChange={handleChange}
+                    disabled
                     className={`${
                       error?.total_value_in_usd
                         ? "border-[1.5px] border-red-400 rounded-md"
@@ -468,6 +593,9 @@ const UpdateForm = () => {
                   />
                 </div>
               </div>
+              <h2 className="text-md font-semibold my-3">
+                Riel Currency (Auto Calculated)
+              </h2>
               <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
                 <div>
                   <Label
@@ -475,11 +603,12 @@ const UpdateForm = () => {
                     value="Total Value in Riel"
                   />
                   <TextInput
-                    id="unit_price_in_riel"
+                    // id="unit_price_in_riel"
                     type="text"
                     placeholder="Enter total value"
-                    value={values.unit_price_in_riel}
+                    value={rawMaterials.unit_price_in_riel}
                     onChange={handleChange}
+                    disabled
                     className={`${
                       error?.unit_price_in_riel
                         ? "border-[1.5px] border-red-400 rounded-md"
@@ -502,11 +631,12 @@ const UpdateForm = () => {
                     value="Total Value in Riel"
                   />
                   <TextInput
-                    id="total_value_in_riel"
-                    type="text"
+                    // id="total_value_in_riel"
+                    type="number"
                     placeholder="Enter total value"
-                    value={values.total_value_in_riel}
+                    value={rawMaterials.total_value_in_riel}
                     onChange={handleChange}
+                    disabled
                     className={`${
                       error?.total_value_in_riel
                         ? "border-[1.5px] border-red-400 rounded-md"
@@ -530,10 +660,11 @@ const UpdateForm = () => {
                   />
                   <TextInput
                     id="exchange_rate_from_riel_to_usd"
-                    type="text"
+                    // type="number"
                     placeholder="Enter total value"
-                    value={values.exchange_rate_from_riel_to_usd}
+                    value={rawMaterials.exchange_rate_from_riel_to_usd}
                     onChange={handleChange}
+                    disabled
                     className={`${
                       error?.exchange_rate_from_riel_to_usd
                         ? "border-[1.5px] border-red-400 rounded-md"
@@ -552,113 +683,9 @@ const UpdateForm = () => {
                 </div>
               </div>
             </div>
-
-            <h2 className="text-md font-semibold">Additional</h2>
-            <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-              <div>
-                <Label
-                  htmlFor="raw_material_category_id"
-                  value="Raw Material Category"
-                />
-                <Select
-                  id="raw_material_category_id"
-                  placeholder="Enter raw material category"
-                  value={values.raw_material_category_id}
-                  onChange={handleChange}
-                  helperText={
-                    error?.raw_material_category_id && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.raw_material_category_id}
-                        </span>
-                      </>
-                    )
-                  }
-                >
-                  <option value="">Select an option</option>
-                  {categories &&
-                    categories.map((category) => (
-                      <option value={category.id}>
-                        {category.category_name}
-                      </option>
-                    ))}
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="status" value="Status" />
-                <Select
-                  id="status"
-                  placeholder="Enter status"
-                  value={values.status}
-                  onChange={handleChange}
-                  helperText={
-                    error?.status && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.status}
-                        </span>
-                      </>
-                    )
-                  }
-                >
-                  <option value="">Select an option</option>
-                  <option value="IN_STOCK">In stock</option>
-                  <option value="OUT_OF_STOCK">Out of stock</option>
-                </Select>
-              </div>
-
-              <div>
-                <Label
-                  htmlFor="unit_of_measurement"
-                  value="Unit of Measurement"
-                />
-                <TextInput
-                  id="unit_of_measurement"
-                  placeholder="Enter unit of measurement"
-                  value={values.unit_of_measurement}
-                  onChange={handleChange}
-                  className={`${
-                    error?.unit_of_measurement
-                      ? "border-[1.5px] border-red-400 rounded-md"
-                      : ""
-                  } `}
-                  helperText={
-                    error?.unit_of_measurement && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.unit_of_measurement}
-                        </span>
-                      </>
-                    )
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-              <div>
-                <Label htmlFor="package_size" value="Package Size" />
-                <TextInput
-                  id="package_size"
-                  placeholder="Enter package size"
-                  value={values.package_size}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="location" value="Location" />
-                <TextInput
-                  id="location"
-                  placeholder="Enter location"
-                  value={values.location}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
           </div>
 
+          <h2 className="text-md font-semibold my-5">Additional</h2>
           <div className="my-5">
             <Label htmlFor="description" value="Description" />
             <Textarea
@@ -840,7 +867,7 @@ const UpdateForm = () => {
                   key={index}
                   src={`${BASE_IMAGE_URL}/${img.image}`}
                   className="w-16 h-16 object-cover rounded-md cursor-pointer"
-                  onClick={() => handleImageClick(img.image)}
+                  onClick={() => handleImageClick(img.image, img.id)}
                   alt={`Thumbnail of ${img.image}`}
                 />
               ))}
@@ -854,6 +881,24 @@ const UpdateForm = () => {
                   className="rounded-md"
                 />
               </Modal.Body>
+              <Modal.Footer>
+                <div className="flex justify-between gap-5">
+                  <Button color="gray" onClick={closeModal}>
+                    <IoIosArrowBack className="mr-2" />
+                    Back
+                  </Button>
+                  <div className="flex justify-center gap-3">
+                    <Button onClick={handleDeleteImage} disabled={status == 'loading'} color="failure">
+                      <FaTrashCan className="mr-3" />
+                      {status === "loading" ? <Spinner /> : "Remove"}
+                    </Button>
+                    <Button onClick={closeModal}>
+                      <MdFileDownload className="mr-2" />
+                      Download
+                    </Button>
+                  </div>
+                </div>
+              </Modal.Footer>
             </Modal>
           </div>
 
@@ -916,9 +961,26 @@ const UpdateForm = () => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full">
+        {/* <Button type="submit" className="w-full">
           {status === "loading" ? <Spinner /> : "Save"}
-        </Button>
+        </Button> */}
+        <div className="flex gap-5">
+          <Link to="/raw-materials" className="text-blue-500 cursor-pointer">
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+              Back
+            </Button>
+          </Link>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner />
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );

@@ -25,13 +25,29 @@ import {
 } from "../../../../redux/slices/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
-import { HiCalendar, HiInformationCircle, HiOutlineCurrencyDollar } from "react-icons/hi";
+import {
+  HiCalendar,
+  HiInformationCircle,
+  HiOutlineCurrencyDollar,
+} from "react-icons/hi";
 import { CgInsights } from "react-icons/cg";
 import RawMaterialRelationship from "./relationships/RawMaterialRelationship";
-import { resetMultipleSelectionState, toggleMultipleSelection } from "../../../../redux/slices/selectionSlice";
-import { addToCart, removeFromCart , resetCartItems } from "../../../../redux/slices/cartSlice";
+import {
+  resetMultipleSelectionState,
+  toggleMultipleSelection,
+} from "../../../../redux/slices/selectionSlice";
+import {
+  addToCart,
+  removeFromCart,
+  resetCartItems,
+} from "../../../../redux/slices/cartSlice";
 import { FaFileImage, FaPlus } from "react-icons/fa";
-import { resetMaterials, updateQuantity } from "../../../../redux/slices/materialStagingSlice";
+import {
+  resetMaterials,
+  updateQuantity,
+} from "../../../../redux/slices/materialStagingSlice";
+import { Link } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 
 const CreateForm = () => {
   const { status, error } = useSelector((state) => state.products);
@@ -45,7 +61,7 @@ const CreateForm = () => {
   const dispatch = useDispatch();
   const [openSuccess, setOpenSuccess] = useState(false);
   const [failedToastOpen, setFailToastOpen] = useState(false);
-  const [overQuantityError , setOverQuantityError] = useState(null);
+  const [overQuantityError, setOverQuantityError] = useState(null);
   console.log(overQuantityError);
 
   const [values, setValues] = useState({
@@ -95,9 +111,12 @@ const CreateForm = () => {
     dispatch(updateQuantity({ id, quantity_used: parsedQuantity }));
   };
 
-  useEffect(() =>{
-    setValues((prevValues) => ({...prevValues , raw_materials : selectedMaterials}))
-  },[selectedMaterials])
+  useEffect(() => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      raw_materials: selectedMaterials,
+    }));
+  }, [selectedMaterials]);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -181,6 +200,35 @@ const CreateForm = () => {
       setFailToastOpen(true);
       dispatch(addProductFailure(error?.response?.data?.errors));
     }
+  };
+
+  const resetForm = () => {
+    setValues({
+      image: [],
+      product_name: "",
+      product_code: "",
+      quantity: "",
+      remaining_quantity: "",
+      unit_price_in_usd: "",
+      total_value_in_usd: "",
+      unit_price_in_riel: "",
+      total_value_in_riel: "",
+      exchange_rate_from_usd_to_riel: "",
+      exchange_rate_from_riel_to_usd: "",
+      minimum_stock_level: "",
+      product_category_id: "",
+      unit_of_measurement: "",
+      package_size: "",
+      status: "",
+      warehouse_location: "",
+      description: "",
+      staging_date: "",
+      barcode: "",
+      raw_materials: [],
+    });
+    dispatch(resetMaterials());
+    dispatch(resetMultipleSelectionState());
+    dispatch(resetCartItems());
   };
 
   return (
@@ -677,11 +725,17 @@ const CreateForm = () => {
                   <Timeline.Title>Move Raw Material to Product</Timeline.Title>
                   <Timeline.Body>
                     <div className="my-5">
-                      {error?.raw_materials ?  
-                          <Alert color="failure" icon={HiInformationCircle}>
-                              <span className="font-medium">Raw Material Cannot be empty !</span> Please select at least one raw material to create product.
-                          </Alert> : <></>
-                      }  
+                      {error?.raw_materials ? (
+                        <Alert color="failure" icon={HiInformationCircle}>
+                          <span className="font-medium">
+                            Raw Material Cannot be empty !
+                          </span>{" "}
+                          Please select at least one raw material to create
+                          product.
+                        </Alert>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                     <div className="overflow-x-auto lg:max-w-6xl  my-5">
                       <Table striped>
@@ -725,7 +779,8 @@ const CreateForm = () => {
                               const selectedMaterial = selectedMaterials.find(
                                 (item) => item.id === material.id
                               );
-                              const quantityUsed = selectedMaterial?.quantity_used;
+                              const quantityUsed =
+                                selectedMaterial?.quantity_used;
 
                               return (
                                 <Table.Row
@@ -734,8 +789,15 @@ const CreateForm = () => {
                                 >
                                   <Table.Cell>
                                     <Checkbox
-                                      checked={multipleSelection?.includes(material.id)}
-                                      onChange={() => handleMultipleSelect(material.id, material)}
+                                      checked={multipleSelection?.includes(
+                                        material.id
+                                      )}
+                                      onChange={() =>
+                                        handleMultipleSelect(
+                                          material.id,
+                                          material
+                                        )
+                                      }
                                     />
                                   </Table.Cell>
                                   <Table.Cell>{material.id}</Table.Cell>
@@ -754,24 +816,35 @@ const CreateForm = () => {
                                       min="0"
                                       value={quantityUsed} // Display the quantity_used
                                       onChange={(e) =>
-                                        handleQuantityChange(material.id, e.target.value)
+                                        handleQuantityChange(
+                                          material.id,
+                                          e.target.value
+                                        )
                                       }
                                     />
                                   </Table.Cell>
                                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                     <div className="flex flex-wrap gap-2">
                                       {material.status === "IN_STOCK" && (
-                                        <Badge color="success">{material.status}</Badge>
+                                        <Badge color="success">
+                                          {material.status}
+                                        </Badge>
                                       )}
                                       {material.status === "OUT_OF_STOCK" && (
-                                        <Badge color="failure">{material.status}</Badge>
+                                        <Badge color="failure">
+                                          {material.status}
+                                        </Badge>
                                       )}
                                     </div>
                                   </Table.Cell>
                                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                     <div className="flex flex-wrap gap-2">
                                       <Badge
-                                        color={material.category ? "warning" : "failure"}
+                                        color={
+                                          material.category
+                                            ? "warning"
+                                            : "failure"
+                                        }
                                       >
                                         {material.category
                                           ? material.category.category_name
@@ -790,7 +863,10 @@ const CreateForm = () => {
                             })
                           ) : (
                             <Table.Row>
-                              <Table.Cell colSpan="8" className="text-center py-4">
+                              <Table.Cell
+                                colSpan="8"
+                                className="text-center py-4"
+                              >
                                 No raw materials found.
                               </Table.Cell>
                             </Table.Row>
@@ -799,13 +875,15 @@ const CreateForm = () => {
                       </Table>
                     </div>
                   </Timeline.Body>
-                    <div className="my-5">
-                      {overQuantityError ?
-                          <Alert color="failure" icon={HiInformationCircle}>
-                              <span className="font-medium">{overQuantityError}</span>
-                          </Alert> : <></>
-                      }  
-                    </div>
+                  <div className="my-5">
+                    {overQuantityError ? (
+                      <Alert color="failure" icon={HiInformationCircle}>
+                        <span className="font-medium">{overQuantityError}</span>
+                      </Alert>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
                   <RawMaterialRelationship />
                 </Timeline.Content>
               </Timeline.Item>
@@ -878,9 +956,26 @@ const CreateForm = () => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full">
-          {status === "loading" ? <Spinner /> : "Save"}
-        </Button>
+        <div className="flex gap-5">
+          <Link to="/products" className="text-blue-500 cursor-pointer">
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+              Back
+            </Button>
+          </Link>
+          <Button color="failure" onClick={resetForm} className="w-sm">
+            Cancel
+          </Button>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner /> Saving
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );

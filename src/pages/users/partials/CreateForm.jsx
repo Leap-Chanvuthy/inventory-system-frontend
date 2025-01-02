@@ -1,7 +1,17 @@
-import { Button, FileInput, Label, TextInput, Select, Spinner } from "flowbite-react";
+import {
+  Button,
+  FileInput,
+  Label,
+  TextInput,
+  Select,
+  Spinner,
+} from "flowbite-react";
 import { useState } from "react";
 import { MdOutlineMarkEmailUnread, MdLockOpen } from "react-icons/md";
-import { DangerToast, SuccessToast } from "../../../components/ToastNotification";
+import {
+  DangerToast,
+  SuccessToast,
+} from "../../../components/ToastNotification";
 import {
   addUserStart,
   addUserSuccess,
@@ -11,6 +21,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../../components/const/constant";
 import useToken from "../../../hooks/useToken";
+import { Link } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 
 const CreateForm = () => {
   const dispatch = useDispatch();
@@ -20,7 +32,7 @@ const CreateForm = () => {
 
   const [values, setValues] = useState({
     profile_picture: "",
-    name : "",
+    name: "",
     email: "",
     password: "",
     password_confirmation: "",
@@ -31,7 +43,7 @@ const CreateForm = () => {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [openSuccess, setOpenSuccess] = useState(false);
-  const [openFailure , setOpenFailure] = useState(false);
+  const [openFailure, setOpenFailure] = useState(false);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -53,30 +65,42 @@ const CreateForm = () => {
     e.preventDefault();
     dispatch(addUserStart());
     try {
-      const response = await axios.post(`${BASE_URL}/users`, values , {
+      const response = await axios.post(`${BASE_URL}/users`, values, {
         headers: {
           "Content-Type": "multipart/form-data",
-           Authorization : `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
       });
       console.log(response);
       dispatch(addUserSuccess(response.data));
       setOpenSuccess(true);
-      if (response.status == 200){
+      if (response.status == 200) {
         setValues({
           profile_picture: null,
-          name : "",
+          name: "",
           email: "",
           password: "",
           password_confirmation: "",
           role: "",
-        })
+        });
       }
     } catch (error) {
       console.log(error);
       dispatch(addUserFailure(error?.response?.data?.errors));
       setOpenFailure(true);
     }
+  };
+
+  const resetForm = () => {
+    setValues({
+      profile_picture: null,
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      role: "",
+    });
+    setImagePreview(null);
   };
 
   return (
@@ -154,7 +178,9 @@ const CreateForm = () => {
             helperText={
               error?.email && (
                 <>
-                  <span className="font-medium text-red-400">{error.email}</span>
+                  <span className="font-medium text-red-400">
+                    {error.email}
+                  </span>
                 </>
               )
             }
@@ -197,7 +223,9 @@ const CreateForm = () => {
               rightIcon={MdLockOpen}
               onChange={handleChange}
               className={`${
-                error?.password ? "border-[1.5px] border-red-400 rounded-md" : ""
+                error?.password
+                  ? "border-[1.5px] border-red-400 rounded-md"
+                  : ""
               } `}
               helperText={
                 error?.password && (
@@ -246,9 +274,7 @@ const CreateForm = () => {
             id="role"
             value={values.role}
             onChange={handleChange}
-            className={`${
-              error?.role ? "rounded-md" : ""
-            } `}
+            className={`${error?.role ? "rounded-md" : ""} `}
             helperText={
               error?.role && (
                 <>
@@ -265,15 +291,26 @@ const CreateForm = () => {
           </Select>
         </div>
 
-        <Button type="submit">
-          {status === "loading" ? (
-            <div>
-              <Spinner /> Saving
-            </div>
-          ) : (
-            "Save"
-          )}
-        </Button>
+        <div className="flex gap-5">
+          <Link to="/users" className="text-blue-500 cursor-pointer">
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+               Back
+            </Button>
+          </Link>
+          <Button color="failure" onClick={resetForm} className="w-sm">
+            Cancel
+          </Button>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner /> Saving
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );

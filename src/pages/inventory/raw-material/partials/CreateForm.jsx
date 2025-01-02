@@ -1,4 +1,11 @@
-import { Alert, Button, Label, Select, Textarea, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Label,
+  Select,
+  Textarea,
+  TextInput,
+} from "flowbite-react";
 import { useState, useEffect } from "react";
 import {
   DangerToast,
@@ -16,11 +23,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "flowbite-react";
 import SupplierRelationship from "./relationships/SupplierRelationship";
 import { HiInformationCircle } from "react-icons/hi";
-import { toggleSingleSelection } from "../../../../redux/slices/selectionSlice";
+import {
+  resetSingleSelectionState,
+  toggleSingleSelection,
+} from "../../../../redux/slices/selectionSlice";
+import { Link } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 
 const CreateForm = () => {
   const { status, error } = useSelector((state) => state.rawMaterials);
-  const {singleSelection} = useSelector((state) => state.selections);
+  const { singleSelection } = useSelector((state) => state.selections);
   const dispatch = useDispatch();
   const [openSuccess, setOpenSuccess] = useState(false);
   const [failedToastOpen, setFailToastOpen] = useState(false);
@@ -30,13 +42,13 @@ const CreateForm = () => {
     name: "",
     material_code: "",
     quantity: "",
-    remaining_quantity: "",
+    // remaining_quantity: "",
     unit_price_in_usd: "",
-    total_value_in_usd: "",
-    exchange_rate_from_usd_to_riel : "",
-    unit_price_in_riel: "",
-    total_value_in_riel: "",
-    exchange_rate_from_riel_to_usd : "",
+    // total_value_in_usd: "",
+    exchange_rate_from_usd_to_riel: "",
+    // unit_price_in_riel: "",
+    // total_value_in_riel: "",
+    // exchange_rate_from_riel_to_usd: "",
     minimum_stock_level: "",
     raw_material_category_id: "",
     unit_of_measurement: "",
@@ -50,14 +62,16 @@ const CreateForm = () => {
 
   console.log(values);
 
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     setValues((prevValues) => ({ ...prevValues, [id]: value }));
   };
 
   useEffect(() => {
-    setValues((prevValues) => ({ ...prevValues, supplier_id: singleSelection }));
+    setValues((prevValues) => ({
+      ...prevValues,
+      supplier_id: singleSelection,
+    }));
   }, [singleSelection]);
 
   const handleFileChange = (e) => {
@@ -85,22 +99,23 @@ const CreateForm = () => {
   };
 
   // get raw material category
-  const [categories , setCategories] = useState([]);
-  console.log(categories)
+  const [categories, setCategories] = useState([]);
+  console.log(categories);
 
-  useEffect(() =>{
-    const getCategory = async (e) =>{
+  useEffect(() => {
+    const getCategory = async (e) => {
       try {
-        
-        const response = await axios.get(`${BASE_URL}/non-paginate/raw-material-categories`)
+        const response = await axios.get(
+          `${BASE_URL}/non-paginate/raw-material-categories`
+        );
         console.log(response.data);
         setCategories(response.data);
-      }catch (err){
+      } catch (err) {
         console.log(err);
       }
-    }
+    };
     getCategory();
-  } , [])
+  }, []);
 
   // Submit post request to backend
 
@@ -118,11 +133,13 @@ const CreateForm = () => {
         name: "",
         material_code: "",
         quantity: "",
-        remaining_quantity: "",
+        // remaining_quantity: "",
         unit_price_in_usd: "",
-        total_value_in_usd: "",
-        unit_price_in_riel: "",
-        total_value_in_riel: "",
+        // total_value_in_usd: "",
+        exchange_rate_from_usd_to_riel: "",
+        // unit_price_in_riel: "",
+        // total_value_in_riel: "",
+        // exchange_rate_from_riel_to_usd: "",
         minimum_stock_level: "",
         raw_material_category_id: "",
         unit_of_measurement: "",
@@ -139,6 +156,32 @@ const CreateForm = () => {
       setFailToastOpen(true);
       dispatch(addRawMaterialFailure(error?.response?.data?.errors));
     }
+  };
+
+  const resetForm = () => {
+    setValues({
+      image: [],
+      name: "",
+      material_code: "",
+      quantity: "",
+      // remaining_quantity: "",
+      unit_price_in_usd: "",
+      // total_value_in_usd: "",
+      exchange_rate_from_usd_to_riel: "",
+      // unit_price_in_riel: "",
+      // total_value_in_riel: "",
+      // exchange_rate_from_riel_to_usd: "",
+      minimum_stock_level: "",
+      raw_material_category_id: "",
+      unit_of_measurement: "",
+      package_size: "",
+      status: "",
+      location: "",
+      description: "",
+      expiry_date: "",
+      supplier_id: "",
+    });
+    dispatch(resetSingleSelectionState(null));
   };
 
   return (
@@ -250,31 +293,6 @@ const CreateForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="remaing_quantity" value="Remainig Quantity" />
-                <TextInput
-                  id="remaining_quantity"
-                  type="number"
-                  placeholder="Enter remaining quantity"
-                  value={values.remaining_quantity}
-                  onChange={handleChange}
-                  className={`${
-                    error?.remaining_quantity
-                      ? "border-[1.5px] border-red-400 rounded-md"
-                      : ""
-                  } `}
-                  helperText={
-                    error?.remaining_quantity && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.remaining_quantity}
-                        </span>
-                      </>
-                    )
-                  }
-                />
-              </div>
-
-              <div>
                 <Label
                   htmlFor="minimum_stock_level"
                   value="Minimum Stock Level"
@@ -301,168 +319,7 @@ const CreateForm = () => {
                   }
                 />
               </div>
-            </div>
 
-            <h2 className="text-md font-semibold">Currency Info</h2>
-            <div className="flex flex-col gap-3">
-              <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-                <div>
-                  <Label htmlFor="unit_price_in_usd" value="Unit Price in USD" />
-                  <TextInput
-                    id="unit_price_in_usd"
-                    type="number"
-                    placeholder="Unit price in USD"
-                    value={values.unit_price_in_usd}
-                    onChange={handleChange}
-                    className={`${
-                      error?.unit_price_in_usd
-                        ? "border-[1.5px] border-red-400 rounded-md"
-                        : ""
-                    } `}
-                    helperText={
-                      error?.unit_price_in_usd && (
-                        <>
-                          <span className="font-medium text-red-400">
-                            {error.unit_price_in_usd}
-                          </span>
-                        </>
-                      )
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="total_value_in_usd" value="Total Value in USD" />
-                  <TextInput
-                    id="total_value_in_usd"
-                    type="text"
-                    placeholder="Enter total value"
-                    value={values.total_value_in_usd}
-                    onChange={handleChange}
-                    className={`${
-                      error?.total_value_in_usd
-                        ? "border-[1.5px] border-red-400 rounded-md"
-                        : ""
-                    } `}
-                    helperText={
-                      error?.total_value_in_usd && (
-                        <>
-                          <span className="font-medium text-red-400">
-                            {error.total_value_in_usd}
-                          </span>
-                        </>
-                      )
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="exchange_rate_from_usd_to_riel" value="Exchange Rate From USD to Riel" />
-                  <TextInput
-                    id="exchange_rate_from_usd_to_riel"
-                    type="text"
-                    placeholder="Enter total value"
-                    value={values.exchange_rate_from_usd_to_riel}
-                    onChange={handleChange}
-                    className={`${
-                      error?.exchange_rate_from_usd_to_riel
-                        ? "border-[1.5px] border-red-400 rounded-md"
-                        : ""
-                    } `}
-                    helperText={
-                      error?.exchange_rate_from_usd_to_riel && (
-                        <>
-                          <span className="font-medium text-red-400">
-                            {error.exchange_rate_from_usd_to_riel}
-                          </span>
-                        </>
-                      )
-                    }
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-              <div>
-                  <Label
-                    htmlFor="unit_price_in_riel"
-                    value="Unit Price in Riel"
-                  />
-                  <TextInput
-                    id="unit_price_in_riel"
-                    type="text"
-                    placeholder="Enter total value"
-                    value={values.unit_price_in_riel}
-                    onChange={handleChange}
-                    className={`${
-                      error?.unit_price_in_riel
-                        ? "border-[1.5px] border-red-400 rounded-md"
-                        : ""
-                    } `}
-                    helperText={
-                      error?.unit_price_in_riel && (
-                        <>
-                          <span className="font-medium text-red-400">
-                            {error.unit_price_in_riel}
-                          </span>
-                        </>
-                      )
-                    }
-                  />
-                </div>
-                <div>
-                  <Label
-                    htmlFor="total_value_in_riel"
-                    value="Total Value in Riel"
-                  />
-                  <TextInput
-                    id="total_value_in_riel"
-                    type="text"
-                    placeholder="Enter total value"
-                    value={values.total_value_in_riel}
-                    onChange={handleChange}
-                    className={`${
-                      error?.total_value_in_riel
-                        ? "border-[1.5px] border-red-400 rounded-md"
-                        : ""
-                    } `}
-                    helperText={
-                      error?.total_value_in_riel && (
-                        <>
-                          <span className="font-medium text-red-400">
-                            {error.total_value_in_riel}
-                          </span>
-                        </>
-                      )
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="exchange_rate_from_riel_to_usd" value="Exchange Rate From Riel to USD" />
-                  <TextInput
-                    id="exchange_rate_from_riel_to_usd"
-                    type="text"
-                    placeholder="Enter total value"
-                    value={values.exchange_rate_from_riel_to_usd}
-                    onChange={handleChange}
-                    className={`${
-                      error?.exchange_rate_from_riel_to_usd
-                        ? "border-[1.5px] border-red-400 rounded-md"
-                        : ""
-                    } `}
-                    helperText={
-                      error?.exchange_rate_from_riel_to_usd && (
-                        <>
-                          <span className="font-medium text-red-400">
-                            {error.exchange_rate_from_riel_to_usd}
-                          </span>
-                        </>
-                      )
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-
-            <h2 className="text-md font-semibold">Additional</h2>
-            <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
                 <Label
                   htmlFor="raw_material_category_id"
@@ -484,32 +341,12 @@ const CreateForm = () => {
                   }
                 >
                   <option value="">Select an option</option>
-                  {categories && categories.map((category) =>(
-                    <option value={category.id}>{category.category_name}</option>
-                  ))}
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="status" value="Status" />
-                <Select
-                  id="status"
-                  placeholder="Enter status"
-                  value={values.status}
-                  onChange={handleChange}
-                  helperText={
-                    error?.status && (
-                      <>
-                        <span className="font-medium text-red-400">
-                          {error.status}
-                        </span>
-                      </>
-                    )
-                  }
-                >
-                  <option value="">Select an option</option>
-                  <option value="IN_STOCK">In stock</option>
-                  <option value="OUT_OF_STOCK">Out of stock</option>
+                  {categories &&
+                    categories.map((category) => (
+                      <option value={category.id}>
+                        {category.category_name}
+                      </option>
+                    ))}
                 </Select>
               </div>
 
@@ -539,9 +376,7 @@ const CreateForm = () => {
                   }
                 />
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
               <div>
                 <Label htmlFor="package_size" value="Package Size" />
                 <TextInput
@@ -562,8 +397,70 @@ const CreateForm = () => {
                 />
               </div>
             </div>
+
+            <h2 className="text-md font-semibold">Currency Info</h2>
+            <div className="flex flex-col gap-3">
+              <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
+                <div>
+                  <Label
+                    htmlFor="unit_price_in_usd"
+                    value="Unit Price in USD"
+                  />
+                  <TextInput
+                    id="unit_price_in_usd"
+                    type="number"
+                    placeholder="Unit price in USD"
+                    value={values.unit_price_in_usd}
+                    onChange={handleChange}
+                    className={`${
+                      error?.unit_price_in_usd
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.unit_price_in_usd && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.unit_price_in_usd}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+
+                <div>
+                  <Label
+                    htmlFor="exchange_rate_from_usd_to_riel"
+                    value="Exchange Rate From USD to Riel"
+                  />
+                  <TextInput
+                    id="exchange_rate_from_usd_to_riel"
+                    type="text"
+                    placeholder="Enter total value"
+                    value={values.exchange_rate_from_usd_to_riel}
+                    onChange={handleChange}
+                    className={`${
+                      error?.exchange_rate_from_usd_to_riel
+                        ? "border-[1.5px] border-red-400 rounded-md"
+                        : ""
+                    } `}
+                    helperText={
+                      error?.exchange_rate_from_usd_to_riel && (
+                        <>
+                          <span className="font-medium text-red-400">
+                            {error.exchange_rate_from_usd_to_riel}
+                          </span>
+                        </>
+                      )
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
+          <h2 className="text-md font-semibold my-5">Additional</h2>
           <div className="my-5">
             <Label htmlFor="description" value="Description" />
             <Textarea
@@ -576,12 +473,12 @@ const CreateForm = () => {
           </div>
 
           <div className="flex flex-col gap-3">
-              <SupplierRelationship/>
-              {error?.supplier_id &&
-                <Alert color="failure" icon={HiInformationCircle}>
-                  <span className="font-medium">{error?.supplier_id}</span>
-                </Alert>
-              }
+            <SupplierRelationship />
+            {error?.supplier_id && (
+              <Alert color="failure" icon={HiInformationCircle}>
+                <span className="font-medium">{error?.supplier_id}</span>
+              </Alert>
+            )}
           </div>
 
           <div className="flex items-center justify-center mt-4 mb-4">
@@ -640,9 +537,30 @@ const CreateForm = () => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full">
+        {/* <Button type="submit" className="w-full">
           {status === "loading" ? <Spinner /> : "Save"}
-        </Button>
+        </Button> */}
+
+        <div className="flex gap-5">
+          <Link to="/raw-materials" className="text-blue-500 cursor-pointer">
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+              Back
+            </Button>
+          </Link>
+          <Button color="failure" onClick={resetForm} className="w-sm">
+            Cancel
+          </Button>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner /> Saving
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );

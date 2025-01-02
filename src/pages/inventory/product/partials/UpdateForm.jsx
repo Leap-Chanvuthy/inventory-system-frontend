@@ -54,7 +54,8 @@ import {
   toggleMaterial,
   updateQuantity,
 } from "../../../../redux/slices/materialStagingSlice";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 
 const UpdateForm = () => {
   const { id } = useParams();
@@ -1025,9 +1026,23 @@ const UpdateForm = () => {
           </div>
         </div>
 
-        <Button type="submit" className="w-full">
-          {status === "loading" ? <Spinner /> : "Save"}
-        </Button>
+        <div className="flex gap-5">
+          <Link to="/products" className="text-blue-500 cursor-pointer">
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+              Back
+            </Button>
+          </Link>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner />
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );
