@@ -7,7 +7,6 @@ const Customer = () => {
     <div className="w-full ">
       <Partial title="customer" link="list" />
       <CustomerList />
-      <CategoryList />
     </div>
   );
 };

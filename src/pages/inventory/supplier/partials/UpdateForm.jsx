@@ -64,8 +64,7 @@ const UpdateForm = () => {
   const { error, status, suppliers } = useSelector((state) => state.suppliers);
   const { multipleSelection } = useSelector((state) => state.selections);
   const [oldImages, setOldImages] = useState(null);
-  const [selectedImage , setSelectedImage] = useState(null);
-
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // fetch specific supplier
   const { id } = useParams();
@@ -153,6 +152,13 @@ const UpdateForm = () => {
       )
     );
   }, [suppliers]);
+
+  // reset set state when component is unmounted
+  useEffect(() => {
+    return () => {
+      dispatch(resetMultipleSelectionState());
+    };
+  }, [location.pathname, dispatch]);
 
   // Handle image click
   const handleImageClick = (img) => {
