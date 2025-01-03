@@ -18,7 +18,10 @@ import {
 } from "../../../../components/ToastNotification";
 import { MdCancel } from "react-icons/md";
 import axios from "axios";
-import { BASE_URL , BASE_IMAGE_URL } from "../../../../components/const/constant";
+import {
+  BASE_URL,
+  BASE_IMAGE_URL,
+} from "../../../../components/const/constant";
 import {
   updateProductStart,
   updateProductSuccess,
@@ -66,7 +69,7 @@ const UpdateForm = () => {
 
   console.log(multipleSelection);
   console.log("Select material stagging:", selectedMaterials);
-  console.log("Cart Items :",  cartItems );
+  console.log("Cart Items :", cartItems);
 
   const dispatch = useDispatch();
   const [openSuccess, setOpenSuccess] = useState(false);
@@ -124,13 +127,13 @@ const UpdateForm = () => {
         quantity: products?.quantity,
         remaining_quantity: products?.remaining_quantity,
         unit_price_in_usd: products?.unit_price_in_usd,
-        total_value_in_usd: products?.total_value_in_usd,
+        // total_value_in_usd: products?.total_value_in_usd,
         exchange_rate_from_usd_to_riel:
           products?.exchange_rate_from_usd_to_riel,
-        unit_price_in_riel: products?.unit_price_in_riel,
-        total_value_in_riel: products?.total_value_in_riel,
-        exchange_rate_from_riel_to_usd:
-          products?.exchange_rate_from_riel_to_usd,
+        // unit_price_in_riel: products?.unit_price_in_riel,
+        // total_value_in_riel: products?.total_value_in_riel,
+        // exchange_rate_from_riel_to_usd:
+        //   products?.exchange_rate_from_riel_to_usd,
         minimum_stock_level: products?.minimum_stock_level,
         product_category_id: products?.product_category_id,
         unit_of_measurement: products?.unit_of_measurement,
@@ -145,9 +148,15 @@ const UpdateForm = () => {
     }
 
     setOldImages(products?.product_images || []);
-    dispatch(setMultipleSelection(products?.raw_materials?.map((material) =>  material.id)))
+    dispatch(
+      setMultipleSelection(
+        products?.raw_materials?.map((material) => material.id)
+      )
+    );
     dispatch(setCart(products?.raw_materials || []));
-    dispatch(setMaterials(products?.raw_materials?.map((material) => ({
+    dispatch(
+      setMaterials(
+        products?.raw_materials?.map((material) => ({
           id: material.id,
           quantity_used: material.pivot.quantity_used,
         })) || []
@@ -155,9 +164,7 @@ const UpdateForm = () => {
     );
   }, [products]);
 
-  console.log('Values :', values);
-
-
+  console.log("Values :", values);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -181,19 +188,21 @@ const UpdateForm = () => {
     dispatch(updateQuantity({ id, quantity_used: parsedQuantity }));
   };
 
-  useEffect(() =>{
-    setValues((prevValues) => ({...prevValues , raw_materials : selectedMaterials}))
-  },[selectedMaterials])
+  useEffect(() => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      raw_materials: selectedMaterials,
+    }));
+  }, [selectedMaterials]);
 
   // reset set state when component is unmounted
   useEffect(() => {
     return () => {
-        dispatch(resetMaterials());
-        dispatch(resetMultipleSelectionState());
-        dispatch(resetCartItems());
+      dispatch(resetMaterials());
+      dispatch(resetMultipleSelectionState());
+      dispatch(resetCartItems());
     };
   }, [location.pathname, dispatch]);
-
 
   // file upload (images)
   const handleFileChange = (e) => {
@@ -220,7 +229,6 @@ const UpdateForm = () => {
     setValues({ ...values, image: updatedImages });
   };
 
-  
   // list of images from API
   const [oldImages, setOldImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -232,7 +240,6 @@ const UpdateForm = () => {
   const closeModal = () => {
     setSelectedImage(null);
   };
-
 
   // get raw material category
   const [categories, setCategories] = useState([]);
@@ -257,14 +264,14 @@ const UpdateForm = () => {
     setOverQuantityError(null);
     try {
       const response = await axios.post(`${BASE_URL}/product/${id}`, values, {
-        params : {
-            _method : "PATCH"
+        params: {
+          _method: "PATCH",
         },
         headers: { "Content-Type": "multipart/form-data" },
       });
       dispatch(updateProductSuccess(response.data));
       const updatedProduct = await axios.get(`${BASE_URL}/product/${id}`);
-    //   console.log("updated material:", updatedProduct)
+      //   console.log("updated material:", updatedProduct)
       dispatch(fetchProductsSuccess(updatedProduct.data));
       setOpenSuccess(true);
     } catch (error) {
@@ -489,6 +496,7 @@ const UpdateForm = () => {
                           placeholder="Enter status"
                           value={values.status}
                           onChange={handleChange}
+                          disabled
                           helperText={
                             error?.status && (
                               <>
@@ -502,6 +510,7 @@ const UpdateForm = () => {
                           <option value="">Select an option</option>
                           <option value="IN_STOCK">In stock</option>
                           <option value="OUT_OF_STOCK">Out of stock</option>
+                          <option value="LOW_STOCK">Low stock</option>
                         </Select>
                       </div>
 
@@ -594,17 +603,19 @@ const UpdateForm = () => {
                             }
                           />
                         </div>
+
                         <div>
                           <Label
                             htmlFor="total_value_in_usd"
                             value="Total Value in USD"
                           />
                           <TextInput
-                            id="total_value_in_usd"
-                            type="text"
+                            // id="total_value_in_usd"
+                            type="number"
                             placeholder="Enter total value"
-                            value={values.total_value_in_usd}
+                            value={products.total_value_in_usd}
                             onChange={handleChange}
+                            disabled
                             className={`${
                               error?.total_value_in_usd
                                 ? "border-[1.5px] border-red-400 rounded-md"
@@ -621,6 +632,7 @@ const UpdateForm = () => {
                             }
                           />
                         </div>
+
                         <div>
                           <Label
                             htmlFor="exchange_rate_from_usd_to_riel"
@@ -649,6 +661,11 @@ const UpdateForm = () => {
                           />
                         </div>
                       </div>
+
+                      <h2 className="text-md text-black font-semibold my-3">
+                        Riel Currency (Auto Calculated)
+                      </h2>
+
                       <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
                         <div>
                           <Label
@@ -656,11 +673,12 @@ const UpdateForm = () => {
                             value="Unit Price in Riel"
                           />
                           <TextInput
-                            id="unit_price_in_riel"
-                            type="text"
+                            // id="unit_price_in_riel"
+                            type="number"
                             placeholder="Enter total value"
-                            value={values.unit_price_in_riel}
+                            value={products.unit_price_in_riel}
                             onChange={handleChange}
+                            disabled
                             className={`${
                               error?.unit_price_in_riel
                                 ? "border-[1.5px] border-red-400 rounded-md"
@@ -677,17 +695,19 @@ const UpdateForm = () => {
                             }
                           />
                         </div>
+
                         <div>
                           <Label
                             htmlFor="total_value_in_riel"
                             value="Total Value in Riel"
                           />
                           <TextInput
-                            id="total_value_in_riel"
-                            type="text"
+                            // id="total_value_in_riel"
+                            type="number"
                             placeholder="Enter total value"
-                            value={values.total_value_in_riel}
+                            value={products.total_value_in_riel}
                             onChange={handleChange}
+                            disabled
                             className={`${
                               error?.total_value_in_riel
                                 ? "border-[1.5px] border-red-400 rounded-md"
@@ -704,6 +724,7 @@ const UpdateForm = () => {
                             }
                           />
                         </div>
+
                         <div>
                           <Label
                             htmlFor="exchange_rate_from_riel_to_usd"
@@ -711,10 +732,11 @@ const UpdateForm = () => {
                           />
                           <TextInput
                             id="exchange_rate_from_riel_to_usd"
-                            type="text"
+                            type="number"
                             placeholder="Enter total value"
-                            value={values.exchange_rate_from_riel_to_usd}
+                            value={products.exchange_rate_from_riel_to_usd}
                             onChange={handleChange}
+                            disabled
                             className={`${
                               error?.exchange_rate_from_riel_to_usd
                                 ? "border-[1.5px] border-red-400 rounded-md"

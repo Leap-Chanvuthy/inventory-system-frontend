@@ -69,13 +69,13 @@ const CreateForm = () => {
     product_name: "",
     product_code: "",
     quantity: "",
-    remaining_quantity: "",
+    // remaining_quantity: "",
     unit_price_in_usd: "",
-    total_value_in_usd: "",
+    // total_value_in_usd: "",
     exchange_rate_from_usd_to_riel: "",
-    unit_price_in_riel: "",
-    total_value_in_riel: "",
-    exchange_rate_from_riel_to_usd: "",
+    // unit_price_in_riel: "",
+    // total_value_in_riel: "",
+    // exchange_rate_from_riel_to_usd: "",
     minimum_stock_level: "",
     product_category_id: "",
     unit_of_measurement: "",
@@ -363,7 +363,7 @@ const CreateForm = () => {
                         />
                       </div>
 
-                      <div>
+                      {/* <div>
                         <Label
                           htmlFor="remaing_quantity"
                           value="Remainig Quantity"
@@ -389,7 +389,7 @@ const CreateForm = () => {
                             )
                           }
                         />
-                      </div>
+                      </div> */}
 
                       <div>
                         <Label
@@ -416,6 +416,109 @@ const CreateForm = () => {
                               </>
                             )
                           }
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="product_category_id"
+                          value="Raw Material Category"
+                        />
+                        <Select
+                          id="product_category_id"
+                          placeholder="Enter raw material category"
+                          value={values.product_category_id}
+                          onChange={handleChange}
+                          helperText={
+                            error?.product_category_id && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.product_category_id}
+                                </span>
+                              </>
+                            )
+                          }
+                        >
+                          <option value="">Select an option</option>
+                          {categories &&
+                            categories.map((category) => (
+                              <option value={category.id}>
+                                {category.category_name}
+                              </option>
+                            ))}
+                        </Select>
+                      </div>
+
+                      {/* <div>
+                        <Label htmlFor="status" value="Status" />
+                        <Select
+                          id="status"
+                          placeholder="Enter status"
+                          value={values.status}
+                          onChange={handleChange}
+                          helperText={
+                            error?.status && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.status}
+                                </span>
+                              </>
+                            )
+                          }
+                        >
+                          <option value="">Select an option</option>
+                          <option value="IN_STOCK">In stock</option>
+                          <option value="OUT_OF_STOCK">Out of stock</option>
+                        </Select>
+                      </div> */}
+
+                      <div>
+                        <Label
+                          htmlFor="unit_of_measurement"
+                          value="Unit of Measurement"
+                        />
+                        <TextInput
+                          id="unit_of_measurement"
+                          placeholder="Enter unit of measurement"
+                          value={values.unit_of_measurement}
+                          onChange={handleChange}
+                          className={`${
+                            error?.unit_of_measurement
+                              ? "border-[1.5px] border-red-400 rounded-md"
+                              : ""
+                          } `}
+                          helperText={
+                            error?.unit_of_measurement && (
+                              <>
+                                <span className="font-medium text-red-400">
+                                  {error.unit_of_measurement}
+                                </span>
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="package_size" value="Package Size" />
+                        <TextInput
+                          id="package_size"
+                          placeholder="Enter package size"
+                          value={values.package_size}
+                          onChange={handleChange}
+                        />
+                      </div>
+
+                      <div>
+                        <Label
+                          htmlFor="warehouse_location"
+                          value="Warehouse Location"
+                        />
+                        <TextInput
+                          id="warehouse_location"
+                          placeholder="Enter warehouse_location"
+                          value={values.warehouse_location}
+                          onChange={handleChange}
                         />
                       </div>
                     </div>
@@ -458,7 +561,8 @@ const CreateForm = () => {
                             }
                           />
                         </div>
-                        <div>
+                        
+                        {/* <div>
                           <Label
                             htmlFor="total_value_in_usd"
                             value="Total Value in USD"
@@ -484,7 +588,8 @@ const CreateForm = () => {
                               )
                             }
                           />
-                        </div>
+                        </div> */}
+
                         <div>
                           <Label
                             htmlFor="exchange_rate_from_usd_to_riel"
@@ -512,9 +617,10 @@ const CreateForm = () => {
                             }
                           />
                         </div>
+
                       </div>
                       <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-                        <div>
+                        {/* <div>
                           <Label
                             htmlFor="unit_price_in_riel"
                             value="Unit Price in Riel"
@@ -540,8 +646,9 @@ const CreateForm = () => {
                               )
                             }
                           />
-                        </div>
-                        <div>
+                        </div> */}
+                        
+                        {/* <div>
                           <Label
                             htmlFor="total_value_in_riel"
                             value="Total Value in Riel"
@@ -567,8 +674,9 @@ const CreateForm = () => {
                               )
                             }
                           />
-                        </div>
-                        <div>
+                        </div> */}
+                        
+                        {/* <div>
                           <Label
                             htmlFor="exchange_rate_from_riel_to_usd"
                             value="Exchange Rate From Riel to USD"
@@ -594,7 +702,8 @@ const CreateForm = () => {
                               )
                             }
                           />
-                        </div>
+                        </div> */}
+
                       </div>
                     </div>
                   </Timeline.Body>
@@ -608,7 +717,7 @@ const CreateForm = () => {
                   <Timeline.Body>
                     {/* <h2 className="text-md font-semibold">Additional</h2> */}
                     <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3 my-5">
-                      <div>
+                      {/* <div>
                         <Label
                           htmlFor="product_category_id"
                           value="Raw Material Category"
@@ -709,7 +818,7 @@ const CreateForm = () => {
                           value={values.warehouse_location}
                           onChange={handleChange}
                         />
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="my-5">

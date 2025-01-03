@@ -15,6 +15,7 @@ import { fetchProductsStart , fetchProductsFailure , fetchProductsSuccess , dele
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import {FiEdit} from 'react-icons/fi';
+import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 
 const Product = ({ filters }) => {
   const dispatch = useDispatch();
@@ -106,9 +107,10 @@ const Product = ({ filters }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto lg:max-w-6xl  my-5">
+      <div className="overflow-x-auto lg:max-w-7xl  my-5">
         <Table striped>
           <Table.Head>
+            <Table.HeadCell>Details</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Product Code</Table.HeadCell>
@@ -136,6 +138,12 @@ const Product = ({ filters }) => {
                   key={product.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
+                  <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
+                    <Link to={`/product/update/${product.id}`}>
+                      <Badge><div className="flex justify-center items-center gap-1"><IoEyeSharp/> View</div></Badge>
+                    </Link>
+                  </Table.Cell>
+                  
                   <Table.Cell className="whitespace-nowrap">
                     { product.product_images && product.product_images.length > 0 ? (
                       <Avatar
