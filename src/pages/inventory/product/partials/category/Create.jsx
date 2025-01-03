@@ -35,6 +35,10 @@ const Create = () => {
     try {
         const response = await axios.post (`${BASE_URL}/product-category/create` , values);
         console.log(response);
+        setValues({
+          category_name: "",
+          description: "",
+        });
         setLoading(false);
         setSuccessToastOpen(true)
         setOpenModal(false);
