@@ -61,6 +61,9 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               <Sidebar.Item >
                 <Link to='/suppliers'>Suppliers</Link>
               </Sidebar.Item>
+              <Sidebar.Item >
+                <Link to='/settings'>Settings</Link>
+              </Sidebar.Item>
             </Sidebar.Collapse>
             : <></>
             }

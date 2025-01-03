@@ -101,6 +101,7 @@ import CreateCustomer from "./pages/sale/customer/Create";
 import UpdateCustomer from "./pages/sale/customer/Update";
 import SaleOrder from "./pages/sale/sale-order/SaleOrder";
 import CreateSaleOrder from './pages/sale/sale-order/Create';
+import Setting from "./pages/inventory/setting/Setting";
 
 function App() {
 
@@ -132,9 +133,11 @@ function App() {
           <Route path="/raw-materials/recover" element={<Layout><RecoverRawMaterial /></Layout>} />
           <Route path="/raw-materials/create" element={<Layout><CreateRawMaterial /></Layout>} />
           <Route path="/raw-material/update/:id" element={<Layout><UpdateRawMaterial/></Layout>} />
+
           <Route path="/suppliers" element={<Layout><Supplier /></Layout>} />
           <Route path="/suppliers/create" element={<Layout><CreateSupplier /></Layout>} />
           <Route path="/supplier/update/:id" element={<Layout><UpdateSupplier /></Layout>} />
+
           <Route path="/purchase-invoice" element={<Layout><PurchaseInvoice /></Layout>} />
           <Route path="/purchase-invoices/recover" element={<Layout><RecoverPurchaseInvoice /></Layout>} />
           <Route path="/purchase-invoice/create" element={<Layout><CreatePurchaseInvoice /></Layout>} />
@@ -145,6 +148,8 @@ function App() {
           <Route path="/products/create" element={<Layout><CreateProduct /></Layout>} />
           <Route path="/product/update/:id" element={<Layout><UpdateProduct /></Layout>} /> 
           <Route path="/products/recover" element={<Layout><RecoverProduct /></Layout>} />  
+
+          <Route path="/settings" element={<Layout><Setting /></Layout>} />
 
         </Route>
 

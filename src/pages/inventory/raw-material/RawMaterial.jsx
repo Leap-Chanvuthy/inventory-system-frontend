@@ -10,7 +10,7 @@ const RawMaterial = () => {
       <Partial title="raw materials" link="list" />
       <div className="flex flex-col gap-5 my-5">
         <RawMaterialList />
-        <CategoryList />
+        {/* <CategoryList /> */}
       </div>
       <div className="flex flex-col lg:md:flex-row gap-5">
         <PieChart data={data} title="Category" />

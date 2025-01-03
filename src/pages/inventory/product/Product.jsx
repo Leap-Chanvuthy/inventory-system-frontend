@@ -8,7 +8,7 @@ const Product = () => {
       <Partial title="products" link="list" />
       <div className="my-5">
         <ProductList />
-        <CategoryList />
+        {/* <CategoryList /> */}
       </div>
     </div>
   );
