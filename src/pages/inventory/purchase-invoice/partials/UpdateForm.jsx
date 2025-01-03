@@ -25,20 +25,24 @@ import {
   updateInvoiceFailure,
 } from "../../../../redux/slices/invoiceSlice";
 import axios from "axios";
-import { BASE_URL , BASE_IMAGE_URL } from "../../../../components/const/constant";
+import {
+  BASE_URL,
+  BASE_IMAGE_URL,
+} from "../../../../components/const/constant";
 import { useDispatch, useSelector } from "react-redux";
 import {
   DangerToast,
   SuccessToast,
 } from "../../../../components/ToastNotification";
 import { HiInformationCircle } from "react-icons/hi";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MdOutlineAdd } from "react-icons/md";
 import {
   resetMultipleSelectionState,
   setMultipleSelection,
   toggleMultipleSelection,
 } from "../../../../redux/slices/selectionSlice";
+import { IoIosArrowBack } from "react-icons/io";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -84,20 +88,20 @@ const UpdateForm = () => {
     clearing_payable_percentage: "",
     raw_materials: [],
     // invoice details
-    invoice_number : "",
-    status : "",
-    discount_value_in_riel : "",
-    discount_value_in_usd : "",
-    tax_value_in_riel : "",
-    tax_value_in_usd : "",
-    sub_total_in_riel : "",
-    sub_total_in_usd : "",
-    grand_total_without_tax_in_riel : "",
-    grand_total_without_tax_in_usd : "",
-    grand_total_with_tax_in_riel : "",
-    grand_total_with_tax_in_usd : "",
-    indebted_in_riel : "",
-    indebted_in_usd : ""
+    invoice_number: "",
+    status: "",
+    discount_value_in_riel: "",
+    discount_value_in_usd: "",
+    tax_value_in_riel: "",
+    tax_value_in_usd: "",
+    sub_total_in_riel: "",
+    sub_total_in_usd: "",
+    grand_total_without_tax_in_riel: "",
+    grand_total_without_tax_in_usd: "",
+    grand_total_with_tax_in_riel: "",
+    grand_total_with_tax_in_usd: "",
+    indebted_in_riel: "",
+    indebted_in_usd: "",
   });
 
   console.log(values);
@@ -114,21 +118,23 @@ const UpdateForm = () => {
         raw_materials: invoices?.purchase_invoice_details?.map(
           (detail) => detail.raw_material_id
         ),
-        // invoice detail 
-        invoice_number : invoices?.invoice_number,
-        status : invoices?.status,
-        discount_value_in_riel : invoices?.discount_value_in_riel,
-        discount_value_in_usd : invoices?.discount_value_in_usd,
-        tax_value_in_riel : invoices?.tax_value_in_riel,
-        tax_value_in_usd : invoices?.tax_value_in_usd,
-        sub_total_in_riel : invoices?.sub_total_in_riel,
-        sub_total_in_usd : invoices?.sub_total_in_riel,
-        grand_total_without_tax_in_riel : invoices?.grand_total_without_tax_in_riel,
-        grand_total_without_tax_in_usd : invoices?.grand_total_without_tax_in_usd,
-        grand_total_with_tax_in_riel : invoices?.grand_total_with_tax_in_riel,
-        grand_total_with_tax_in_usd : invoices?.grand_total_with_tax_in_usd,
-        indebted_in_riel : invoices?.indebted_in_riel,
-        indebted_in_usd : invoices?.indebted_in_usd
+        // invoice detail
+        invoice_number: invoices?.invoice_number,
+        status: invoices?.status,
+        discount_value_in_riel: invoices?.discount_value_in_riel,
+        discount_value_in_usd: invoices?.discount_value_in_usd,
+        tax_value_in_riel: invoices?.tax_value_in_riel,
+        tax_value_in_usd: invoices?.tax_value_in_usd,
+        sub_total_in_riel: invoices?.sub_total_in_riel,
+        sub_total_in_usd: invoices?.sub_total_in_riel,
+        grand_total_without_tax_in_riel:
+          invoices?.grand_total_without_tax_in_riel,
+        grand_total_without_tax_in_usd:
+          invoices?.grand_total_without_tax_in_usd,
+        grand_total_with_tax_in_riel: invoices?.grand_total_with_tax_in_riel,
+        grand_total_with_tax_in_usd: invoices?.grand_total_with_tax_in_usd,
+        indebted_in_riel: invoices?.indebted_in_riel,
+        indebted_in_usd: invoices?.indebted_in_usd,
       });
     }
     dispatch(
@@ -341,7 +347,7 @@ const UpdateForm = () => {
                       value={values.invoice_number}
                     />
                   </div>
-                  
+
                   <div>
                     <div className="mb-2 block">
                       <Label className="font-bold" value="Invoice Status." />
@@ -369,100 +375,141 @@ const UpdateForm = () => {
                     <Table.Head>
                       <Table.HeadCell>Image</Table.HeadCell>
                       <Table.HeadCell>ID</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Name / Company</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Phone Number</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Name / Company
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Phone Number
+                      </Table.HeadCell>
                       <Table.HeadCell>Category</Table.HeadCell>
                       <Table.HeadCell>Status</Table.HeadCell>
                       <Table.HeadCell>Location</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Contact Person</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Business Reg. No.</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Bank Account No.</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Bank Name</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Supplier Code</Table.HeadCell>
-                      <Table.HeadCell >Address</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Contact Person
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Business Reg. No.
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Bank Account No.
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Bank Name
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Supplier Code
+                      </Table.HeadCell>
+                      <Table.HeadCell>Address</Table.HeadCell>
                       <Table.HeadCell>Email</Table.HeadCell>
                       <Table.HeadCell>Website</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">Social Media</Table.HeadCell>
-
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Social Media
+                      </Table.HeadCell>
                     </Table.Head>
                     <Table.Body className="divide-y">
-                      {invoices.supplier ?
-                          <Table.Row
-                            key={invoices.supplier.id}
-                            className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                          >
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              <Avatar
-                                img={invoices.supplier.image ? `${BASE_IMAGE_URL}/${invoices.supplier.image}` : ""}
-                              />
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.id}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.name}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.phone_number}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.supplier_category === 'PRODUCT' && (
-                                <Badge color="success">{invoices.supplier.supplier_category}</Badge>
+                      {invoices.supplier ? (
+                        <Table.Row
+                          key={invoices.supplier.id}
+                          className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                        >
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            <Avatar
+                              img={
+                                invoices.supplier.image
+                                  ? `${BASE_IMAGE_URL}/${invoices.supplier.image}`
+                                  : ""
+                              }
+                            />
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.id}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.name}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.phone_number}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.supplier_category ===
+                              "PRODUCT" && (
+                              <Badge color="success">
+                                {invoices.supplier.supplier_category}
+                              </Badge>
+                            )}
+                            {invoices.supplier.supplier_category ===
+                              "SERVICE" && (
+                              <Badge color="warning">
+                                {invoices.supplier.supplier_category}
+                              </Badge>
+                            )}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            <div className="flex flex-wrap gap-2">
+                              {invoices.supplier.supplier_status ===
+                                "ACTIVE" && (
+                                <Badge color="success">
+                                  {invoices.supplier.supplier_status}
+                                </Badge>
                               )}
-                              {invoices.supplier.supplier_category === 'SERVICE' && (
-                                <Badge color="warning">{invoices.supplier.supplier_category}</Badge>
+                              {invoices.supplier.supplier_status ===
+                                "INACTIVE" && (
+                                <Badge color="warning">
+                                  {invoices.supplier.supplier_status}
+                                </Badge>
                               )}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              <div className="flex flex-wrap gap-2">
-                                {invoices.supplier.supplier_status === 'ACTIVE' && (
-                                  <Badge color="success">{invoices.supplier.supplier_status}</Badge>
-                                )}
-                                {invoices.supplier.supplier_status === 'INACTIVE' && (
-                                  <Badge color="warning">{invoices.supplier.supplier_status}</Badge>
-                                )}
-                                {invoices.supplier.supplier_status === 'SUSPENDED' && (
-                                  <Badge color="failure">{invoices.supplier.supplier_status}</Badge>
-                                )}
-                              </div>
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.location}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.contact_person}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.business_registration_number}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.bank_account_number}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.bank_name}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.supplier_code}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.address}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {invoices.supplier.email}
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              <a href={invoices.supplier.website} target="_blank" rel="noopener noreferrer">
-                                {invoices.supplier.website}
-                              </a>
-                            </Table.Cell>
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              <a href={invoices.supplier.social_media} target="_blank" rel="noopener noreferrer">
-                                {invoices.supplier.social_media}
-                              </a>
-                            </Table.Cell>
-
-                          </Table.Row>
-                        : (
+                              {invoices.supplier.supplier_status ===
+                                "SUSPENDED" && (
+                                <Badge color="failure">
+                                  {invoices.supplier.supplier_status}
+                                </Badge>
+                              )}
+                            </div>
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.location}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.contact_person}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.business_registration_number}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.bank_account_number}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.bank_name}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.supplier_code}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.address}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {invoices.supplier.email}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            <a
+                              href={invoices.supplier.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {invoices.supplier.website}
+                            </a>
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            <a
+                              href={invoices.supplier.social_media}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {invoices.supplier.social_media}
+                            </a>
+                          </Table.Cell>
+                        </Table.Row>
+                      ) : (
                         <Table.Row>
                           <Table.Cell colSpan="16" className="text-center py-4">
                             No suppliers.
@@ -637,7 +684,7 @@ const UpdateForm = () => {
             <Timeline.Content>
               <Timeline.Title>Invoice Value in Riel</Timeline.Title>
               <Timeline.Body>
-              <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-5 my-5">
+                <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-5 my-5">
                   <div>
                     <div className="mb-2 block">
                       <Label className="font-bold" value="Discount Value (៛)" />
@@ -650,7 +697,7 @@ const UpdateForm = () => {
                       value={values.discount_value_in_riel}
                     />
                   </div>
-                  
+
                   <div>
                     <div className="mb-2 block">
                       <Label className="font-bold" value="Tax Value (៛)" />
@@ -679,7 +726,10 @@ const UpdateForm = () => {
 
                   <div>
                     <div className="mb-2 block">
-                      <Label className="font-bold" value="Grand Total (No Tax Included)" />
+                      <Label
+                        className="font-bold"
+                        value="Grand Total (No Tax Included)"
+                      />
                     </div>
                     <TextInput
                       id="grand_total_without_tax_in_riel"
@@ -692,7 +742,10 @@ const UpdateForm = () => {
 
                   <div>
                     <div className="mb-2 block">
-                      <Label className="font-bold" value="Grand Total (Tax Included)" />
+                      <Label
+                        className="font-bold"
+                        value="Grand Total (Tax Included)"
+                      />
                     </div>
                     <TextInput
                       id="grand_total_with_tax_in_riel"
@@ -715,12 +768,10 @@ const UpdateForm = () => {
                       value={values.indebted_in_riel}
                     />
                   </div>
-
                 </div>
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>
-
 
           <Timeline.Item>
             <Timeline.Point icon={IoCartOutline} />
@@ -740,7 +791,7 @@ const UpdateForm = () => {
                       value={values.discount_value_in_usd}
                     />
                   </div>
-                  
+
                   <div>
                     <div className="mb-2 block">
                       <Label className="font-bold" value="Tax Value ($)" />
@@ -769,7 +820,10 @@ const UpdateForm = () => {
 
                   <div>
                     <div className="mb-2 block">
-                      <Label className="font-bold" value="Grand Total (No Tax Included)" />
+                      <Label
+                        className="font-bold"
+                        value="Grand Total (No Tax Included)"
+                      />
                     </div>
                     <TextInput
                       id="grand_total_without_tax_in_usd"
@@ -782,7 +836,10 @@ const UpdateForm = () => {
 
                   <div>
                     <div className="mb-2 block">
-                      <Label className="font-bold" value="Grand Total (Tax Included)" />
+                      <Label
+                        className="font-bold"
+                        value="Grand Total (Tax Included)"
+                      />
                     </div>
                     <TextInput
                       id="grand_total_with_tax_in_usd"
@@ -805,7 +862,6 @@ const UpdateForm = () => {
                       value={values.indebted_in_usd}
                     />
                   </div>
-
                 </div>
               </Timeline.Body>
             </Timeline.Content>
@@ -841,9 +897,31 @@ const UpdateForm = () => {
             </Timeline.Content>
           </Timeline.Item>
         </Timeline>
-        <Button className="w-full" type="submit">
+        {/* <Button className="w-full" type="submit">
           {status == "loading" ? <Spinner /> : "Save"}
-        </Button>
+        </Button> */}
+
+        <div className="flex gap-5">
+          <Link
+            to="/purchase-invoices"
+            className="text-blue-500 cursor-pointer"
+          >
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+              Back
+            </Button>
+          </Link>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner /> Saving
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
+
       </form>
 
       <SuccessToast

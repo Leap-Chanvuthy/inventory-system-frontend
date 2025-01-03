@@ -138,7 +138,7 @@ function App() {
           <Route path="/suppliers/create" element={<Layout><CreateSupplier /></Layout>} />
           <Route path="/supplier/update/:id" element={<Layout><UpdateSupplier /></Layout>} />
 
-          <Route path="/purchase-invoice" element={<Layout><PurchaseInvoice /></Layout>} />
+          <Route path="/purchase-invoices" element={<Layout><PurchaseInvoice /></Layout>} />
           <Route path="/purchase-invoices/recover" element={<Layout><RecoverPurchaseInvoice /></Layout>} />
           <Route path="/purchase-invoice/create" element={<Layout><CreatePurchaseInvoice /></Layout>} />
           <Route path="/purchase-invoice/update/:id" element={<Layout><UpdatePurchaseInvoice /></Layout>} />

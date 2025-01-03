@@ -56,7 +56,7 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
                 <Link to='/raw-materials'>Raw Materials</Link>
               </Sidebar.Item>
               <Sidebar.Item >
-                <Link to='/purchase-invoice'>Purchase Invoice</Link>
+                <Link to='/purchase-invoices'>Purchase Invoices</Link>
               </Sidebar.Item>
               <Sidebar.Item >
                 <Link to='/suppliers'>Suppliers</Link>

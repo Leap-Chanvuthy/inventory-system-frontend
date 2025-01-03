@@ -17,6 +17,8 @@ import {
 } from "../../../../components/ToastNotification";
 import { HiInformationCircle } from "react-icons/hi";
 import { resetMultipleSelectionState } from "../../../../redux/slices/selectionSlice";
+import { Link } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -80,6 +82,19 @@ const CreateForm = () => {
       setSupplierMisMatchError(err?.response?.data?.error);
     }
   };
+
+
+  const resetForm = () => {
+    setValues({
+      payment_method: "",
+      payment_date: "",
+      discount_percentage: "",
+      tax_percentage: "",
+      clearing_payable_percentage: "",
+      raw_materials: [],
+    });
+    dispatch(resetMultipleSelectionState());
+  }
 
   return (
     <div>
@@ -152,7 +167,6 @@ const CreateForm = () => {
                       id="discount_percentage"
                       type="number"
                       min="0"
-                      
                       onChange={handleChange}
                       value={values.discount_percentage}
                       className={`${
@@ -180,7 +194,6 @@ const CreateForm = () => {
                       id="tax_percentage"
                       type="number"
                       min="0"
-                      
                       onChange={handleChange}
                       value={values.tax_percentage}
                       className={`${
@@ -208,7 +221,6 @@ const CreateForm = () => {
                       id="clearing_payable_percentage"
                       type="number"
                       min="0"
-                      
                       onChange={handleChange}
                       value={values.clearing_payable_percentage}
                       className={`${
@@ -236,28 +248,54 @@ const CreateForm = () => {
             <Timeline.Point icon={IoCartOutline} />
             <Timeline.Content>
               <Timeline.Title>Invoice Items</Timeline.Title>
-                <div className="my-5">
-                    {error?.raw_materials ?  
-                        <Alert color="failure" icon={HiInformationCircle}>
-                            <span className="font-medium">Raw Material Cannot be NULL !</span> Please select at least one raw material to create invoice.
-                        </Alert> : <></>
-                    }  
+              <div className="my-5">
+                {error?.raw_materials ? (
+                  <Alert color="failure" icon={HiInformationCircle}>
+                    <span className="font-medium">
+                      Raw Material Cannot be NULL !
+                    </span>{" "}
+                    Please select at least one raw material to create invoice.
+                  </Alert>
+                ) : (
+                  <></>
+                )}
 
-                    {supplierMisMatchError ?  
-                        <Alert color="failure" icon={HiInformationCircle}>
-                            <span className="font-medium">{supplierMisMatchError}</span>
-                        </Alert> : <></>
-                    }  
-                </div>
+                {supplierMisMatchError ? (
+                  <Alert color="failure" icon={HiInformationCircle}>
+                    <span className="font-medium">{supplierMisMatchError}</span>
+                  </Alert>
+                ) : (
+                  <></>
+                )}
+              </div>
               <Timeline.Body>
                 <RawMaterialRelationship createStatus={status} />
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>
         </Timeline>
-        <Button className="w-full" type="submit">
-          {status == 'loading' ? <Spinner /> : 'Save'}
-        </Button>
+
+        <div className="flex gap-5">
+          <Link to="/purchase-invoices" className="text-blue-500 cursor-pointer">
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+              Back
+            </Button>
+          </Link>
+          <Button color="failure" onClick={resetForm} className="w-sm">
+            Cancel
+          </Button>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner /> Saving
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
+        
       </form>
 
       <SuccessToast
