@@ -4,6 +4,7 @@ import axios from "axios";
 import { BASE_URL } from "../../../../../components/const/constant";
 import { DangerToast, SuccessToast } from "../../../../../components/ToastNotification";
 import { FiEdit } from "react-icons/fi";
+import { IoIosArrowBack } from "react-icons/io";
 
 
 const Update = ({raw_material_category_id}) => {
@@ -134,11 +135,23 @@ const Update = ({raw_material_category_id}) => {
                   } 
                />
             </div>
-            <div className="w-full">
-              <Button type="submite">
-                {loading ? <Spinner /> : 'Save'}
+
+            <div className="flex gap-5">
+              <Button color="gray" onClick={() => {setOpenModal(false)}}>
+                <IoIosArrowBack className="mr-2" />
+                Back
+              </Button>
+              <Button type="submit" className="w-full">
+                {loading ? (
+                  <div>
+                    <Spinner /> Saving
+                  </div>
+                ) : (
+                  "Save"
+                )}
               </Button>
             </div>
+
           </form>
         </Modal.Body>
       </Modal>

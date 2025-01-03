@@ -4,6 +4,7 @@ import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import { BASE_URL } from "../../../../../components/const/constant";
 import { DangerToast, SuccessToast } from "../../../../../components/ToastNotification";
+import { IoIosArrowBack } from "react-icons/io";
 
 
 const Create = () => {
@@ -51,6 +52,12 @@ const Create = () => {
   }
 
 
+  const resetForm = () => {
+    setValues({
+      category_name: "",
+      description: "",
+    });
+  };
 
   function onCloseModal() {
     setOpenModal(false);
@@ -120,11 +127,26 @@ const Create = () => {
                   } 
                />
             </div>
-            <div className="w-full">
-              <Button type="submite">
-                {loading ? <Spinner /> : 'Save'}
+
+            <div className="flex gap-5">
+              <Button color="gray" onClick={() => {setOpenModal(false)}}>
+                <IoIosArrowBack className="mr-2" />
+                Back
+              </Button>
+              <Button color="failure" onClick={resetForm} className="w-sm">
+                Cancel
+              </Button>
+              <Button type="submit" className="w-full">
+                {loading ? (
+                  <div>
+                    <Spinner /> Saving
+                  </div>
+                ) : (
+                  "Save"
+                )}
               </Button>
             </div>
+
           </form>
         </Modal.Body>
       </Modal>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Modal, Table, Spinner } from "flowbite-react";
+import { Button, Modal, Table, Spinner, Badge } from "flowbite-react";
 import axios from "axios";
 import GlobalPagination from "../../../../../components/Pagination";
 import { BASE_URL } from "../../../../../components/const/constant";
