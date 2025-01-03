@@ -22,6 +22,9 @@ import {
   DangerToast,
 } from "../../../../components/ToastNotification";
 import RawMaterialRelationship from "./relationship/RawMaterialRelationship";
+import { Link } from "react-router-dom";
+import { IoIosArrowBack } from "react-icons/io";
+import { MdCancel } from "react-icons/md";
 
 const mapContainerStyle = {
   width: "100%",
@@ -39,13 +42,12 @@ const center = {
 };
 
 const CreateForm = () => {
-
-    // diapatch redux action
-    const dispatch = useDispatch();
-    const [successToastOpen, setSuccessToastOpen] = useState(false);
-    const [failToastOpen, setFailToastOpen] = useState(false);
-    const { error, status } = useSelector((state) => state.suppliers);
-    const { multipleSelection } = useSelector((state) => state.selections);
+  // diapatch redux action
+  const dispatch = useDispatch();
+  const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [failToastOpen, setFailToastOpen] = useState(false);
+  const { error, status } = useSelector((state) => state.suppliers);
+  const { multipleSelection } = useSelector((state) => state.selections);
 
   const [values, setValues] = useState({
     image: "",
@@ -57,13 +59,13 @@ const CreateForm = () => {
     address: "",
     email: "",
     contact_person: "",
-    website: "",                
-    social_media: "",           
-    supplier_category: "",      
-    supplier_status: "",        
-    contract_length: "",        
-    discount_term: "",          
-    payment_term: "",           
+    website: "",
+    social_media: "",
+    supplier_category: "",
+    supplier_status: "",
+    contract_length: "",
+    discount_term: "",
+    payment_term: "",
     business_registration_number: "",
     vat_number: "",
     bank_account_number: "",
@@ -72,13 +74,15 @@ const CreateForm = () => {
     note: "",
   });
 
-  console.log(values)
-
+  console.log(values);
 
   useEffect(() => {
-    setValues((prevValues) => ({...prevValues , raw_materials : multipleSelection}));
-  },[multipleSelection])
-  
+    setValues((prevValues) => ({
+      ...prevValues,
+      raw_materials: multipleSelection,
+    }));
+  }, [multipleSelection]);
+
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -119,6 +123,12 @@ const CreateForm = () => {
     }
   };
 
+  const handleRemoveImage = () => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      image: null,
+    }));
+  };
 
   // handle submit post request
   const handleSubmit = async (e) => {
@@ -142,13 +152,13 @@ const CreateForm = () => {
         address: "",
         email: "",
         contact_person: "",
-        website: "",                
-        social_media: "",          
-        supplier_category: "",      
-        supplier_status: "",        
-        contract_length: "",        
-        discount_term: "",          
-        payment_term: "",           
+        website: "",
+        social_media: "",
+        supplier_category: "",
+        supplier_status: "",
+        contract_length: "",
+        discount_term: "",
+        payment_term: "",
         business_registration_number: "",
         vat_number: "",
         bank_account_number: "",
@@ -162,6 +172,33 @@ const CreateForm = () => {
       dispatch(createSupplierFailed(error?.response?.data?.errors));
       setFailToastOpen(true);
     }
+  };
+
+  const resetForm = () => {
+    setValues({
+      image: "",
+      name: "",
+      phone_number: "",
+      location: "",
+      longitude: "",
+      latitude: "",
+      address: "",
+      email: "",
+      contact_person: "",
+      website: "",
+      social_media: "",
+      supplier_category: "",
+      supplier_status: "",
+      contract_length: "",
+      discount_term: "",
+      payment_term: "",
+      business_registration_number: "",
+      vat_number: "",
+      bank_account_number: "",
+      bank_account_name: "",
+      bank_name: "",
+      note: "",
+    });
   };
 
   if (loadError) return <div>Error loading maps</div>;
@@ -180,44 +217,56 @@ const CreateForm = () => {
         message="Something Went Wrong!"
       />
       <form className="w-full flex flex-col gap-4 my-5" onSubmit={handleSubmit}>
-        <div className="relative flex items-center justify-center">
+
+        <h2 className="text-lg font-semibold my-2">Supplier Profile</h2>
+        <div className="flex items-center justify-center">
           <Label
             htmlFor="image"
-            className={`flex items-center justify-center cursor-pointer rounded-full border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 ${
-              imagePreview ? "p-0" : "p-10"
-            }`}
-            style={{ width: "200px", height: "200px" }}
+            className="flex items-center justify-center cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 p-4 w-full"
           >
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full h-full object-cover rounded-full"
-              />
-            ) : (
-              <>
-                <svg
-                  className="text-gray-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                  />
-                </svg>
-              </>
-            )}
-            <FileInput
+            <div className="flex flex-col items-center justify-center">
+              <svg
+                className="mb-3 w-10 h-10 text-gray-400 dark:text-gray-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M16 5a2 2 0 00-1.5.654L9.828 10.832A3.5 3.5 0 1112.5 13H17a2 2 0 002-2V7a2 2 0 00-2-2H16z" />
+              </svg>
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                <span className="font-semibold">Click to upload</span> or drag
+                and drop
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                PNG, JPG or GIF (max. 2MB)
+              </p>
+            </div>
+            <input
               id="image"
+              type="file"
               className="hidden"
               onChange={handleFileChange}
             />
           </Label>
+        </div>
+
+        <div className="flex flex-col gap-4 mt-2">
+          {values.image && (
+            <div className="relative mr-2 mb-2">
+              <img
+                src={URL.createObjectURL(values.image)}
+                alt="Image Preview"
+                className="w-[18rem] h-40 object-cover rounded-md"
+              />
+              <button
+                type="button"
+                className="absolute top-0 right-0 p-1 text-white bg-red-500 rounded-full"
+                onClick={handleRemoveImage}
+              >
+                <MdCancel />
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="mb-6">
@@ -237,12 +286,13 @@ const CreateForm = () => {
                 helperText={
                   error?.name && (
                     <>
-                      <span className="font-medium text-red-400">{error.name}</span>
+                      <span className="font-medium text-red-400">
+                        {error.name}
+                      </span>
                     </>
                   )
                 }
               />
-
             </div>
 
             <div className="w-full">
@@ -349,9 +399,9 @@ const CreateForm = () => {
                 value={values.supplier_category}
                 onChange={handleChange}
               >
-                <option value=''>Select an option</option>
-                <option value='PRODUCT'>Product</option>
-                <option value='SERVICE'>Service</option>
+                <option value="">Select an option</option>
+                <option value="PRODUCT">Product</option>
+                <option value="SERVICE">Service</option>
               </Select>
             </div>
 
@@ -364,10 +414,10 @@ const CreateForm = () => {
                 value={values.supplier_status}
                 onChange={handleChange}
               >
-                <option value=''>Select an option</option>
-                <option value='ACTIVE'>Active</option>
-                <option value='INACTIVE'>Inactive</option>
-                <option value='SUSPENDED'>Suspended</option>
+                <option value="">Select an option</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+                <option value="SUSPENDED">Suspended</option>
               </Select>
             </div>
           </div>
@@ -384,7 +434,9 @@ const CreateForm = () => {
                 type="text"
                 placeholder="Location"
                 className={`${
-                  error?.location ? "border-[1.5px] border-red-400 rounded-md" : ""
+                  error?.location
+                    ? "border-[1.5px] border-red-400 rounded-md"
+                    : ""
                 } `}
                 value={values.location}
                 onChange={handleChange}
@@ -439,7 +491,6 @@ const CreateForm = () => {
         <div className="mb-6">
           <h2 className="text-lg font-semibold my-5">Business Information</h2>
           <div className="grid grid-cols-1 lg:md:grid-cols-3 gap-3">
-
             <div className="w-full">
               <Label htmlFor="contract_length" value="Contract Length" />
               <TextInput
@@ -472,7 +523,6 @@ const CreateForm = () => {
                 onChange={handleChange}
               />
             </div>
-            
 
             <div className="w-full">
               <Label
@@ -551,12 +601,11 @@ const CreateForm = () => {
           </div>
         </div>
 
-
         {/* Raw Materials Relationship */}
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <h2 className="text-lg font-semibold my-5">Raw Materials</h2>
           <RawMaterialRelationship createStatus={status} />
-        </div>
+        </div> */}
 
         <div className="w-full mb-4" style={{ height: "400px" }}>
           <GoogleMap
@@ -570,9 +619,27 @@ const CreateForm = () => {
           </GoogleMap>
         </div>
 
-        <Button type="submit">
-          {status == "loading" ? <Spinner /> : "Save"}
-        </Button>
+        <div className="flex gap-5">
+          <Link to="/suppliers" className="text-blue-500 cursor-pointer">
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+              Back
+            </Button>
+          </Link>
+          <Button color="failure" onClick={resetForm} className="w-sm">
+            Cancel
+          </Button>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner />
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
+        
       </form>
     </div>
   );

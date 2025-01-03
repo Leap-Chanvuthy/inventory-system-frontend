@@ -27,9 +27,9 @@ import { LuAlertTriangle } from "react-icons/lu";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { HiCheck } from "react-icons/hi";
 import { ImWarning } from "react-icons/im";
+import { IoEyeSharp } from "react-icons/io5";
 
 const SupplierTable = ({ filters }) => {
-
   const { suppliers, error, status } = useSelector((state) => state.suppliers);
   const dispatch = useDispatch();
 
@@ -74,9 +74,9 @@ const SupplierTable = ({ filters }) => {
         params: {
           page,
           "filter[search]": filters?.search,
-          "filter[supplier_category]" : filters?.category , 
-          "filter[supplier_status]" : filters?.status , 
-          "sort" : filters?.sort
+          "filter[supplier_category]": filters?.category,
+          "filter[supplier_status]": filters?.status,
+          sort: filters?.sort,
         },
       });
       dispatch(getSupplierSuccess(response.data.data));
@@ -117,12 +117,16 @@ const SupplierTable = ({ filters }) => {
     );
 
   if (!Array.isArray(suppliers)) {
-    return <div className="text-center py-5 text-red-500">Suppliers data is invalid.</div>;
+    return (
+      <div className="text-center py-5 text-red-500">
+        Suppliers data is invalid.
+      </div>
+    );
   }
 
   const locations = suppliers.map((supplier) => ({
     id: supplier.id,
-    image : supplier.image,
+    image: supplier.image,
     name: supplier.name,
     latitude: parseFloat(supplier.latitude),
     longitude: parseFloat(supplier.longitude),
@@ -136,22 +140,39 @@ const SupplierTable = ({ filters }) => {
       <div className="overflow-x-auto lg:max-w-6xl  my-5">
         <Table striped>
           <Table.Head>
+            <Table.HeadCell>Details</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>ID</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Name / Company</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Phone Number</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Name / Company
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Phone Number
+            </Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Location</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Contact Person</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Business Reg. No.</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Bank Account No.</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Bank Name</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Supplier Code</Table.HeadCell>
-            <Table.HeadCell >Address</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Contact Person
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Business Reg. No.
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Bank Account No.
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Bank Name
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Supplier Code
+            </Table.HeadCell>
+            <Table.HeadCell>Address</Table.HeadCell>
             <Table.HeadCell>Email</Table.HeadCell>
             <Table.HeadCell>Website</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Social Media</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Social Media
+            </Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -161,9 +182,23 @@ const SupplierTable = ({ filters }) => {
                   key={supplier.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
+                  <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
+                    <Link to={`/supplier/update/${supplier.id}`}>
+                      <Badge>
+                        <div className="flex justify-center items-center gap-1">
+                          <IoEyeSharp /> View
+                        </div>
+                      </Badge>
+                    </Link>
+                  </Table.Cell>
+
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Avatar
-                      img={supplier.image ? `${BASE_IMAGE_URL}/${supplier.image}` : ""}
+                      img={
+                        supplier.image
+                          ? `${BASE_IMAGE_URL}/${supplier.image}`
+                          : ""
+                      }
                     />
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -176,23 +211,33 @@ const SupplierTable = ({ filters }) => {
                     {supplier.phone_number}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {supplier.supplier_category === 'PRODUCT' && (
-                      <Badge color="success">{supplier.supplier_category}</Badge>
+                    {supplier.supplier_category === "PRODUCT" && (
+                      <Badge color="success">
+                        {supplier.supplier_category}
+                      </Badge>
                     )}
-                    {supplier.supplier_category === 'SERVICE' && (
-                      <Badge color="warning">{supplier.supplier_category}</Badge>
+                    {supplier.supplier_category === "SERVICE" && (
+                      <Badge color="warning">
+                        {supplier.supplier_category}
+                      </Badge>
                     )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
-                      {supplier.supplier_status === 'ACTIVE' && (
-                        <Badge color="success">{supplier.supplier_status}</Badge>
+                      {supplier.supplier_status === "ACTIVE" && (
+                        <Badge color="success">
+                          {supplier.supplier_status}
+                        </Badge>
                       )}
-                      {supplier.supplier_status === 'INACTIVE' && (
-                        <Badge color="warning">{supplier.supplier_status}</Badge>
+                      {supplier.supplier_status === "INACTIVE" && (
+                        <Badge color="warning">
+                          {supplier.supplier_status}
+                        </Badge>
                       )}
-                      {supplier.supplier_status === 'SUSPENDED' && (
-                        <Badge color="failure">{supplier.supplier_status}</Badge>
+                      {supplier.supplier_status === "SUSPENDED" && (
+                        <Badge color="failure">
+                          {supplier.supplier_status}
+                        </Badge>
                       )}
                     </div>
                   </Table.Cell>
@@ -221,17 +266,27 @@ const SupplierTable = ({ filters }) => {
                     {supplier.email}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <a href={supplier.website} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={supplier.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {supplier.website}
                     </a>
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <a href={supplier.social_media} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={supplier.social_media}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {supplier.social_media}
                     </a>
                   </Table.Cell>
                   <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <Link to={`/supplier/update/${supplier.id}`}><FiEdit /></Link>
+                    <Link to={`/supplier/update/${supplier.id}`}>
+                      <FiEdit />
+                    </Link>
                     <MdDelete
                       className="text-red-600 text-lg cursor-pointer"
                       onClick={() => {
@@ -268,21 +323,27 @@ const SupplierTable = ({ filters }) => {
         <SupplierMap locations={locations} />
       </div>
       <>
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header><p className="text-center font-bold text-lg capitalize">Are you sure want to delete ?</p></Modal.Header>
-        <Modal.Body>
-          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
-            <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500  uppercase text-sm font-semibold">Item will be shown in recover list after deleted.</p>
-          </div>
-        </Modal.Body>
+        <Modal show={openModal} onClose={() => setOpenModal(false)}>
+          <Modal.Header>
+            <p className="text-center font-bold text-lg capitalize">
+              Are you sure want to delete ?
+            </p>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
+              <ImWarning className="text-lg text-red-500" />
+              <p className="text-red-500  uppercase text-sm font-semibold">
+                Item will be shown in recover list after deleted.
+              </p>
+            </div>
+          </Modal.Body>
 
-        <Modal.Footer>
-          <Button onClick={handleDelete} color='failure'>
-            {status == "loading" ? <Spinner /> : "Delete"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Modal.Footer>
+            <Button onClick={handleDelete} color="failure">
+              {status == "loading" ? <Spinner /> : "Delete"}
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </>
 
       <SuccessToast

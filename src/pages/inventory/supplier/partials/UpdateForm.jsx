@@ -11,6 +11,7 @@ import {
   Table,
   Badge,
   Checkbox,
+  Modal,
 } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -30,9 +31,15 @@ import {
   SuccessToast,
   DangerToast,
 } from "../../../../components/ToastNotification";
-import { useParams } from "react-router-dom";
-import { resetMultipleSelectionState, setMultipleSelection, toggleMultipleSelection } from "../../../../redux/slices/selectionSlice";
+import { Link, useParams } from "react-router-dom";
+import {
+  resetMultipleSelectionState,
+  setMultipleSelection,
+  toggleMultipleSelection,
+} from "../../../../redux/slices/selectionSlice";
 import RawMaterialRelationship from "./relationship/RawMaterialRelationship";
+import { IoIosArrowBack } from "react-icons/io";
+import { MdCancel } from "react-icons/md";
 
 const mapContainerStyle = {
   width: "100%",
@@ -55,8 +62,10 @@ const UpdateForm = () => {
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
   const { error, status, suppliers } = useSelector((state) => state.suppliers);
-  const {multipleSelection} = useSelector((state) => state.selections);
-  console.log(suppliers);
+  const { multipleSelection } = useSelector((state) => state.selections);
+  const [oldImages, setOldImages] = useState(null);
+  const [selectedImage , setSelectedImage] = useState(null);
+
 
   // fetch specific supplier
   const { id } = useParams();
@@ -104,7 +113,7 @@ const UpdateForm = () => {
     raw_materials: [],
   });
 
-  console.log('Multiple selection :' , multipleSelection);
+  console.log("Multiple selection :", multipleSelection);
 
   useEffect(() => {
     if (suppliers) {
@@ -137,17 +146,33 @@ const UpdateForm = () => {
         ),
       });
     }
-    dispatch(setMultipleSelection(suppliers?.raw_materials?.map((raw_material) => raw_material.id)));
+    setOldImages(suppliers?.image);
+    dispatch(
+      setMultipleSelection(
+        suppliers?.raw_materials?.map((raw_material) => raw_material.id)
+      )
+    );
   }, [suppliers]);
 
+  // Handle image click
+  const handleImageClick = (img) => {
+    setSelectedImage(img);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
 
   const handleMultipleSelect = (id) => {
-    dispatch(toggleMultipleSelection(id))
+    dispatch(toggleMultipleSelection(id));
   };
 
   useEffect(() => {
-    setValues((prevValues) => ({...prevValues , raw_materials : multipleSelection}));
-  },[multipleSelection])
+    setValues((prevValues) => ({
+      ...prevValues,
+      raw_materials: multipleSelection,
+    }));
+  }, [multipleSelection]);
 
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -189,6 +214,13 @@ const UpdateForm = () => {
     }
   };
 
+  const handleRemoveImage = () => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      image: null,
+    }));
+  };
+
   // handle submit patch request
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -205,6 +237,7 @@ const UpdateForm = () => {
       console.log(response);
       dispatch(createSupplierSuccess(response));
       setSuccessToastOpen(true);
+      setImagePreview(null);
       const updatedSupplier = await axios.get(`${BASE_URL}/supplier/${id}`);
       dispatch(getSupplierSuccess(updatedSupplier.data));
       dispatch(resetMultipleSelectionState());
@@ -214,7 +247,6 @@ const UpdateForm = () => {
       setFailToastOpen(true);
     }
   };
-
 
   // map loading state
   if (loadError) return <div>Error loading maps</div>;
@@ -233,35 +265,80 @@ const UpdateForm = () => {
         message="Something Went Wrong!"
       />
       <form className="w-full flex flex-col gap-4 my-5" onSubmit={handleSubmit}>
-        <div className="relative flex items-center justify-center">
-          <Label
-            htmlFor="image"
-            className={`flex items-center justify-center cursor-pointer rounded-full border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 ${
-              imagePreview ? "p-0" : "p-10"
-            }`}
-            style={{ width: "250px", height: "250px" }}
-          >
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full h-full object-cover rounded-full"
+        {/* image section */}
+        <div>
+          <h2 className="text-lg font-semibold my-2">Supplier Profile</h2>
+          <div className="flex items-center justify-center">
+            <Label
+              htmlFor="image"
+              className="flex items-center justify-center cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 p-4 w-full"
+            >
+              <div className="flex flex-col items-center justify-center">
+                <svg
+                  className="mb-3 w-10 h-10 text-gray-400 dark:text-gray-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M16 5a2 2 0 00-1.5.654L9.828 10.832A3.5 3.5 0 1112.5 13H17a2 2 0 002-2V7a2 2 0 00-2-2H16z" />
+                </svg>
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold">Click to upload</span> or drag
+                  and drop
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  PNG, JPG or GIF (max. 2MB)
+                </p>
+              </div>
+              <input
+                id="image"
+                type="file"
+                className="hidden"
+                onChange={handleFileChange}
               />
-            ) : (
-              <>
+            </Label>
+          </div>
+
+          <div className="flex flex-col gap-4 mt-2">
+            {imagePreview && (
+              <div className="relative">
                 <img
-                  // src={`${BASE_IMAGE_URL}/${suppliers.image}`}
-                  alt="Preview"
-                  className="w-[500px] h-full object-cover rounded-full"
+                  src={imagePreview}
+                  alt="Image Preview"
+                  className="w-[18rem] h-40 object-cover rounded-md"
                 />
-              </>
+                <button
+                  type="button"
+                  className="absolute top-0 right-0 p-1 text-white bg-red-500 rounded-full"
+                  onClick={handleRemoveImage}
+                >
+                  <MdCancel />
+                </button>
+              </div>
             )}
-            <FileInput
-              id="image"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </Label>
+          </div>
+
+          <div className="my-5">
+            <div className="flex flex-wrap gap-3">
+              <img
+                src={`${BASE_IMAGE_URL}/${oldImages}`}
+                className="w-16 h-16 object-cover rounded-md cursor-pointer"
+                onClick={() => handleImageClick(oldImages)}
+                alt={`Thumbnail of ${oldImages}`}
+              />
+            </div>
+            <Modal show={selectedImage} onClose={closeModal}>
+              <Modal.Header>
+                <span className="font-bold">Customer Image</span>
+              </Modal.Header>
+              <Modal.Body>
+                <img
+                  src={`${BASE_IMAGE_URL}/${selectedImage}`}
+                  className="rounded-md"
+                />
+              </Modal.Body>
+            </Modal>
+          </div>
         </div>
 
         <div className="mb-6">
@@ -594,7 +671,7 @@ const UpdateForm = () => {
 
         {/* Notes Section */}
         <div className="w-full">
-          <h2 className="text-lg font-semibold my-5">Raw Materials</h2>
+          <h2 className="text-lg font-semibold my-5">Raw Materials on Hand</h2>
           <div className="overflow-x-auto lg:max-w-6xl  my-5">
             <Table striped>
               <Table.Head>
@@ -642,12 +719,8 @@ const UpdateForm = () => {
                     >
                       <Table.Cell>
                         <Checkbox
-                          checked={multipleSelection?.includes(
-                            raw_material.id
-                          )}
-                          onChange={() =>
-                            handleMultipleSelect(raw_material.id)
-                          }
+                          checked={multipleSelection?.includes(raw_material.id)}
+                          onChange={() => handleMultipleSelect(raw_material.id)}
                         />
                       </Table.Cell>
                       <Table.Cell>{raw_material?.id}</Table.Cell>
@@ -659,14 +732,12 @@ const UpdateForm = () => {
                       </Table.Cell>
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         <div className="flex flex-wrap gap-2">
-                          {raw_material?.status ===
-                            "IN_STOCK" && (
+                          {raw_material?.status === "IN_STOCK" && (
                             <Badge color="success">
                               {raw_material?.status}
                             </Badge>
                           )}
-                          {raw_material?.status ===
-                            "OUT_OF_STOCK" && (
+                          {raw_material?.status === "OUT_OF_STOCK" && (
                             <Badge color="failure">
                               {raw_material?.status}
                             </Badge>
@@ -677,14 +748,11 @@ const UpdateForm = () => {
                         <div className="flex flex-wrap gap-2">
                           <Badge
                             color={
-                              raw_material?.category
-                                ? "warning"
-                                : "failure"
+                              raw_material?.category ? "warning" : "failure"
                             }
                           >
                             {raw_material?.category
-                              ? raw_material?.category
-                                  ?.category_name
+                              ? raw_material?.category?.category_name
                               : "NULL"}
                           </Badge>
                         </div>
@@ -724,10 +792,10 @@ const UpdateForm = () => {
         </div>
 
         {/* Raw Materials Relationship */}
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <h2 className="text-lg font-semibold my-5">Add More Raw Materials</h2>
           <RawMaterialRelationship createStatus={status} />
-        </div>
+        </div> */}
 
         <div className="w-full mb-4" style={{ height: "400px" }}>
           <GoogleMap
@@ -741,9 +809,23 @@ const UpdateForm = () => {
           </GoogleMap>
         </div>
 
-        <Button type="submit">
-          {status == "loading" ? <Spinner /> : "Save"}
-        </Button>
+        <div className="flex gap-5">
+          <Link to="/suppliers" className="text-blue-500 cursor-pointer">
+            <Button color="gray">
+              <IoIosArrowBack className="mr-2" />
+              Back
+            </Button>
+          </Link>
+          <Button type="submit" className="w-full">
+            {status === "loading" ? (
+              <div>
+                <Spinner />
+              </div>
+            ) : (
+              "Save"
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );
