@@ -15,6 +15,7 @@ import { deleteRawMaterialFailure, deleteRawMaterialStart, deleteRawMaterialSucc
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import {FiEdit} from 'react-icons/fi';
+import { IoEyeSharp } from "react-icons/io5";
 
 const RawMaterialTable = ({ filters }) => {
   const dispatch = useDispatch();
@@ -105,9 +106,10 @@ const RawMaterialTable = ({ filters }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto lg:max-w-6xl  my-5">
+      <div className="overflow-x-auto lg:max-w-7xl  my-5">
         <Table striped>
           <Table.Head>
+          <Table.HeadCell className="whitespace-nowrap">View Detail</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Code</Table.HeadCell>
@@ -137,6 +139,11 @@ const RawMaterialTable = ({ filters }) => {
                   key={material.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
+                  <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
+                    <Link to={`/raw-material/update/${material.id}`}>
+                      <Badge><div className="flex justify-center items-center gap-1"><IoEyeSharp/> View</div></Badge>
+                    </Link>
+                  </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
                     { material.raw_material_images && material.raw_material_images.length > 0 ? (
                       <Avatar
@@ -191,12 +198,12 @@ const RawMaterialTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.remaining_quantity}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.unit_price_in_usd}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.total_value_in_usd}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">៛ {material.exchange_rate_from_usd_to_riel} / 1$</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.unit_price_in_riel} ​៛</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.total_value_in_riel} ​៛</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.exchange_rate_from_riel_to_usd} / 100៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">$ {material.unit_price_in_usd}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">$ {material.total_value_in_usd}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">៛ {material.exchange_rate_from_usd_to_riel} / 1 $</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">{material.unit_price_in_riel} ​៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">{material.total_value_in_riel} ​៛</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">$ {material.exchange_rate_from_riel_to_usd} / 100 ៛</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.minimum_stock_level}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.location}</Table.Cell>
                   <Table.Cell className="whitespace-nowrap">

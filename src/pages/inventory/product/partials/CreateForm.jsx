@@ -118,6 +118,17 @@ const CreateForm = () => {
     }));
   }, [selectedMaterials]);
 
+
+    // reset set state when component is unmounted
+    useEffect(() => {
+      return () => {
+          dispatch(resetMaterials());
+          dispatch(resetMultipleSelectionState());
+          dispatch(resetCartItems());
+      };
+    }, [location.pathname, dispatch]);
+    
+
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const validImages = files.filter((file) => file.type.startsWith("image/"));
