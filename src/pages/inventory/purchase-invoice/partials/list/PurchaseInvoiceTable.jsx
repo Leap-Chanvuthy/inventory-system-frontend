@@ -3,9 +3,7 @@ import { Avatar, Badge, Button, Modal, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import GlobalPagination from "../../../../../components/Pagination";
-import {
-  BASE_URL
-} from "../../../../../components/const/constant";
+import { BASE_URL } from "../../../../../components/const/constant";
 import LoadingState from "./LoadingState";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { MdDelete } from "react-icons/md";
@@ -21,29 +19,30 @@ import {
   deleteInvoiceSuccess,
 } from "../../../../../redux/slices/invoiceSlice";
 import { SuccessToast } from "../../../../../components/ToastNotification";
-import { IoPrintOutline } from "react-icons/io5";
+import { IoEyeSharp, IoPrintOutline } from "react-icons/io5";
 import GenerateInvoice from "../print/GenerateInvoice";
-import ReactDOMServer from 'react-dom/server';
-
+import ReactDOMServer from "react-dom/server";
 
 const PurchaseInvoiceTable = ({ filters }) => {
   const dispatch = useDispatch();
   const { invoices, error, status } = useSelector((state) => state.invoices);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
-  const [selectedId , setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  
-// Handle print function and states
-const handlePrint = (invoice) => {
-  const printWindow = window.open('', '_blank');
-  if (!printWindow) return;
 
-  const invoiceHTML = ReactDOMServer.renderToString(<GenerateInvoice invoice={invoice} />);
+  // Handle print function and states
+  const handlePrint = (invoice) => {
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
 
-  printWindow.document.write(`
+    const invoiceHTML = ReactDOMServer.renderToString(
+      <GenerateInvoice invoice={invoice} />
+    );
+
+    printWindow.document.write(`
     <html>
       <head>
         <title>Print Invoice</title>
@@ -79,13 +78,10 @@ const handlePrint = (invoice) => {
     </html>
   `);
 
-  printWindow.document.close();
-  printWindow.print();
-  printWindow.onafterprint = () => printWindow.close();
-};
-
-
-
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.onafterprint = () => printWindow.close();
+  };
 
   const fetchInvoice = async (page = 1) => {
     dispatch(fetchInvoiceStart());
@@ -93,12 +89,12 @@ const handlePrint = (invoice) => {
       const response = await axios.get(`${BASE_URL}/purchase-invoices`, {
         params: {
           page,
-          'filter[search]' : filters.search,
-          'filter[status]' : filters.status,
-          'filter[payment_method]' : filters.payment_method,
-          'filter[date_range][start_date]' : filters.start_date,
-          'filter[date_range][end_date]' : filters.end_date,
-          sort : filters.sort
+          "filter[search]": filters.search,
+          "filter[status]": filters.status,
+          "filter[payment_method]": filters.payment_method,
+          "filter[date_range][start_date]": filters.start_date,
+          "filter[date_range][end_date]": filters.end_date,
+          sort: filters.sort,
         },
       });
       console.log(response);
@@ -170,36 +166,81 @@ const handlePrint = (invoice) => {
     return <div className="text-center py-5 text-red-500">{error}</div>;
 
   return (
-    <div>        
-      <div className="overflow-x-auto lg:max-w-6xl  my-5">
+    <div>
+      <div className="overflow-x-auto lg:max-w-7xl  my-5">
         <Table striped>
-        <Table.Head>
+          <Table.Head>
+            <Table.HeadCell className="whitespace-nowrap">Detail</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Print</Table.HeadCell>
             <Table.HeadCell>ID</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Invoice Number</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Payment Method</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Payment Date</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Invoice Number
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Payment Method
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Payment Date
+            </Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Supplier Name</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Supplier Code</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Supplier Email</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Subtotal (Riel)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Subtotal (USD)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Tax Amount (Riel)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Tax Amount (USD)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Grand Total No Tax (Riel)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Grand Total No Tax (USD)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Grand Total With Tax (Riel)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Grand Total With Tax (USD)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Clear Payable (%)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Discount Amount (Riel)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Discount Amount (USD)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Discount (%)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Tax (%)</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Created At</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Updated At</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Actions</Table.HeadCell>
-            </Table.Head>
+            <Table.HeadCell className="whitespace-nowrap">
+              Supplier Name
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Supplier Code
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Supplier Email
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Subtotal (Riel)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Subtotal (USD)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Tax Amount (Riel)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Tax Amount (USD)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Grand Total No Tax (Riel)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Grand Total No Tax (USD)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Grand Total With Tax (Riel)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Grand Total With Tax (USD)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Clear Payable (%)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Discount Amount (Riel)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Discount Amount (USD)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Discount (%)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Tax (%)
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Created At
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Updated At
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Actions
+            </Table.HeadCell>
+          </Table.Head>
           <Table.Body className="divide-y">
             {invoices.length > 0 ? (
               invoices.map((invoice) => (
@@ -207,40 +248,50 @@ const handlePrint = (invoice) => {
                   key={invoice.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800 font-medium text-gray-900 dark:text-white"
                 >
-                    <Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
+                    <Link to={`/purchase-invoice/update/${invoice.id}`}>
+                      <Badge>
+                        <div className="flex justify-center items-center gap-1">
+                          <IoEyeSharp /> View
+                        </div>
+                      </Badge>
+                    </Link>
+                  </Table.Cell>
+                  
+                  <Table.Cell>
                     <IoPrintOutline
                       onClick={() => handlePrint(invoice)}
                       className="text-lg text-center font-bold text-yellow-300 cursor-pointer"
                     />
-                    </Table.Cell>
-                    <Table.Cell>{invoice.id}</Table.Cell>
-                    <Table.Cell>{invoice.invoice_number}</Table.Cell>
-                    <Table.Cell>
-                        <div className="flex flex-wrap gap-2">
-                          {invoice.payment_method === "BANK" && (
-                          <Badge color="success">{invoice.payment_method}</Badge>
-                          )}
-                          {invoice.payment_method === "CREDIT_CARD" && (
-                          <Badge color="warning">{invoice.payment_method}</Badge>
-                          )}
-                          {invoice.payment_method === "CASH" && (
-                          <Badge color="failure">{invoice.payment_method}</Badge>
-                          )}
-                        </div>
-                    </Table.Cell>
-                    <Table.Cell>{invoice.payment_date}</Table.Cell>
-                    <Table.Cell >
-                        <div className="flex flex-wrap gap-2">
-                          {invoice.status === "PAID" && (
-                          <Badge color="success">{invoice.status}</Badge>
-                          )}
-                          {invoice.status === "UNPAID" && (
-                          <Badge color="failure">{invoice.status}</Badge>
-                          )}
-                          {invoice.status === "INDEBTED" && (
-                          <Badge color="warning">{invoice.status}</Badge>
-                          )}
-                        </div>
+                  </Table.Cell>
+                  <Table.Cell>{invoice.id}</Table.Cell>
+                  <Table.Cell>{invoice.invoice_number}</Table.Cell>
+                  <Table.Cell>
+                    <div className="flex flex-wrap gap-2">
+                      {invoice.payment_method === "BANK" && (
+                        <Badge color="success">{invoice.payment_method}</Badge>
+                      )}
+                      {invoice.payment_method === "CREDIT_CARD" && (
+                        <Badge color="warning">{invoice.payment_method}</Badge>
+                      )}
+                      {invoice.payment_method === "CASH" && (
+                        <Badge color="failure">{invoice.payment_method}</Badge>
+                      )}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>{invoice.payment_date}</Table.Cell>
+                  <Table.Cell>
+                    <div className="flex flex-wrap gap-2">
+                      {invoice.status === "PAID" && (
+                        <Badge color="success">{invoice.status}</Badge>
+                      )}
+                      {invoice.status === "UNPAID" && (
+                        <Badge color="failure">{invoice.status}</Badge>
+                      )}
+                      {invoice.status === "INDEBTED" && (
+                        <Badge color="warning">{invoice.status}</Badge>
+                      )}
+                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     <div className="flex flex-wrap gap-2">
@@ -253,31 +304,44 @@ const handlePrint = (invoice) => {
                   <Table.Cell>{invoice.sub_total_in_usd} $</Table.Cell>
                   <Table.Cell>{invoice.tax_value_in_riel} ៛</Table.Cell>
                   <Table.Cell>{invoice.tax_value_in_usd} $</Table.Cell>
-                  <Table.Cell>{invoice.grand_total_without_tax_in_riel} ៛</Table.Cell>
-                  <Table.Cell>{invoice.grand_total_without_tax_in_usd} $</Table.Cell>
-                  <Table.Cell>{invoice.grand_total_with_tax_in_riel} ៛</Table.Cell>
-                  <Table.Cell>{invoice.grand_total_with_tax_in_usd} $</Table.Cell>
-                  <Table.Cell>{invoice.clearing_payable_percentage} %</Table.Cell>
+                  <Table.Cell>
+                    {invoice.grand_total_without_tax_in_riel} ៛
+                  </Table.Cell>
+                  <Table.Cell>
+                    {invoice.grand_total_without_tax_in_usd} $
+                  </Table.Cell>
+                  <Table.Cell>
+                    {invoice.grand_total_with_tax_in_riel} ៛
+                  </Table.Cell>
+                  <Table.Cell>
+                    {invoice.grand_total_with_tax_in_usd} $
+                  </Table.Cell>
+                  <Table.Cell>
+                    {invoice.clearing_payable_percentage} %
+                  </Table.Cell>
                   <Table.Cell>{invoice.discount_value_in_riel} ៛</Table.Cell>
                   <Table.Cell>{invoice.discount_value_in_usd} $</Table.Cell>
                   <Table.Cell>{invoice.discount_percentage} %</Table.Cell>
                   <Table.Cell>{invoice.tax_percentage} %</Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                    {new Date(invoice.created_at).toLocaleString('en-US', {
-                        weekday: 'short',
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                    })}, {formatDistanceToNow(new Date(invoice.created_at))} ago
+                    {new Date(invoice.created_at).toLocaleString("en-US", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    , {formatDistanceToNow(new Date(invoice.created_at))} ago
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                     {formatDistanceToNow(new Date(invoice.created_at))} ago
+                    {formatDistanceToNow(new Date(invoice.created_at))} ago
                   </Table.Cell>
                   <Table.Cell>
                     <div className="flex items-center gap-2">
-                      <Link to={`/purchase-invoice/update/${invoice.id}`}><FiEdit className="text-green-600 dark:text-green-300 font-bold" /></Link>
+                      <Link to={`/purchase-invoice/update/${invoice.id}`}>
+                        <FiEdit className="text-green-600 dark:text-green-300 font-bold" />
+                      </Link>
                       <MdDelete
                         className="text-red-600 text-lg cursor-pointer"
                         onClick={() => {
@@ -287,7 +351,6 @@ const handlePrint = (invoice) => {
                       />
                     </div>
                   </Table.Cell>
-
                 </Table.Row>
               ))
             ) : (
@@ -323,8 +386,7 @@ const handlePrint = (invoice) => {
           <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
             <ImWarning className="text-lg text-red-500" />
             <p className="text-red-500  uppercase text-sm font-semibold">
-              After deleted, Item will be shown in active recover
-              list.
+              After deleted, Item will be shown in active recover list.
             </p>
           </div>
         </Modal.Body>
