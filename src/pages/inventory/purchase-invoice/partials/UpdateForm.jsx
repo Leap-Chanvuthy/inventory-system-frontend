@@ -146,6 +146,12 @@ const UpdateForm = () => {
     );
   }, [invoices]);
 
+  // Reset multiple selection state when component unmount
+  useEffect(() => {
+    dispatch(resetMultipleSelectionState());
+  },[location.pathname , dispatch]);
+
+
   // handle values change
   const handleChange = (e) => {
     const key = e.target.id;
