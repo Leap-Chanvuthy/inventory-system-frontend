@@ -128,18 +128,36 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
             <Table.HeadCell>ID</Table.HeadCell>
             {/* <Table.HeadCell>Image</Table.HeadCell> */}
             <Table.HeadCell>Code</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Material Name</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Supplier Code</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Supplier Name</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Material Name
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Supplier Code
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Supplier Name
+            </Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
             <Table.HeadCell>Quantity</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Remaining Quantity</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Unit Price in USD</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Total Value in USD</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Unit Price in Riel</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Total Value in Riel</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Minimum Stock</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Remaining Quantity
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Unit Price in USD
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Total Value in USD
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Unit Price in Riel
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Total Value in Riel
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Minimum Stock
+            </Table.HeadCell>
             <Table.HeadCell>location</Table.HeadCell>
             <Table.HeadCell>Created</Table.HeadCell>
             <Table.HeadCell>Updated</Table.HeadCell>
@@ -153,14 +171,14 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <Table.Cell>
-                  <Checkbox
-                    checked={multipleSelection?.includes(material.id)}
-                    onChange={() => handleMultipleSelect(material.id , material)}
-                  />
-                  </Table.Cell>  
-                  <Table.Cell>
-                    {material.id}
+                    <Checkbox
+                      checked={multipleSelection?.includes(material.id)}
+                      onChange={() =>
+                        handleMultipleSelect(material.id, material)
+                      }
+                    />
                   </Table.Cell>
+                  <Table.Cell>{material.id}</Table.Cell>
                   {/* <Table.Cell className="whitespace-nowrap">
                     { material.raw_material_images && material.raw_material_images.length > 0 ? (
                       <Avatar
@@ -179,10 +197,22 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                     {material.name}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.supplier.supplier_code}
+                    {material.supplier ? (
+                      material.supplier.supplier_code
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        <Badge color="failure">N/A</Badge>
+                      </div>
+                    )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.supplier.name}
+                    {material.supplier ? (
+                      material.supplier.name
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        <Badge color="failure">N/A</Badge>
+                      </div>
+                    )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
@@ -201,7 +231,9 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
                       <Badge color={material.category ? "warning" : "failure"}>
-                        {material.category ? material.category.category_name : 'NULL'}
+                        {material.category
+                          ? material.category.category_name
+                          : "NULL"}
                       </Badge>
                     </div>
                   </Table.Cell>
@@ -212,27 +244,42 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.remaining_quantity}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.unit_price_in_usd}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">$ {material.total_value_in_usd}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.unit_price_in_riel} ​៛</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.total_value_in_riel} ​៛</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.minimum_stock_level}</Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">{material.location}</Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    $ {material.unit_price_in_usd}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    $ {material.total_value_in_usd}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.unit_price_in_riel} ​៛
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.total_value_in_riel} ​៛
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.minimum_stock_level}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.location}
+                  </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                    {new Date(material.created_at).toLocaleString('en-US', {
-                        weekday: 'short',
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                    })}, {formatDistanceToNow(new Date(material.created_at))} ago
+                    {new Date(material.created_at).toLocaleString("en-US", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    , {formatDistanceToNow(new Date(material.created_at))} ago
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
                     {formatDistanceToNow(new Date(material.updated_at))} ago
                   </Table.Cell>
                   <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <Link to={`/raw-material/update/${material.id}`}><FiEdit /></Link>
+                    <Link to={`/raw-material/update/${material.id}`}>
+                      <FiEdit />
+                    </Link>
                     <MdDelete
                       className="text-red-600 text-lg cursor-pointer"
                       onClick={() => {
@@ -266,17 +313,23 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
         />
       </div>
 
-      <Modal size='lg' show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header><p className="text-center font-bold text-lg capitalize">Are you sure want to delete ?</p></Modal.Header>
+      <Modal size="lg" show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header>
+          <p className="text-center font-bold text-lg capitalize">
+            Are you sure want to delete ?
+          </p>
+        </Modal.Header>
         <Modal.Body>
           <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
             <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500 capitalize">Item will be shown in recover list after deleted.</p>
+            <p className="text-red-500 capitalize">
+              Item will be shown in recover list after deleted.
+            </p>
           </div>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={handleDelete} color='failure'>
+          <Button onClick={handleDelete} color="failure">
             {status == "loading" ? <Spinner /> : "Delete"}
           </Button>
         </Modal.Footer>

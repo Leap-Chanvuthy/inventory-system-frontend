@@ -116,6 +116,15 @@ const RawMaterialList = () => {
                   />
                   <label htmlFor="material_code">Material Code</label>
                 </div>
+
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="supplier_name"
+                    onChange={handleSortChange}
+                    checked={filters.sort.includes("supplier_name")}
+                  />
+                  <label htmlFor="supplier_name">Supplier</label>
+                </div>
               </div>
             </Dropdown>
 

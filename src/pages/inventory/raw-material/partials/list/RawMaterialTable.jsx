@@ -165,10 +165,22 @@ const RawMaterialTable = ({ filters }) => {
                     {material.name}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.supplier.supplier_code}
+                    {material.supplier ? (
+                      material.supplier.supplier_code
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        <Badge color="failure">N/A</Badge>
+                      </div>
+                    )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.supplier.name}
+                    {material.supplier ? (
+                      material.supplier.name
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        <Badge color="failure">N/A</Badge>
+                      </div>
+                    )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">

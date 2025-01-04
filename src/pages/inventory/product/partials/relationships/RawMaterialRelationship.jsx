@@ -21,7 +21,7 @@ import { resetMaterials } from "../../../../../redux/slices/materialStagingSlice
 const RawMaterialRelationship = ({ createStatus }) => {
   const dispatch = useDispatch();
   const { multipleSelection } = useSelector((state) => state.selections);
-  const {selectedMaterials} = useSelector((state) => state.materialStagings);
+  const { selectedMaterials } = useSelector((state) => state.materialStagings);
   const [openModal, setOpenModal] = useState(false);
   const [filters, setFilters] = useState({
     query: "",
@@ -61,13 +61,11 @@ const RawMaterialRelationship = ({ createStatus }) => {
   };
 
   // clear selections state
-  const clearMultipleSelections = () =>{
+  const clearMultipleSelections = () => {
     dispatch(resetMultipleSelectionState());
     dispatch(resetCartItems());
     dispatch(resetMaterials());
-  }
-
-
+  };
 
   // get raw material category
   const [categories, setCategories] = useState([]);
@@ -123,7 +121,31 @@ const RawMaterialRelationship = ({ createStatus }) => {
                       />
                       <label htmlFor="created_at">Created At</label>
                     </div>
-                    {/* Other sorting options */}
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="updated_at"
+                        onChange={handleSortChange}
+                        checked={filters.sort.includes("updated_at")}
+                      />
+                      <label htmlFor="updated_at">Updated At</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="material_code"
+                        onChange={handleSortChange}
+                        checked={filters.sort.includes("material_code")}
+                      />
+                      <label htmlFor="material_code">Material Code</label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="supplier_name"
+                        onChange={handleSortChange}
+                        checked={filters.sort.includes("supplier_name")}
+                      />
+                      <label htmlFor="supplier_name">Supplier</label>
+                    </div>
                   </div>
                 </Dropdown>
                 <Dropdown label="Filter">
@@ -174,11 +196,13 @@ const RawMaterialRelationship = ({ createStatus }) => {
                 </Dropdown>
               </form>
               <div className="flex gap-2">
-                { multipleSelection?.length > 0 ?
+                {multipleSelection?.length > 0 ? (
                   <Button color="failure" onClick={clearMultipleSelections}>
                     Unselect All
-                  </Button> : <></>
-                }
+                  </Button>
+                ) : (
+                  <></>
+                )}
                 <Button color="success" onClick={() => setOpenModal(false)}>
                   Add Item
                 </Button>

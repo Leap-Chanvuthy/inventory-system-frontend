@@ -140,9 +140,8 @@
 //           </form>
 //         </div>
 //       </div>
-      
-//       <RawMaterialRelationshipTable filters={filters} />
 
+//       <RawMaterialRelationshipTable filters={filters} />
 
 //     </div>
 //   );
@@ -150,13 +149,19 @@
 
 // export default RawMaterialRelationship;
 
-
 import { useState } from "react";
-import { TextInput, Select, Dropdown, Checkbox, Label , Button } from "flowbite-react";
+import {
+  TextInput,
+  Select,
+  Dropdown,
+  Checkbox,
+  Label,
+  Button,
+} from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import RawMaterialRelationshipTable from "./table/RawMaterialRelationshipTable";
 
-const RawMaterialRelationship = ({createStatus}) => {
+const RawMaterialRelationship = ({ createStatus }) => {
   const [filters, setFilters] = useState({
     query: "",
     category: "",
@@ -194,11 +199,13 @@ const RawMaterialRelationship = ({createStatus}) => {
     e.preventDefault();
   };
 
-
   return (
     <div>
       <div className="my-5 flex flex-col lg:md:flex-row gap-3 justify-between">
-        <form onSubmit={handleSearch} className="flex flex-col lg:md:flex-row gap-3">
+        <form
+          onSubmit={handleSearch}
+          className="flex flex-col lg:md:flex-row gap-3"
+        >
           <TextInput
             placeholder="Search product"
             id="query"
@@ -217,27 +224,70 @@ const RawMaterialRelationship = ({createStatus}) => {
                 />
                 <label htmlFor="created_at">Created At</label>
               </div>
-              {/* Other sorting options */}
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="updated_at"
+                  onChange={handleSortChange}
+                  checked={filters.sort.includes("updated_at")}
+                />
+                <label htmlFor="updated_at">Updated At</label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="material_code"
+                  onChange={handleSortChange}
+                  checked={filters.sort.includes("material_code")}
+                />
+                <label htmlFor="material_code">Material Code</label>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="supplier_name"
+                  onChange={handleSortChange}
+                  checked={filters.sort.includes("supplier_name")}
+                />
+                <label htmlFor="supplier_name">Supplier</label>
+              </div>
             </div>
           </Dropdown>
 
           <Dropdown label="Filter">
-            <p className="absolute left-[70%] text-red-500 cursor-pointer" onClick={resetFilters}>
+            <p
+              className="absolute left-[70%] text-red-500 cursor-pointer"
+              onClick={resetFilters}
+            >
               Clear
             </p>
             <div className="p-5">
               <div className="flex flex-col gap-3">
                 <div>
-                  <Label htmlFor="status" value="Status" className="mb-2 block" />
-                  <Select id="status" value={filters.status} onChange={handleFilterChange}>
+                  <Label
+                    htmlFor="status"
+                    value="Status"
+                    className="mb-2 block"
+                  />
+                  <Select
+                    id="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
+                  >
                     <option value="">Select Status</option>
                     <option value="IN_STOCK">In stock</option>
                     <option value="OUT_OF_STOCK">Out of stock</option>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="category" value="Category" className="mb-2 block" />
-                  <Select id="category" value={filters.category} onChange={handleFilterChange}>
+                  <Label
+                    htmlFor="category"
+                    value="Category"
+                    className="mb-2 block"
+                  />
+                  <Select
+                    id="category"
+                    value={filters.category}
+                    onChange={handleFilterChange}
+                  >
                     <option value="">Select Category</option>
                     <option value="SERVICE">Service</option>
                     <option value="PRODUCT">Product</option>
@@ -248,8 +298,11 @@ const RawMaterialRelationship = ({createStatus}) => {
           </Dropdown>
         </form>
       </div>
-      
-      <RawMaterialRelationshipTable filters={filters} createStatus={createStatus}  />
+
+      <RawMaterialRelationshipTable
+        filters={filters}
+        createStatus={createStatus}
+      />
     </div>
   );
 };
