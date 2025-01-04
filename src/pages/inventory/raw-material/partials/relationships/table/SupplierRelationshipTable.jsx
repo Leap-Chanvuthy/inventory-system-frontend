@@ -132,6 +132,7 @@ const SupplierRelationshipTable = ({ filters }) => {
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Select</Table.HeadCell>
+            <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Name / Company</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Phone Number</Table.HeadCell>
@@ -161,6 +162,9 @@ const SupplierRelationshipTable = ({ filters }) => {
                       checked={singleSelection === supplier.id}
                       onChange={() => handleSingleSelect(supplier.id)}
                     />
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {supplier.id}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Avatar
