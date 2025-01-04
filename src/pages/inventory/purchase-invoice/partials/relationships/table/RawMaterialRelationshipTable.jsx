@@ -169,10 +169,22 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                     {material.name}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.supplier ? material.supplier.supplier_code : 'N/A'}
+                    {material.supplier ? (
+                      material.supplier.supplier_code
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        <Badge color="failure">N/A</Badge>
+                      </div>
+                    )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.supplier ? material.supplier.name : 'N/A'}
+                    {material.supplier ? (
+                      material.supplier.name
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        <Badge color="failure">N/A</Badge>
+                      </div>
+                    )}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
