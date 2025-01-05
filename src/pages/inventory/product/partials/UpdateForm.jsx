@@ -414,6 +414,7 @@ const UpdateForm = () => {
                           placeholder="Enter remaining quantity"
                           value={values.remaining_quantity}
                           onChange={handleChange}
+                          disabled
                           className={`${
                             error?.remaining_quantity
                               ? "border-[1.5px] border-red-400 rounded-md"

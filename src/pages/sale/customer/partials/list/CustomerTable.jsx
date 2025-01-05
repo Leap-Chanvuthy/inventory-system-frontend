@@ -16,8 +16,8 @@ import { Button, Modal } from "flowbite-react";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import {
-    deleteCustomerFailed,
-    deleteCustomerStart,
+  deleteCustomerFailed,
+  deleteCustomerStart,
   deleteCustomerSuccess,
   fetchCustomerFailed,
   fetchCustomerStart,
@@ -25,6 +25,7 @@ import {
 } from "../../../../../redux/slices/customerSlice";
 import CustomerMap from "../map/CustomerMap";
 import useDebounce from "../../../../../hooks/useDebounce";
+import { IoEyeSharp } from "react-icons/io5";
 
 const CustomerTable = ({ filters }) => {
   const { customers, error, status } = useSelector((state) => state.customers);
@@ -64,15 +65,15 @@ const CustomerTable = ({ filters }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchCustomers = async (page = 1 , search = filters.search) => {
+  const fetchCustomers = async (page = 1, search = filters.search) => {
     dispatch(fetchCustomerStart());
     try {
       const response = await axios.get(`${BASE_URL}/customers`, {
         params: {
           page,
-            "filter[search]": search,
-            "filter[customer_category_id]" : filters?.category ,
-            "filter[customer_status]" : filters?.status ,
+          "filter[search]": search,
+          "filter[customer_category_id]": filters?.category,
+          "filter[customer_status]": filters?.status,
           sort: filters?.sort,
         },
       });
@@ -91,18 +92,18 @@ const CustomerTable = ({ filters }) => {
     }
   };
 
-    // Custom debounced fetch function
-    const debouncedFetchCustomers = useCallback(
-      useDebounce((page, query) => {
-        fetchCustomers(page, query);
-      }, 2000),
-      [filters]
-    );
-  
-    // Fetch data when filters or page changes
-    useEffect(() => {
-      debouncedFetchCustomers(currentPage, filters.search);
-    }, [filters, currentPage]);
+  // Custom debounced fetch function
+  const debouncedFetchCustomers = useCallback(
+    useDebounce((page, query) => {
+      fetchCustomers(page, query);
+    }, 2000),
+    [filters]
+  );
+
+  // Fetch data when filters or page changes
+  useEffect(() => {
+    debouncedFetchCustomers(currentPage, filters.search);
+  }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
@@ -124,20 +125,16 @@ const CustomerTable = ({ filters }) => {
     );
 
   if (!Array.isArray(customers)) {
-    return (
-      <div className="text-center py-5 text-red-500">
-        Customers data is invalid.
-      </div>
-    );
+    return <LoadingState />;
   }
 
-    const locations = customers.map((customer) => ({
-      id: customer.id,
-      image : customer.image,
-      name: customer.fullname,
-      latitude: parseFloat(customer.latitude),
-      longitude: parseFloat(customer.longitude),
-    }));
+  const locations = customers.map((customer) => ({
+    id: customer.id,
+    image: customer.image,
+    name: customer.fullname,
+    latitude: parseFloat(customer.latitude),
+    longitude: parseFloat(customer.longitude),
+  }));
 
   if (status === "failed")
     return <div className="text-center py-5 text-red-500">Oops! {error}</div>;
@@ -147,6 +144,7 @@ const CustomerTable = ({ filters }) => {
       <div className="overflow-x-auto lg:max-w-6xl  my-5">
         <Table striped>
           <Table.Head>
+            <Table.HeadCell>Detail</Table.HeadCell>
             <Table.HeadCell>Image</Table.HeadCell>
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
@@ -179,6 +177,16 @@ const CustomerTable = ({ filters }) => {
                   key={customer.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
+                  <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
+                    <Link to={`/customer/update/${customer.id}`}>
+                      <Badge>
+                        <div className="flex justify-center items-center gap-1">
+                          <IoEyeSharp /> View
+                        </div>
+                      </Badge>
+                    </Link>
+                  </Table.Cell>
+
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Avatar
                       img={
@@ -198,7 +206,9 @@ const CustomerTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
                       <Badge color={customer.category ? "warning" : "failure"}>
-                        {customer.category ? customer.category.category_name : 'N/A'}
+                        {customer.category
+                          ? customer.category.category_name
+                          : "N/A"}
                       </Badge>
                     </div>
                   </Table.Cell>
@@ -206,13 +216,19 @@ const CustomerTable = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
                       {customer.customer_status === "ACTIVE" && (
-                        <Badge color="success">{customer.customer_status}</Badge>
+                        <Badge color="success">
+                          {customer.customer_status}
+                        </Badge>
                       )}
                       {customer.customer_status === "INACTIVE" && (
-                        <Badge color="warning">{customer.customer_status}</Badge>
+                        <Badge color="warning">
+                          {customer.customer_status}
+                        </Badge>
                       )}
                       {customer.customer_status === "SUSPENDED" && (
-                        <Badge color="failure">{customer.customer_status}</Badge>
+                        <Badge color="failure">
+                          {customer.customer_status}
+                        </Badge>
                       )}
                     </div>
                   </Table.Cell>
@@ -229,7 +245,6 @@ const CustomerTable = ({ filters }) => {
                     {customer.social_medial}
                   </Table.Cell>
 
-                  
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {customer.shipping_address}
                   </Table.Cell>
@@ -283,7 +298,7 @@ const CustomerTable = ({ filters }) => {
           onPageChange={handlePageChange}
         />
       </div>
-      
+
       <div className="my-5 flex flex-col gap-3">
         <CustomerMap locations={locations} />
       </div>

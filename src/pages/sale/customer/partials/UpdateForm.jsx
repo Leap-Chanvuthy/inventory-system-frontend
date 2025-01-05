@@ -439,7 +439,7 @@ const UpdateForm = () => {
                   </div>
                 </div>
 
-                <div className="w-full my-5" style={{ height: "400px" }}>
+                <div className="w-full my-5" style={{ height: "400px" , width: "60%"}}>
                   <GoogleMap
                     mapContainerStyle={mapContainerStyle}
                     zoom={10}
