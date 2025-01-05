@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Modal, Table, Spinner, Badge } from "flowbite-react";
 import axios from "axios";
 import GlobalPagination from "../../../../../components/Pagination";
@@ -9,6 +9,7 @@ import { MdDelete } from "react-icons/md";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import Update from "../category/Update";
+import useDebounce from "../../../../../hooks/useDebounce";
 
 const CategoryTable = ({ filters }) => {
   const [categories, setCategories] = useState([]);
@@ -21,13 +22,13 @@ const CategoryTable = ({ filters }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchCategories = async (page = 1) => {
+  const fetchCustomerCategories = async (page = 1 , query = filters.query) => {
     setStatus("loading");
     try {
       const response = await axios.get(`${BASE_URL}/customer-categories`, {
         params: {
           page,
-          "filter[search]": filters.query,
+          "filter[search]": query,
           sort: filters.sort,
         },
       });
@@ -43,8 +44,17 @@ const CategoryTable = ({ filters }) => {
     }
   };
 
+  // Custom debounced fetch function
+  const debouncedFetchCustomerCategories = useCallback(
+    useDebounce((page, query) => {
+      fetchCustomerCategories(page, query);
+    }, 2000),
+    [filters]
+  );
+
+  // Fetch data when filters or page changes
   useEffect(() => {
-    fetchCategories(currentPage);
+    debouncedFetchCustomerCategories(currentPage, filters.query);
   }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {

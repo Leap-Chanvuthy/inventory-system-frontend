@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Avatar, Badge, Button, Modal, Table, Spinner } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -11,6 +11,7 @@ import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import { FiEdit } from "react-icons/fi";
 import Update from "../category/Update";
+import useDebounce from "../../../../../hooks/useDebounce";
 
 const CategoryTable = ({ filters }) => {
   const [rawMaterials, setRawMaterials] = useState([]);
@@ -23,13 +24,13 @@ const CategoryTable = ({ filters }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchRawMaterials = async (page = 1) => {
+  const fetchRawMaterialCategories = async (page = 1 , query = filters.query) => {
     setStatus("loading");
     try {
       const response = await axios.get(`${BASE_URL}/raw-material-categories`, {
         params: {
           page,
-          "filter[search]": filters.query,
+          "filter[search]": query,
           "filter[category_name]": filters.category_id,
           sort: filters.sort,
         },
@@ -46,9 +47,18 @@ const CategoryTable = ({ filters }) => {
     }
   };
 
-  useEffect(() => {
-    fetchRawMaterials(currentPage);
-  }, [filters, currentPage]);
+    // Custom debounced fetch function
+    const debouncedFetchRawMaterialCategories = useCallback(
+      useDebounce((page, query) => {
+        fetchRawMaterialCategories(page, query);
+      }, 2000),
+      [filters]
+    );
+  
+    // Fetch data when filters or page changes
+    useEffect(() => {
+      debouncedFetchRawMaterialCategories(currentPage, filters.query);
+    }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);

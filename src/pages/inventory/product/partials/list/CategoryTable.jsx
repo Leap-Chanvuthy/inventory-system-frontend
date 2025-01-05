@@ -1,15 +1,19 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Avatar, Badge, Button, Modal, Table, Spinner } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import GlobalPagination from "../../../../../components/Pagination";
-import { BASE_URL, BASE_IMAGE_URL } from "../../../../../components/const/constant";
+import {
+  BASE_URL,
+  BASE_IMAGE_URL,
+} from "../../../../../components/const/constant";
 import LoadingState from "./LoadingState";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { MdDelete } from "react-icons/md";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import Update from "../category/Update";
+import useDebounce from "../../../../../hooks/useDebounce";
 
 const CategoryTable = ({ filters }) => {
   const [rawMaterials, setRawMaterials] = useState([]);
@@ -22,18 +26,18 @@ const CategoryTable = ({ filters }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchRawMaterials = async (page = 1) => {
+  const fetchProductCategories = async (page = 1 , query = filters.query ) => {
     setStatus("loading");
     try {
       const response = await axios.get(`${BASE_URL}/product-categories`, {
         params: {
           page,
-          "filter[search]": filters.query,
+          "filter[search]": query,
           "filter[category_name]": filters.category_id,
           sort: filters.sort,
         },
       });
-      console.log('Category Response:',  response)
+      console.log("Category Response:", response);
       setRawMaterials(response.data.data);
       setCurrentPage(response.data.current_page);
       setTotalPages(response.data.last_page);
@@ -45,8 +49,17 @@ const CategoryTable = ({ filters }) => {
     }
   };
 
+  // Custom debounced fetch function
+  const debouncedFetchProductCategories = useCallback(
+    useDebounce((page, query) => {
+      fetchProductCategories(page, query);
+    }, 2000),
+    [filters]
+  );
+
+  // Fetch data when filters or page changes
   useEffect(() => {
-    fetchRawMaterials(currentPage);
+    debouncedFetchProductCategories(currentPage, filters.query);
   }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {
@@ -58,9 +71,13 @@ const CategoryTable = ({ filters }) => {
 
     setStatus("loading");
     try {
-      const response = await axios.delete(`${BASE_URL}/product-category/delete/${selectedId}`);
+      const response = await axios.delete(
+        `${BASE_URL}/product-category/delete/${selectedId}`
+      );
       if (response.status === 200) {
-        setRawMaterials(rawMaterials.filter(material => material.id !== selectedId));
+        setRawMaterials(
+          rawMaterials.filter((material) => material.id !== selectedId)
+        );
         setOpenModal(false);
         setSuccessToastOpen(true);
         setStatus("succeeded");
@@ -101,8 +118,12 @@ const CategoryTable = ({ filters }) => {
         <Table striped>
           <Table.Head>
             <Table.HeadCell>ID</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Category Name</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Description</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Category Name
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Description
+            </Table.HeadCell>
             <Table.HeadCell>Created</Table.HeadCell>
             <Table.HeadCell>Updated</Table.HeadCell>
             <Table.HeadCell>Actions</Table.HeadCell>
@@ -114,11 +135,8 @@ const CategoryTable = ({ filters }) => {
                   key={material.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
-
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <div className="flex flex-wrap gap-2">
-                        {material.id}
-                    </div>
+                    <div className="flex flex-wrap gap-2">{material.id}</div>
                   </Table.Cell>
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -128,21 +146,26 @@ const CategoryTable = ({ filters }) => {
                     {material.description}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                    {new Date(material.created_at).toLocaleString('en-US', {
-                        weekday: 'short',
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                    })}, {formatDistanceToNow(new Date(material.created_at))} ago
+                    {new Date(material.created_at).toLocaleString("en-US", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    , {formatDistanceToNow(new Date(material.created_at))} ago
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
                     {formatDistanceToNow(new Date(material.updated_at))} ago
                   </Table.Cell>
                   <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <div onClick={() =>{setSelectedId(material.id)}}>
-                        <Update product_category_id={selectedId || null} />
+                    <div
+                      onClick={() => {
+                        setSelectedId(material.id);
+                      }}
+                    >
+                      <Update product_category_id={selectedId || null} />
                     </div>
                     <MdDelete
                       className="text-red-600 text-lg cursor-pointer"
@@ -175,7 +198,6 @@ const CategoryTable = ({ filters }) => {
           onPageChange={handlePageChange}
         />
       </div>
-      
 
       {/* confirm delete modal */}
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
@@ -183,7 +205,9 @@ const CategoryTable = ({ filters }) => {
         <Modal.Body>
           <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 rounded-md">
             <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500">After deletion, the item will appear in the recovery list.</p>
+            <p className="text-red-500">
+              After deletion, the item will appear in the recovery list.
+            </p>
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -193,7 +217,11 @@ const CategoryTable = ({ filters }) => {
         </Modal.Footer>
       </Modal>
 
-      <SuccessToast open={successToastOpen} onClose={() => setSuccessToastOpen(false)} message="Product category deleted successfully!" />
+      <SuccessToast
+        open={successToastOpen}
+        onClose={() => setSuccessToastOpen(false)}
+        message="Product category deleted successfully!"
+      />
     </div>
   );
 };
