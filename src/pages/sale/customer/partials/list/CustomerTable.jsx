@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Avatar, Badge, Spinner, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -24,6 +24,7 @@ import {
   fetchCustomerSuccess,
 } from "../../../../../redux/slices/customerSlice";
 import CustomerMap from "../map/CustomerMap";
+import useDebounce from "../../../../../hooks/useDebounce";
 
 const CustomerTable = ({ filters }) => {
   const { customers, error, status } = useSelector((state) => state.customers);
@@ -63,13 +64,13 @@ const CustomerTable = ({ filters }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchCustomers = async (page = 1) => {
+  const fetchCustomers = async (page = 1 , search = filters.search) => {
     dispatch(fetchCustomerStart());
     try {
       const response = await axios.get(`${BASE_URL}/customers`, {
         params: {
           page,
-            "filter[search]": filters?.search,
+            "filter[search]": search,
             "filter[customer_category_id]" : filters?.category ,
             "filter[customer_status]" : filters?.status ,
           sort: filters?.sort,
@@ -90,9 +91,18 @@ const CustomerTable = ({ filters }) => {
     }
   };
 
-  useEffect(() => {
-    fetchCustomers(currentPage);
-  }, [filters, currentPage]);
+    // Custom debounced fetch function
+    const debouncedFetchCustomers = useCallback(
+      useDebounce((page, query) => {
+        fetchCustomers(page, query);
+      }, 2000),
+      [filters]
+    );
+  
+    // Fetch data when filters or page changes
+    useEffect(() => {
+      debouncedFetchCustomers(currentPage, filters.search);
+    }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);

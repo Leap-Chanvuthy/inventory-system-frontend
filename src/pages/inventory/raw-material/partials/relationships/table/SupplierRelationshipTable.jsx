@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Avatar, Badge, Checkbox, Spinner, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -22,6 +22,7 @@ import LoadingState from '../../list/LoadingState';
 import { Button, Modal } from "flowbite-react";
 import { SuccessToast } from "../../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
+import useDebounce from "../../../../../../hooks/useDebounce";
 
 const SupplierRelationshipTable = ({ filters }) => {
 
@@ -70,13 +71,13 @@ const SupplierRelationshipTable = ({ filters }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchSuppliers = async (page = 1) => {
+  const fetchSuppliers = async (page = 1 , search = filters.search) => {
     dispatch(getSuppliersStart());
     try {
       const response = await axios.get(`${BASE_URL}/suppliers`, {
         params: {
           page,
-          "filter[search]": filters?.search,
+          "filter[search]": search,
           "filter[supplier_category]" : filters?.category , 
           "filter[supplier_status]" : filters?.status , 
           "sort" : filters?.sort
@@ -96,8 +97,16 @@ const SupplierRelationshipTable = ({ filters }) => {
     }
   };
 
+  const debouncedFetchSuppliers = useCallback(
+    useDebounce((page, query) => {
+      fetchSuppliers(page, query);
+    }, 2000),
+    [filters]
+  );
+
+  // Fetch data when filters or page changes
   useEffect(() => {
-    fetchSuppliers(currentPage);
+    debouncedFetchSuppliers(currentPage, filters.search);
   }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {

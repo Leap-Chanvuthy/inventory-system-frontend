@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Badge, Button, Modal, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import GlobalPagination from "../../../../components/Pagination";
@@ -19,9 +19,13 @@ import {
 import LoadingState from "../../../inventory/supplier/partials/list/LoadingState";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { DangerToast, SuccessToast } from "../../../../components/ToastNotification";
+import {
+  DangerToast,
+  SuccessToast,
+} from "../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import useToken from "../../../../hooks/useToken";
+import useDebounce from "../../../../hooks/useDebounce";
 
 function UserTable({ filters }) {
   const dispatch = useDispatch();
@@ -33,19 +37,19 @@ function UserTable({ filters }) {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchData = async (page = 1) => {
+  const fetchData = async (page = 1, search = filters.search) => {
     dispatch(fetchUsersStart());
     try {
       const response = await axios.get(`${BASE_URL}/users`, {
         params: {
           page,
-          "filter[search]": filters.search,
+          "filter[search]": search,
           "filter[role]": filters.role,
           sort: filters.sort,
         },
-        headers : {
+        headers: {
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
       dispatch(fetchUsersSuccess(response.data.data));
       setCurrentPage(response.data.current_page);
@@ -55,20 +59,29 @@ function UserTable({ filters }) {
       console.error("Failed to fetch user:", err);
       dispatch(
         fetchUsersFailure(
-          err?.response?.data?.message || "Failed to fetch data from the server."
+          err?.response?.data?.message ||
+            "Failed to fetch data from the server."
         )
       );
     }
   };
 
+  // Custom debounced fetch function
+  const debouncedFetchData = useCallback(
+    useDebounce((page, query) => {
+      fetchData(page, query);
+    }, 2000),
+    [filters]
+  );
+
+  // Fetch data when filters or page changes
   useEffect(() => {
-    fetchData(currentPage);
+    debouncedFetchData(currentPage, filters.search);
   }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
   };
-
 
   // handle delete function
   const [openModal, setOpenModal] = useState(false);
@@ -98,8 +111,6 @@ function UserTable({ filters }) {
       );
     }
   };
-
-
 
   if (status === "loading")
     return (
@@ -188,7 +199,15 @@ function UserTable({ filters }) {
                   {user.name}
                 </Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>{user.phone_number}</Table.Cell>
+                <Table.Cell>
+                  {user.phone_number ? (
+                    user.phone_number
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      <Badge color="failure">N/A</Badge>
+                    </div>
+                  )}
+                </Table.Cell>
                 <Table.Cell>
                   <div className="flex flex-wrap gap-2">
                     {user.role === "ADMIN" && (
@@ -205,7 +224,17 @@ function UserTable({ filters }) {
                     )}
                   </div>
                 </Table.Cell>
-                <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">{user.email_verified_at || "N/A"}</Table.Cell>
+
+                <Table.Cell>
+                  {user.email_verified_at ? (
+                    user.email_verified_at
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      <Badge color="failure">N/A</Badge>
+                    </div>
+                  )}
+                </Table.Cell>
+              
                 <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   <FiEdit />
                   <MdDelete
@@ -232,17 +261,23 @@ function UserTable({ filters }) {
         />
       </div>
 
-      <Modal size='lg' show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header><p className="text-center font-bold text-sm capitalize">Are you sure want to delete ?</p></Modal.Header>
+      <Modal size="lg" show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header>
+          <p className="text-center font-bold text-sm capitalize">
+            Are you sure want to delete ?
+          </p>
+        </Modal.Header>
         <Modal.Body>
           <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100 ">
             <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500 text-sm">Once user is deleted, Data will not be recoverd!</p>
+            <p className="text-red-500 text-sm">
+              Once user is deleted, Data will not be recoverd!
+            </p>
           </div>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={handleDelete} color='failure'>
+          <Button onClick={handleDelete} color="failure">
             {status == "loading" ? <Spinner /> : "Delete"}
           </Button>
         </Modal.Footer>

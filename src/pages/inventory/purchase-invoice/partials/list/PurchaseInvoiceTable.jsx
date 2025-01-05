@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Avatar, Badge, Button, Modal, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -22,6 +22,7 @@ import { SuccessToast } from "../../../../../components/ToastNotification";
 import { IoEyeSharp, IoPrintOutline } from "react-icons/io5";
 import GenerateInvoice from "../print/GenerateInvoice";
 import ReactDOMServer from "react-dom/server";
+import useDebounce from "../../../../../hooks/useDebounce";
 
 const PurchaseInvoiceTable = ({ filters }) => {
   const dispatch = useDispatch();
@@ -83,13 +84,13 @@ const PurchaseInvoiceTable = ({ filters }) => {
     printWindow.onafterprint = () => printWindow.close();
   };
 
-  const fetchInvoice = async (page = 1) => {
+  const fetchInvoice = async (page = 1 , search = filters.search) => {
     dispatch(fetchInvoiceStart());
     try {
       const response = await axios.get(`${BASE_URL}/purchase-invoices`, {
         params: {
           page,
-          "filter[search]": filters.search,
+          "filter[search]": search,
           "filter[status]": filters.status,
           "filter[payment_method]": filters.payment_method,
           "filter[date_range][start_date]": filters.start_date,
@@ -108,9 +109,17 @@ const PurchaseInvoiceTable = ({ filters }) => {
     }
   };
 
+  // Custom debounced fetch function
+  const debouncedFetchProducts = useCallback(
+    useDebounce((page, query) => {
+      fetchInvoice(page, query);
+    }, 2000),
+    [filters]
+  );
+
   // Fetch data when filters or page changes
   useEffect(() => {
-    fetchInvoice(currentPage);
+    debouncedFetchProducts(currentPage, filters.search);
   }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {

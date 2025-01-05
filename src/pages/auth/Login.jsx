@@ -63,7 +63,7 @@ const Login = () => {
               id="email"
               type="email"
               placeholder="name@flowbite.com"
-              value={values.email}
+              value={values.email.trim()}
               onChange={handleChange}
               className={`${
                 error?.email ? "border-[1.5px] border-red-400 rounded-md" : ""
@@ -86,7 +86,7 @@ const Login = () => {
             <TextInput
               id="password"
               type="password"
-              value={values.password}
+              value={values.password.trim()}
               onChange={handleChange}
               className={`${
                   error?.password ? "border-[1.5px] border-red-400 rounded-md" : ""

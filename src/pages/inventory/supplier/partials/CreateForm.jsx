@@ -217,7 +217,6 @@ const CreateForm = () => {
         message="Something Went Wrong!"
       />
       <form className="w-full flex flex-col gap-4 my-5" onSubmit={handleSubmit}>
-
         <h2 className="text-lg font-semibold my-2">Supplier Profile</h2>
         <div className="flex items-center justify-center">
           <Label
@@ -485,6 +484,20 @@ const CreateForm = () => {
               />
             </div>
           </div>
+          <div
+            className="w-full my-5"
+            style={{ height: "400px", width: "60%" }}
+          >
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              zoom={10}
+              center={center}
+              options={options}
+              onClick={handleMapClick}
+            >
+              {selectedLocation && <Marker position={selectedLocation} />}
+            </GoogleMap>
+          </div>
         </div>
 
         {/* Business Info Section */}
@@ -607,7 +620,7 @@ const CreateForm = () => {
           <RawMaterialRelationship createStatus={status} />
         </div> */}
 
-        <div className="w-full mb-4" style={{ height: "400px" }}>
+        {/* <div className="w-full mb-4" style={{ height: "400px" }}>
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
             zoom={10}
@@ -617,7 +630,7 @@ const CreateForm = () => {
           >
             {selectedLocation && <Marker position={selectedLocation} />}
           </GoogleMap>
-        </div>
+        </div> */}
 
         <div className="flex gap-5">
           <Link to="/suppliers" className="text-blue-500 cursor-pointer">
@@ -639,7 +652,6 @@ const CreateForm = () => {
             )}
           </Button>
         </div>
-        
       </form>
     </div>
   );

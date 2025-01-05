@@ -1,41 +1,68 @@
-import { useEffect, useState } from "react";
-import { Alert, Avatar, Badge, Button, Checkbox, Modal, Table } from "flowbite-react";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Alert,
+  Avatar,
+  Badge,
+  Button,
+  Checkbox,
+  Modal,
+  Table,
+} from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import GlobalPagination from "../../../../../../components/Pagination";
-import { BASE_URL , BASE_IMAGE_URL } from "../../../../../../components/const/constant";
+import {
+  BASE_URL,
+  BASE_IMAGE_URL,
+} from "../../../../../../components/const/constant";
 import LoadingState from "../../list/LoadingState";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteRawMaterialFailure, deleteRawMaterialStart, deleteRawMaterialSuccess, fetchRawMaterialsFailure, fetchRawMaterialsStart, fetchRawMaterialsSuccess } from "../../../../../../redux/slices/rawMaterialSlice";
+import {
+  deleteRawMaterialFailure,
+  deleteRawMaterialStart,
+  deleteRawMaterialSuccess,
+  fetchRawMaterialsFailure,
+  fetchRawMaterialsStart,
+  fetchRawMaterialsSuccess,
+} from "../../../../../../redux/slices/rawMaterialSlice";
 import { ImWarning } from "react-icons/im";
-import {FiEdit} from 'react-icons/fi';
+import { FiEdit } from "react-icons/fi";
 import { SuccessToast } from "../../../../../../components/ToastNotification";
 import { HiInformationCircle } from "react-icons/hi";
 import { toggleMultipleSelection } from "../../../../../../redux/slices/selectionSlice";
-import { addToCart, removeFromCart } from "../../../../../../redux/slices/cartSlice";
-import { setMaterials, toggleMaterial } from "../../../../../../redux/slices/materialStagingSlice";
+import {
+  addToCart,
+  removeFromCart,
+} from "../../../../../../redux/slices/cartSlice";
+import {
+  setMaterials,
+  toggleMaterial,
+} from "../../../../../../redux/slices/materialStagingSlice";
+import useDebounce from "../../../../../../hooks/useDebounce";
 
-const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
+const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
   const dispatch = useDispatch();
-  const {rawMaterials , error , status} =  useSelector((state) => state.rawMaterials);
-  const {multipleSelection} = useSelector((state) => state.selections);
-  const {cartItems} = useSelector((state) => state.carts);
+  const { rawMaterials, error, status } = useSelector(
+    (state) => state.rawMaterials
+  );
+  const { multipleSelection } = useSelector((state) => state.selections);
+  const { cartItems } = useSelector((state) => state.carts);
   const [selectedId, setSelectedId] = useState(null);
-  const [successToastOpen , setSuccessToastOpen] = useState(false);
-  const [openModal , setOpenModal] = useState(false);
+  const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchRawMaterials = async (page = 1) => {
+  const fetchRawMaterials = async (page = 1 , query = filters.query) => {
     dispatch(fetchRawMaterialsStart());
     try {
       const response = await axios.get(`${BASE_URL}/raw-materials`, {
         params: {
           page,
-          "filter[search]": filters.query,
+          "filter[search]": query,
           "filter[status]": filters.status,
           "filter[raw_material_category_id]": filters.category_id,
           sort: filters.sort,
@@ -46,33 +73,39 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
       setTotalPages(response.data.last_page);
       setTotalItems(response.data.total);
     } catch (err) {
-      dispatch(fetchRawMaterialsFailure(err?.message))
+      dispatch(fetchRawMaterialsFailure(err?.message));
       console.log("Failed to fetch raw materials: " + err);
     }
   };
 
   // Function to hanlde selected id change of raw materials
-  const handleMultipleSelect = (id , material) => {
+  const handleMultipleSelect = (id, material) => {
     dispatch(toggleMultipleSelection(id));
     dispatch(toggleMaterial({ id }));
     if (multipleSelection.includes(id)) {
-        dispatch(removeFromCart({ id }));
-      } else {
-        dispatch(addToCart(material));
-      }
+      dispatch(removeFromCart({ id }));
+    } else {
+      dispatch(addToCart(material));
+    }
   };
 
-
+  // Custom debounced fetch function
+  const debouncedFetchRawMaterials = useCallback(
+    useDebounce((page, query) => {
+      fetchRawMaterials(page, query);
+    }, 2000),
+    [filters]
+  );
 
   // Fetch data when filters or page changes
   useEffect(() => {
-    fetchRawMaterials(currentPage);
-  }, [filters, currentPage , createStatus=='succeeded']);
+    debouncedFetchRawMaterials(currentPage, filters.query);
+  }, [filters, currentPage, createStatus == "succeeded"]);
+
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
   };
-
 
   // delete raw material function
   const handleDelete = async () => {
@@ -82,7 +115,9 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
     }
     dispatch(deleteRawMaterialStart());
     try {
-      const response = await axios.delete(`${BASE_URL}/raw-material/${selectedId}`);
+      const response = await axios.delete(
+        `${BASE_URL}/raw-material/${selectedId}`
+      );
       console.log(response);
       if (response.status === 200) {
         dispatch(deleteRawMaterialSuccess(selectedId));
@@ -92,7 +127,9 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
     } catch (err) {
       console.log("Delete error:", err.message);
       dispatch(
-        deleteRawMaterialFailure(err.message || "Error deleting data from the server.")
+        deleteRawMaterialFailure(
+          err.message || "Error deleting data from the server."
+        )
       );
     }
   };
@@ -100,7 +137,6 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   if (!Array.isArray(rawMaterials)) {
     return <LoadingState />;
   }
-
 
   if (status === "loading")
     return (

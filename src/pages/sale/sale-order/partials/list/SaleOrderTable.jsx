@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Avatar, Badge, Spinner, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -28,6 +28,7 @@ import {
   fetchSaleOrderStart,
   fetchSaleOrderSuccess,
 } from "../../../../../redux/slices/saleOrderSlice";
+import useDebounce from "../../../../../hooks/useDebounce";
 
 const SaleOrderTable = ({ filters }) => {
   const { saleOrders, error, status } = useSelector(
@@ -72,13 +73,13 @@ const SaleOrderTable = ({ filters }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchCustomers = async (page = 1) => {
+  const fetchSaleOrders = async (page = 1 , search = filters.search) => {
     dispatch(fetchSaleOrderStart());
     try {
       const response = await axios.get(`${BASE_URL}/sale-orders`, {
         params: {
           page,
-          "filter[search]": filters?.search,
+          "filter[search]": search,
           sort: filters?.sort,
         },
       });
@@ -97,9 +98,18 @@ const SaleOrderTable = ({ filters }) => {
     }
   };
 
-  useEffect(() => {
-    fetchCustomers(currentPage);
-  }, [filters, currentPage]);
+    // Custom debounced fetch function
+    const debouncedFetchInvoices = useCallback(
+      useDebounce((page, query) => {
+        fetchSaleOrders(page, query);
+      }, 2000),
+      [filters]
+    );
+  
+    // Fetch data when filters or page changes
+    useEffect(() => {
+      debouncedFetchInvoices(currentPage, filters.search);
+    }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);

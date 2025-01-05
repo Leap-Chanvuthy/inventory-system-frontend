@@ -559,6 +559,22 @@ const UpdateForm = () => {
               />
             </div>
           </div>
+
+          <div
+            className="w-full my-5"
+            style={{ height: "400px", width: "60%" }}
+          >
+            <GoogleMap
+              mapContainerStyle={mapContainerStyle}
+              zoom={10}
+              center={center}
+              options={options}
+              onClick={handleMapClick}
+            >
+              {selectedLocation && <Marker position={selectedLocation} />}
+            </GoogleMap>
+          </div>
+          
         </div>
 
         {/* Business Info Section */}
@@ -677,7 +693,10 @@ const UpdateForm = () => {
 
         {/* Notes Section */}
         <div className="w-full">
-          <h2 className="text-lg font-semibold my-5">Raw Materials on Hand</h2>
+          {/* <h2 className="text-lg font-semibold my-5">Raw Materials on Hand</h2> */}
+          <h2 className="text-lg font-semibold my-5">
+            Total Raw Materials Supplied
+          </h2>
           <div className="overflow-x-auto lg:max-w-6xl  my-5">
             <Table striped>
               <Table.Head>
@@ -803,17 +822,6 @@ const UpdateForm = () => {
           <RawMaterialRelationship createStatus={status} />
         </div> */}
 
-        <div className="w-full mb-4" style={{ height: "400px" }}>
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            zoom={10}
-            center={center}
-            options={options}
-            onClick={handleMapClick}
-          >
-            {selectedLocation && <Marker position={selectedLocation} />}
-          </GoogleMap>
-        </div>
 
         <div className="flex gap-5">
           <Link to="/suppliers" className="text-blue-500 cursor-pointer">
