@@ -16,6 +16,7 @@ import currencyReducer from './slices/currencySlice';
 import invoiceReducer from './slices/invoiceSlice';
 import selectionReducer from './slices/selectionSlice';
 import materialStagingReducer from './slices/materialStagingSlice';
+import productSelectionReducer from './slices/productSelectionSlice';
 import cartReducer from './slices/cartSlice';
 
 
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
     selections : selectionReducer,
     carts : cartReducer,
     materialStagings : materialStagingReducer,
+    productSelections  : productSelectionReducer ,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -29,6 +29,7 @@ import {
   fetchSaleOrderSuccess,
 } from "../../../../../redux/slices/saleOrderSlice";
 import useDebounce from "../../../../../hooks/useDebounce";
+import { IoEyeSharp } from "react-icons/io5";
 
 const SaleOrderTable = ({ filters }) => {
   const { saleOrders, error, status } = useSelector(
@@ -139,13 +140,14 @@ const SaleOrderTable = ({ filters }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto lg:max-w-6xl  my-5">
+      <div className="overflow-x-auto lg:max-w-7xl  my-5">
         <Table striped>
           <Table.Head>
+            <Table.HeadCell>Details</Table.HeadCell>
+            <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Customer Image
             </Table.HeadCell>
-            <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Customer Name
             </Table.HeadCell>
@@ -210,6 +212,19 @@ const SaleOrderTable = ({ filters }) => {
                   key={saleOrder.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
+                  <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
+                    <Link to={`/sale-order/update/${saleOrder.id}`}>
+                      <Badge>
+                        <div className="flex justify-center items-center gap-1">
+                          <IoEyeSharp /> View
+                        </div>
+                      </Badge>
+                    </Link>
+                  </Table.Cell>
+
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {saleOrder.id}
+                  </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Avatar
                       img={
@@ -220,15 +235,23 @@ const SaleOrderTable = ({ filters }) => {
                     />
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {saleOrder.id}
-                  </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {saleOrder.customer.fullname}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <div className="flex flex-wrap gap-2">
-                      <Badge color="warning">{saleOrder.order_status}</Badge>
-                    </div>
+                      <div className="flex flex-wrap gap-2">
+                          {saleOrder.order_status === "PENDING" && (
+                          <Badge color="pink">{saleOrder.order_status}</Badge>
+                          )}
+                          {saleOrder.order_status === "PROCESSING" && (
+                          <Badge color="purple">{saleOrder.order_status}</Badge>
+                          )}
+                          {saleOrder.order_status === "DELIVERING" && (
+                          <Badge color="default">{saleOrder.order_status}</Badge>
+                          )}
+                          {saleOrder.order_status === "COMPLETED" && (
+                          <Badge color="success">{saleOrder.order_status}</Badge>
+                          )}
+                        </div>
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
