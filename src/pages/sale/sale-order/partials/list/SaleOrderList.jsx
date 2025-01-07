@@ -16,6 +16,9 @@ import SaleOrderTable from "./SaleOrderTable";
 const SaleOrderList = () => {
   const [filters, setFilters] = useState({
     search: "",
+    payment_method : "",
+    payment_status : "",
+    order_status : "",
     sort: [],
   });
 
@@ -40,6 +43,9 @@ const SaleOrderList = () => {
   const resetFilters = () => {
     setFilters({
       search: "",
+      payment_method : "",
+      payment_status : "",
+      order_status : "",
       sort: [],
     });
   };
@@ -82,11 +88,27 @@ const SaleOrderList = () => {
                     />
                     <label htmlFor="updated_at">Updated At</label>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="order_date"
+                      onChange={handleSortChange}
+                      checked={filters.sort.includes("order_date")}
+                    />
+                    <label htmlFor="order_date">Order Date</label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="customer_name"
+                      onChange={handleSortChange}
+                      checked={filters.sort.includes("customer_name")}
+                    />
+                    <label htmlFor="updated_at">Customer Name</label>
+                  </div>
                 </div>
               </Dropdown>
 
               {/* Filter        */}
-              {/* <Dropdown label="Filter">
+              <Dropdown label="Filter">
                 <p
                   className="absolute left-[70%] text-red-500 cursor-pointer"
                   onClick={resetFilters}
@@ -97,42 +119,58 @@ const SaleOrderList = () => {
                   <div className="flex flex-col gap-3">
                     <div>
                       <Label
-                        htmlFor="status"
-                        value="Status"
-                        className="mb-2 block"
+                        htmlFor="payment_method"
+                        className="font-bold"
+                        value="Payment Method"
                       />
                       <Select
-                        id="status"
-                        value={filters.status}
-                        onChange={handleFilterChange}
-                      >
-                        <option value="">Select Status</option>
-                        <option value="ACTIVE">Active</option>
-                        <option value="INACTIVE">Inactive</option>
-                        <option value="SUSPENDED">Suspended</option>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="category" value="Category" />
-                      <Select
-                        id="category"
-                        placeholder="Choose category"
-                        value={filters.category}
+                        id="payment_method"
+                        value={filters.payment_method}
                         onChange={handleFilterChange}
                       >
                         <option value="">Select an option</option>
-                        {categories &&
-                          categories.map((category) => (
-                            <option value={category.id}>
-                              {category.category_name}
-                            </option>
-                          ))}
+                        <option value="CREDIT_CARD">Credit Card</option>
+                        <option value="CASH">Cash</option>
+                        <option value="BANK">Bank</option>
                       </Select>
                     </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Order Status" />
+                    </div>
+                    <Select
+                      id="order_status"
+                      onChange={handleFilterChange}
+                      value={filters.order_status}
+                    >
+                      <option value="">Select an option</option>
+                      <option value="PENDING">Pending</option>
+                      <option value="PROCESSING">Processing</option>
+                      <option value="DELIVERING">Delivering</option>
+                      <option value="COMPLETED">Completed</option>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <div className="mb-2 block">
+                      <Label className="font-bold" value="Payment Status" />
+                    </div>
+                    <Select
+                      id="payment_status"
+                      onChange={handleFilterChange}
+                      value={filters.payment_status}
+                    >
+                      <option value="">Select an option</option>
+                      <option value="UNPAID">Unpaid</option>
+                      <option value="PAID">Paid</option>
+                      <option value="INDEBTED">Indebted</option>
+                    </Select>
+                  </div>
+                  
                   </div>
                 </div>
-              </Dropdown> */}
+              </Dropdown>
             {/* export */}
             <div className="flex gap-3 items-center">
               {/* Export here */}

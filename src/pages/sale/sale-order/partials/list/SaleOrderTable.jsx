@@ -81,6 +81,9 @@ const SaleOrderTable = ({ filters }) => {
         params: {
           page,
           "filter[search]": search,
+          "filter[payment_method]" : filters.payment_method,
+          "filter[payment_status]" : filters.payment_status,
+          "filter[order_status]" : filters.order_status,
           sort: filters?.sort,
         },
       });
@@ -150,6 +153,9 @@ const SaleOrderTable = ({ filters }) => {
             </Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Customer Name
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Payment Method
             </Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Order Status
@@ -236,6 +242,19 @@ const SaleOrderTable = ({ filters }) => {
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {saleOrder.customer.fullname}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex flex-wrap gap-2">
+                      {saleOrder.payment_method === "BANK" && (
+                        <Badge color="success">{saleOrder.payment_method}</Badge>
+                      )}
+                      {saleOrder.payment_method === "CREDIT_CARD" && (
+                        <Badge color="warning">{saleOrder.payment_method}</Badge>
+                      )}
+                      {saleOrder.payment_method === "CASH" && (
+                        <Badge color="failure">{saleOrder.payment_method}</Badge>
+                      )}
+                    </div>
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       <div className="flex flex-wrap gap-2">
