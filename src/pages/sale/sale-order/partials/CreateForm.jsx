@@ -67,6 +67,8 @@ const CreateForm = () => {
   const [failToastOpen, setFailToastOpen] = useState(false);
   const [overQuantityError, setOverQuantityError] = useState(null);
 
+  console.log(customerOnCart);
+
   //initial values
   const [values, setValues] = useState({
     payment_method: "",
@@ -358,6 +360,7 @@ const CreateForm = () => {
                   <Table striped>
                     <Table.Head>
                       <Table.HeadCell>Image</Table.HeadCell>
+                      <Table.HeadCell>Customer ID</Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
                         Customer Name
                       </Table.HeadCell>
@@ -386,6 +389,9 @@ const CreateForm = () => {
                                     : ""
                                 }
                               />
+                            </Table.Cell>
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {customerOnCart.id}
                             </Table.Cell>
                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                               {customerOnCart.fullname}
