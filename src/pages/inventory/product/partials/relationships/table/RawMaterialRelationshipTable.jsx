@@ -93,7 +93,7 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
   const debouncedFetchRawMaterials = useCallback(
     useDebounce((page, query) => {
       fetchRawMaterials(page, query);
-    }, 2000),
+    }, 1000),
     [filters]
   );
 

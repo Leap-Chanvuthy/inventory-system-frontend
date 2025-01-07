@@ -100,7 +100,7 @@ const SupplierRelationshipTable = ({ filters }) => {
   const debouncedFetchSuppliers = useCallback(
     useDebounce((page, query) => {
       fetchSuppliers(page, query);
-    }, 2000),
+    }, 1000),
     [filters]
   );
 

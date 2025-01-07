@@ -51,7 +51,7 @@ const CategoryTable = ({ filters }) => {
     const debouncedFetchRawMaterialCategories = useCallback(
       useDebounce((page, query) => {
         fetchRawMaterialCategories(page, query);
-      }, 2000),
+      }, 1000),
       [filters]
     );
   

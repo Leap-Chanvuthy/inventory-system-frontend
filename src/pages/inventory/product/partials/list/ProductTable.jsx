@@ -62,7 +62,7 @@ const Product = ({ filters }) => {
   const debouncedFetchProducts = useCallback(
     useDebounce((page, query) => {
       fetchProducts(page, query);
-    }, 2000), // Adjust the debounce delay as needed
+    }, 1000), // Adjust the debounce delay as needed
     [filters]
   );
 

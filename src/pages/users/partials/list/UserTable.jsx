@@ -70,7 +70,7 @@ function UserTable({ filters }) {
   const debouncedFetchData = useCallback(
     useDebounce((page, query) => {
       fetchData(page, query);
-    }, 2000),
+    }, 1000),
     [filters]
   );
 

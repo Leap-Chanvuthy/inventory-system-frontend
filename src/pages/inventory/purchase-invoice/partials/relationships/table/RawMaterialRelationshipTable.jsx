@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Avatar, Badge, Button, Checkbox, Modal, Table } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -14,6 +14,7 @@ import {FiEdit} from 'react-icons/fi';
 import { SuccessToast } from "../../../../../../components/ToastNotification";
 import { HiInformationCircle } from "react-icons/hi";
 import { toggleMultipleSelection } from "../../../../../../redux/slices/selectionSlice";
+import useDebounce from "../../../../../../hooks/useDebounce";
 
 const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   const dispatch = useDispatch();
@@ -26,13 +27,13 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  const fetchRawMaterials = async (page = 1) => {
+  const fetchRawMaterials = async (page = 1 , search = filters.search) => {
     dispatch(fetchRawMaterialsStart());
     try {
       const response = await axios.get(`${BASE_URL}/raw-materials/no-invoice`, {
         params: {
           page,
-          "filter[search]": filters.query,
+          "filter[search]": search,
           "filter[status]": filters.status,
           "filter[raw_material_category_id]": filters.category_id,
           sort: filters.sort,
@@ -53,11 +54,18 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
     dispatch(toggleMultipleSelection(id));
   };
 
-
-  // Fetch data when filters or page changes
-  useEffect(() => {
-    fetchRawMaterials(currentPage);
-  }, [filters, currentPage , createStatus=='succeeded']);
+    // Custom debounced fetch function
+    const debouncedFetchRawMaterials = useCallback(
+      useDebounce((page, query) => {
+        fetchRawMaterials(page, query);
+      }, 1000),
+      [filters]
+    );
+  
+    // Fetch data when filters or page changes
+    useEffect(() => {
+      debouncedFetchRawMaterials(currentPage, filters.search);
+    }, [filters, currentPage , createStatus=='succeeded']);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);

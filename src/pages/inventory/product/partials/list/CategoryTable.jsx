@@ -53,7 +53,7 @@ const CategoryTable = ({ filters }) => {
   const debouncedFetchProductCategories = useCallback(
     useDebounce((page, query) => {
       fetchProductCategories(page, query);
-    }, 2000),
+    }, 1000),
     [filters]
   );
 

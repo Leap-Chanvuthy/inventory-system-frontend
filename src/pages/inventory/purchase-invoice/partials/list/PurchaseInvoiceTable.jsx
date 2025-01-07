@@ -113,7 +113,7 @@ const PurchaseInvoiceTable = ({ filters }) => {
   const debouncedFetchProducts = useCallback(
     useDebounce((page, query) => {
       fetchInvoice(page, query);
-    }, 2000),
+    }, 1000),
     [filters]
   );
 

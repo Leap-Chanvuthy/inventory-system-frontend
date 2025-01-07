@@ -103,7 +103,7 @@ const SaleOrderTable = ({ filters }) => {
     const debouncedFetchInvoices = useCallback(
       useDebounce((page, query) => {
         fetchSaleOrders(page, query);
-      }, 2000),
+      }, 1000),
       [filters]
     );
   
