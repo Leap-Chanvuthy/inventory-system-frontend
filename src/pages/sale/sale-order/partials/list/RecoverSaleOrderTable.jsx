@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Avatar, Badge, Spinner, Table } from "flowbite-react";
+import { Avatar, Badge, Spinner, Table, Tooltip } from "flowbite-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import {
@@ -8,56 +8,55 @@ import {
 } from "../../../../../components/const/constant";
 import { useSelector, useDispatch } from "react-redux";
 import GlobalPagination from "../../../../../components/Pagination";
-import { FiEdit } from "react-icons/fi";
-import { MdDelete } from "react-icons/md";
 import LoadingState from "./LoadingState";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { Button, Modal } from "flowbite-react";
 import { SuccessToast } from "../../../../../components/ToastNotification";
-import { ImWarning } from "react-icons/im";
 import {
-  deleteSaleOrderFailed,
-  deleteSaleOrderStart,
-  deleteSaleOrderSuccess,
   fetchSaleOrderFailed,
   fetchSaleOrderStart,
   fetchSaleOrderSuccess,
+  recoverSaleOrderFailure,
+  recoverSaleOrderStart,
+  recoverSaleOrderSuccess,
 } from "../../../../../redux/slices/saleOrderSlice";
 import useDebounce from "../../../../../hooks/useDebounce";
 import { IoEyeSharp } from "react-icons/io5";
+import { CiCircleCheck } from "react-icons/ci";
+import { TbRestore } from "react-icons/tb";
 
-const SaleOrderTable = ({ filters }) => {
+const RecoverSaleOrderTable = ({ filters }) => {
   const { saleOrders, error, status } = useSelector(
     (state) => state.saleOrders
   );
-  console.log(saleOrders);
   const dispatch = useDispatch();
 
   // handle delete function
   const [openModal, setOpenModal] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  console.log(selectedId);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
 
-  const handleDelete = async () => {
+  const handleRecover = async () => {
     if (!selectedId) {
       console.log("No sale order selected for deletion");
       return;
     }
-    dispatch(deleteSaleOrderStart());
+    dispatch(recoverSaleOrderStart());
     try {
-      const response = await axios.delete(
-        `${BASE_URL}/sale-order/${selectedId}`
+      const response = await axios.patch(
+        `${BASE_URL}/sale-order/recover/${selectedId}`
       );
       console.log(response);
       if (response.status === 200) {
-        dispatch(deleteSaleOrderSuccess(selectedId));
+        dispatch(recoverSaleOrderSuccess(selectedId));
         setOpenModal(false);
         setSuccessToastOpen(true);
       }
     } catch (err) {
       console.log("Delete error:", err.response);
       dispatch(
-        deleteSaleOrderFailed(
+        recoverSaleOrderFailure(
           err.message || "Error deleting data from the server."
         )
       );
@@ -72,7 +71,7 @@ const SaleOrderTable = ({ filters }) => {
   const fetchSaleOrders = async (page = 1 , search = filters.search) => {
     dispatch(fetchSaleOrderStart());
     try {
-      const response = await axios.get(`${BASE_URL}/sale-orders`, {
+      const response = await axios.get(`${BASE_URL}/sale-orders/trashed`, {
         params: {
           page,
           "filter[search]": search,
@@ -141,7 +140,7 @@ const SaleOrderTable = ({ filters }) => {
       <div className="overflow-x-auto lg:max-w-7xl  my-5">
         <Table striped>
           <Table.Head>
-            <Table.HeadCell>Details</Table.HeadCell>
+            {/* <Table.HeadCell>Details</Table.HeadCell> */}
             <Table.HeadCell>ID</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Customer Image
@@ -157,6 +156,9 @@ const SaleOrderTable = ({ filters }) => {
             </Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Payment Status
+            </Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Status
             </Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Order Date
@@ -201,7 +203,7 @@ const SaleOrderTable = ({ filters }) => {
               Tax (%)
             </Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Created At</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">Updated At</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">Deleted At</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Actions
             </Table.HeadCell>
@@ -213,7 +215,7 @@ const SaleOrderTable = ({ filters }) => {
                   key={saleOrder.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
-                  <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
+                  {/* <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
                     <Link to={`/sale-order/update/${saleOrder.id}`}>
                       <Badge>
                         <div className="flex justify-center items-center gap-1">
@@ -221,7 +223,7 @@ const SaleOrderTable = ({ filters }) => {
                         </div>
                       </Badge>
                     </Link>
-                  </Table.Cell>
+                  </Table.Cell> */}
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {saleOrder.id}
@@ -280,6 +282,11 @@ const SaleOrderTable = ({ filters }) => {
                           )}
                         </div>
                   </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <div className="flex flex-wrap gap-2">
+                        <Badge color="pink">DELETED</Badge>
+                    </div>
+                  </Table.Cell>
 
                   <Table.Cell className="whitespace-nowrap">
                     {new Date(saleOrder.order_date).toLocaleString("en-US", {
@@ -319,27 +326,27 @@ const SaleOrderTable = ({ filters }) => {
                     , {formatDistanceToNow(new Date(saleOrder.created_at))} ago
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap">
-                    {formatDistanceToNow(new Date(saleOrder.updated_at))} ago
+                    {formatDistanceToNow(new Date(saleOrder.deleted_at))} ago
                   </Table.Cell>
 
-                  <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <Link to={`/sale-order/update/${saleOrder.id}`}>
-                      <FiEdit />
-                    </Link>
-                    <MdDelete
-                      className="text-red-600 text-lg cursor-pointer"
-                      onClick={() => {
-                        setOpenModal(true);
-                        setSelectedId(saleOrder.id);
-                      }}
-                    />
+                  <Table.Cell className="flex justify-center items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <Tooltip content='Click to recover'>
+                        <TbRestore
+                          className="text-green-600 text-lg cursor-pointer"
+                          onClick={() => {
+                            setOpenModal(true);
+                            setSelectedId(saleOrder.id);
+                          }}
+                        />
+                    </Tooltip>
                   </Table.Cell>
+
                 </Table.Row>
               ))
             ) : (
               <Table.Row>
                 <Table.Cell colSpan="16" className="text-center py-4">
-                  No sale orders found.
+                  No deleted sale orders found.
                 </Table.Cell>
               </Table.Row>
             )}
@@ -358,35 +365,28 @@ const SaleOrderTable = ({ filters }) => {
       </div>
 
       <>
-        <Modal show={openModal} onClose={() => setOpenModal(false)}>
-          <Modal.Header>
-            <p className="text-center font-bold text-lg capitalize">
-              Are you sure want to delete ?
-            </p>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
-              <ImWarning className="text-lg text-red-500" />
-              <p className="text-red-500  uppercase text-sm font-semibold">
-                Item will be shown in recover list after deleted.
-              </p>
-            </div>
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button onClick={handleDelete} color="failure">
-              {status == "loading" ? <Spinner /> : "Delete"}
-            </Button>
-          </Modal.Footer>
-        </Modal>
+      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+        <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to recover this item ?</p></Modal.Header>
+        <Modal.Body>
+          <div className="flex items-center gap-3 p-4 border-l-4 border-green-600 bg-green-100">
+            <CiCircleCheck className="text-lg text-green-500" />
+            <p className="text-green-500 uppercase text-sm font-semibold">After successfully restored, Item will be shown in active list.</p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleRecover} color='success'>
+            {status == "loading" ? <Spinner /> : "Restore"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </>
       <SuccessToast
         open={successToastOpen}
         onClose={() => setSuccessToastOpen(false)}
-        message="Sale Order deleted successfully!"
+        message="Sale Order restored successfully!"
       />
     </div>
   );
 };
 
-export default SaleOrderTable;
+export default RecoverSaleOrderTable;

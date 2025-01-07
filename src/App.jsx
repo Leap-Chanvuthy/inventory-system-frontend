@@ -102,6 +102,7 @@ import UpdateCustomer from "./pages/sale/customer/Update";
 import SaleOrder from "./pages/sale/sale-order/SaleOrder";
 import CreateSaleOrder from './pages/sale/sale-order/Create';
 import UpdateSaleOrder from './pages/sale/sale-order/Update';
+import RecoverSaleOrder from "./pages/sale/sale-order/RecoverSaleOrder";
 import Setting from "./pages/inventory/setting/Setting";
 
 function App() {
@@ -126,6 +127,7 @@ function App() {
           <Route path="/sale-orders" element={<Layout><SaleOrder /></Layout>} />
           <Route path="/sale-orders/create" element={<Layout><CreateSaleOrder /></Layout>} />
           <Route path="/sale-order/update/:id" element={<Layout><UpdateSaleOrder /></Layout>} />
+          <Route path="/sale-orders/recover" element={<Layout><RecoverSaleOrder /></Layout>} />
 
         </Route>
 
