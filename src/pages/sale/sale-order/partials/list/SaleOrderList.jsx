@@ -12,6 +12,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { TbRestore } from "react-icons/tb";
 import SaleOrderTable from "./SaleOrderTable";
+import SaleOrderExport from "../export/SaleOrderExport";
 
 const SaleOrderList = () => {
   const [filters, setFilters] = useState({
@@ -172,6 +173,7 @@ const SaleOrderList = () => {
                 </div>
               </Dropdown>
             {/* export */}
+            <SaleOrderExport />
             <div className="flex gap-3 items-center">
               {/* Export here */}
               <div className="flex gap-3 items-center">
