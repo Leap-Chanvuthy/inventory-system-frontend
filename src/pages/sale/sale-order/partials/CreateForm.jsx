@@ -11,6 +11,7 @@ import {
   Badge,
   Table,
   Checkbox,
+  Tooltip,
 } from "flowbite-react";
 import { IoCartOutline } from "react-icons/io5";
 import { FaFileInvoiceDollar, FaUserTie } from "react-icons/fa6";
@@ -24,6 +25,7 @@ import {
 import { HiInformationCircle } from "react-icons/hi";
 import {
   resetMultipleSelectionState,
+  resetSingleSelectionState,
   toggleMultipleSelection,
   toggleSingleSelection,
 } from "../../../../redux/slices/selectionSlice";
@@ -63,6 +65,7 @@ const CreateForm = () => {
   const { customerOnCart } = useSelector((state) => state.customers);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
+  const [overQuantityError, setOverQuantityError] = useState(null);
 
   //initial values
   const [values, setValues] = useState({
@@ -123,26 +126,11 @@ const CreateForm = () => {
       console.log(response);
       dispatch(createSaleOrderSuccess(response.data));
       setSuccessToastOpen(true);
-      // setValues({
-      //   payment_method: "",
-      //   order_date: "",
-      //   order_status: "",
-      //   discount_percentage: 0,
-      //   tax_percentage: 0,
-      //   clearing_payable_percentage: 0,
-      //   customer_id,
-      //   products: [],
-      // });
-      // dispatch(resetMultipleSelectionState());
-      // dispatch(resetCartItems());
-      // dispatch(removeCustomerFromCart());
-      // dispatch(resetProducts());
-
       resetForm();
-
     } catch (err) {
       console.log(err);
       dispatch(createSaleOrderFailed(err?.response?.data?.errors));
+      setOverQuantityError(err?.response?.data?.error);
       setFailToastOpen(true);
     }
   };
@@ -159,10 +147,16 @@ const CreateForm = () => {
       products: [],
     });
     dispatch(resetMultipleSelectionState());
+    dispatch(resetSingleSelectionState());
     dispatch(resetCartItems());
     dispatch(removeCustomerFromCart());
     dispatch(resetProducts());
   };
+
+  // clear state when component is unmount
+  useEffect(() =>{
+    resetForm();
+  },[location.pathname , dispatch]);
 
   return (
     <div className="my-5">
@@ -363,7 +357,6 @@ const CreateForm = () => {
                 <div className="overflow-x-auto lg:max-w-7xl  my-5">
                   <Table striped>
                     <Table.Head>
-                      <Table.HeadCell>Select</Table.HeadCell>
                       <Table.HeadCell>Image</Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
                         Customer Name
@@ -385,18 +378,6 @@ const CreateForm = () => {
                             key={customerOnCart.id}
                             className="bg-white dark:border-gray-700 dark:bg-gray-800"
                           >
-                            <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
-                              <Checkbox
-                                checked={singleSelection === customerOnCart.id}
-                                onChange={() => {
-                                  handleCustomerSelection(
-                                    customerOnCart.id,
-                                    customerOnCart
-                                  );
-                                }}
-                              />
-                            </Table.Cell>
-
                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                               <Avatar
                                 img={
@@ -462,9 +443,25 @@ const CreateForm = () => {
                               {customerOnCart.shipping_address}
                             </Table.Cell>
 
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              <Button color="failure" onClick={handleCustomerSelection}>Remove</Button>
+                            <Table.Cell className="whitespace-nowrap font-medium text-blue-600 dark:text-white">
+                              <Tooltip content="Click to remove customer">
+                                <Checkbox
+                                  color="failure"
+                                  className="cursor-pointer text-lg w-5 h-5"
+                                  checked={singleSelection === customerOnCart.id}
+                                  onChange={() => {
+                                    handleCustomerSelection(
+                                      customerOnCart.id,
+                                      customerOnCart
+                                    );
+                                  }}
+                                />
+                              </Tooltip>
                             </Table.Cell>
+
+                            {/* <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              <Button color="failure" onClick={handleCustomerSelection}>Remove</Button>
+                            </Table.Cell> */}
                           </Table.Row>
                       ) : (
                         <Table.Row>
@@ -496,6 +493,15 @@ const CreateForm = () => {
                   <></>
                 )}
               </div>
+              <div className="my-5">
+                    {overQuantityError ? (
+                      <Alert color="failure" icon={HiInformationCircle}>
+                        <span className="font-medium">{overQuantityError}</span>
+                      </Alert>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
               <Timeline.Body>
                 <div className="my-5">
                   <ProductRelationship />
@@ -506,16 +512,22 @@ const CreateForm = () => {
                       <Table.Head>
                         <Table.HeadCell>Image</Table.HeadCell>
                         <Table.HeadCell className="whitespace-nowrap">
+                          Product ID
+                        </Table.HeadCell>
+                        <Table.HeadCell className="whitespace-nowrap">
+                          Product Code
+                        </Table.HeadCell>
+                        <Table.HeadCell className="whitespace-nowrap">
                           Product Name
+                        </Table.HeadCell>
+                        <Table.HeadCell className="whitespace-nowrap">
+                          Quantity In Stock
                         </Table.HeadCell>
                         <Table.HeadCell className="whitespace-nowrap">
                           Quantity
                         </Table.HeadCell>
                         <Table.HeadCell className="whitespace-nowrap">
                           Price (usd & riel)
-                        </Table.HeadCell>
-                        <Table.HeadCell className="whitespace-nowrap">
-                          Total
                         </Table.HeadCell>
                         <Table.HeadCell className="whitespace-nowrap">
                           Actions
@@ -543,7 +555,10 @@ const CreateForm = () => {
                                     ""
                                   )}
                                 </Table.Cell>
+                                <Table.Cell>{product.id}</Table.Cell>
+                                <Table.Cell>{product.product_code}</Table.Cell>
                                 <Table.Cell>{product.product_name}</Table.Cell>
+                                <Table.Cell>{product.remaining_quantity}</Table.Cell>
                                 <Table.Cell>
                                   <div className="flex items-center gap-2">
                                     {/* <Button color='failure'>-</Button> */}
@@ -564,24 +579,17 @@ const CreateForm = () => {
                                   </div>
                                 </Table.Cell>
                                 <Table.Cell>$ {product.unit_price_in_usd} / {product.unit_price_in_riel} ៛ </Table.Cell>
-                                <Table.Cell>$19990</Table.Cell>
-                                {/* <Table.Cell>
-                                  <Button
-                                    color="failure"
-                                    onClick={() => {
-                                      handleMultipleSelect(product.id, product);
-                                    }}
-                                  >
-                                    Remove
-                                  </Button>
-                                </Table.Cell> */}
                                 <Table.Cell>
-                                  <Checkbox
-                                      checked={multipleSelection?.includes(product.id)}
-                                      onChange={() =>
-                                        handleMultipleSelect(product.id, product)
-                                      }
-                                    />
+                                  <Tooltip content="Click to remove products">
+                                    <Checkbox
+                                        color="failure"
+                                        className="cursor-pointer text-lg w-5 h-5"
+                                        checked={multipleSelection?.includes(product.id)}
+                                        onChange={() =>
+                                          handleMultipleSelect(product.id, product)
+                                        }
+                                      />
+                                  </Tooltip>
                                   </Table.Cell>
                               </Table.Row>
                             );

@@ -22,7 +22,7 @@ import useDebounce from "../../../../../../hooks/useDebounce";
 import { IoEyeSharp } from "react-icons/io5";
 import { toggleSingleSelection } from "../../../../../../redux/slices/selectionSlice";
 
-const CustomerRelationshipTable = ({ filters }) => {
+const CustomerRelationshipTable = ({ filters , setOpenModal }) => {
   const { customers, error, status , customerOnCart } = useSelector((state) => state.customers);
   const {singleSelection} = useSelector((state) => state.selections);
   const dispatch = useDispatch();
@@ -82,6 +82,9 @@ const CustomerRelationshipTable = ({ filters }) => {
 
   const handleCustomerSelection = (customerId, customer) => {
     dispatch(toggleSingleSelection(customerId));
+    setTimeout(() => {
+      setOpenModal(false);
+    }, 300);
     if (singleSelection == customerId) {
       dispatch(removeCustomerFromCart());
     } else {

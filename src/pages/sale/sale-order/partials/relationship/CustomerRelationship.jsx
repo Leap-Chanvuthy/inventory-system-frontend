@@ -176,7 +176,7 @@ const CustomerRelationship = () => {
                 </div>
               </div>
             </div>
-            <CustomerRelationshipTable filters={filters} />
+            <CustomerRelationshipTable filters={filters} setOpenModal={setOpenModal} />
           </div>
         </Modal.Body>
       </Modal>
