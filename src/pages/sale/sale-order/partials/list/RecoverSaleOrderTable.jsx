@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Avatar, Badge, Spinner, Table, Tooltip } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   BASE_URL,
@@ -34,10 +34,11 @@ const RecoverSaleOrderTable = ({ filters }) => {
   // handle delete function
   const [openModal, setOpenModal] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const navigate = useNavigate();
   console.log(selectedId);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
 
-  const handleRecover = async () => {
+  const handleRecover = async (viewDetail = false) => {
     if (!selectedId) {
       console.log("No sale order selected for deletion");
       return;
@@ -53,6 +54,12 @@ const RecoverSaleOrderTable = ({ filters }) => {
         setOpenModal(false);
         setSuccessToastOpen(true);
       }
+      if (viewDetail) {
+        setTimeout(() => {
+          navigate(`/sale-order/update/${selectedId}`);
+        }, 2000);
+      }
+      
     } catch (err) {
       console.log("Delete error:", err.response);
       dispatch(
@@ -374,8 +381,11 @@ const RecoverSaleOrderTable = ({ filters }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleRecover} color='success'>
+          <Button onClick={() => {handleRecover(false)}} color='success'>
             {status == "loading" ? <Spinner /> : "Restore"}
+          </Button>
+          <Button onClick={()=>{handleRecover(true) }} color='success'>
+            {status == "loading" ? <Spinner /> : "Restore & View"}
           </Button>
         </Modal.Footer>
       </Modal>
