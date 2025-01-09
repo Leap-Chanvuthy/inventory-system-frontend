@@ -83,7 +83,7 @@ const Create = () => {
   useEffect(() => {
     dispatch(resetSingleSelectionState());
     dispatch(removeMaterialFromCart());
-  }, [location.pathname, dispatch]);
+  }, [location.pathname, dispatch , openModal]);
 
   // Sending post request
   const handleSubmit = async (e) => {
@@ -134,9 +134,9 @@ const Create = () => {
           </div>
         </Button>
       </Tooltip>
-      <Modal show={openModal} size="5xl" onClose={onCloseModal} popup>
+      <Modal show={openModal} size="6xl" onClose={onCloseModal} popup>
         <Modal.Header>
-          <h3 className="font-semibold p-4">Raw Material Scrap</h3>
+          <h3 className="font-semibold p-4">Create Raw Material Scrap</h3>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -173,6 +173,10 @@ const Create = () => {
                     <Table.HeadCell className="whitespace-nowrap">
                       Material Name
                     </Table.HeadCell>
+                    <Table.HeadCell>Quantity</Table.HeadCell>
+                    <Table.HeadCell className="whitespace-nowrap">
+                      Remaining Quantity
+                    </Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
                       Supplier Code
                     </Table.HeadCell>
@@ -181,10 +185,6 @@ const Create = () => {
                     </Table.HeadCell>
                     <Table.HeadCell>Status</Table.HeadCell>
                     <Table.HeadCell>Category</Table.HeadCell>
-                    <Table.HeadCell>Quantity</Table.HeadCell>
-                    <Table.HeadCell className="whitespace-nowrap">
-                      Remaining Quantity
-                    </Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
                       Unit Price in USD
                     </Table.HeadCell>
@@ -225,6 +225,12 @@ const Create = () => {
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           {materialOnCart.name}
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {materialOnCart.quantity}
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {materialOnCart.remaining_quantity}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           {materialOnCart.supplier ? (
@@ -278,12 +284,6 @@ const Create = () => {
                           </div>
                         </Table.Cell>
 
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.quantity}
-                        </Table.Cell>
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.remaining_quantity}
-                        </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           $ {materialOnCart.unit_price_in_usd}
                         </Table.Cell>
@@ -398,7 +398,7 @@ const Create = () => {
               <Button color="failure" onClick={resetForm} className="w-sm">
                 Cancel
               </Button>
-              <Button type="submit" className="w-full">
+              <Button type="submit" disabled={loading} className="w-full">
                 {loading ? (
                   <div>
                     <Spinner /> Saving

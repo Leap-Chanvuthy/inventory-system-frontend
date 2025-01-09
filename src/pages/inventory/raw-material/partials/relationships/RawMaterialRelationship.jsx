@@ -208,7 +208,7 @@ const RawMaterialRelationship = ({ createStatus }) => {
 
             <RawMaterialRelationshipTable
               filters={filters}
-              createStatus={createStatus}
+              setOpenModal={setOpenModal}
             />
           </div>
         </Modal.Body>

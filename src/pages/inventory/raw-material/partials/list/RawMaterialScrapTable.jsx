@@ -10,8 +10,9 @@ import { MdDelete } from "react-icons/md";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import { FiEdit } from "react-icons/fi";
-import Update from "../category/Update";
+
 import useDebounce from "../../../../../hooks/useDebounce";
+import Update from "../raw-material-scrap/Update";
 
 const RawMaterialScrapTable = ({ filters }) => {
   const [rawMaterials, setRawMaterials] = useState([]);
@@ -185,7 +186,7 @@ const RawMaterialScrapTable = ({ filters }) => {
                   </Table.Cell>
                   <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div onClick={() =>{setSelectedId(material.id)}}>
-                        <Update raw_material_category_id={selectedId || null} />
+                        <Update raw_material_scrap_id={selectedId} />
                     </div>
                     <MdDelete
                       className="text-red-600 text-lg cursor-pointer"

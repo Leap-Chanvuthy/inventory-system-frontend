@@ -7,6 +7,7 @@ import themeReducer from './slices/themeSlice';
 import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice';
 import rawMaterialReducer from './slices/rawMaterialSlice';
+import stockScrapReducer from './slices/stockScrapSlice';
 import productReducer from './slices/productSlice';
 import supplierReducer from './slices/supplierSlice';
 import customerReducer from './slices/customerSlice';
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
     auth : authReducer,
     users : userReducer,
     rawMaterials : rawMaterialReducer,
+    stockScraps : stockScrapReducer,
     products : productReducer,
     suppliers : supplierReducer,
     customers : customerReducer,

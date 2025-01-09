@@ -25,6 +25,7 @@ import {
   import { useDispatch, useSelector } from "react-redux";
   import {
     resetSingleSelectionState,
+    setSingleSelection,
     toggleSingleSelection,
   } from "../../../../../redux/slices/selectionSlice";
   import {
@@ -32,15 +33,18 @@ import {
     removeMaterialFromCart,
   } from "../../../../../redux/slices/rawMaterialSlice";
   import { HiInformationCircle } from "react-icons/hi";
+import { FiEdit } from "react-icons/fi";
+import { fetchStockScrapFailure, fetchStockScrapStart, fetchStockScrapSuccess, updateStockScrapFailure, updateStockScrapStart, updateStockScrapSuccess } from "../../../../../redux/slices/stockScrapSlice";
+import RawMaterialScrapTable from "../list/RawMaterialScrapTable";
   
-  const Update = () => {
-    const { materialOnCart } = useSelector((state) => state.rawMaterials);
+  const Update = ({raw_material_scrap_id}) => {
+    const { materialOnCart , error , status } = useSelector((state) => state.rawMaterials);
     const { singleSelection } = useSelector((state) => state.selections);
+    const { stockScraps } = useSelector((state) => state.stockScraps);
     const dispatch = useDispatch();
-    const [error, setError] = useState(null);
-    const [overQuantityError, setOverQuantityError] = useState(null);
-    const [loading, setLoading] = useState(false);
+
     const [openModal, setOpenModal] = useState(false);
+    const [overQuantityError, setOverQuantityError] = useState(null);
     const [successToastOpen, setSuccessToastOpen] = useState(false);
     const [failToastOpen, setFailToastOpen] = useState(false);
   
@@ -50,6 +54,37 @@ import {
       quantity: "",
       reason: "",
     });
+
+    // // fetch raw materila scrap by id
+    useEffect(() => {
+      const getRawMaterialScrapById = async () => {
+        dispatch(fetchStockScrapStart());
+        try {
+          const response = await axios.get(`${BASE_URL}/raw-material-scrap/${raw_material_scrap_id}`);
+          console.log(response);
+          dispatch(fetchStockScrapSuccess(response.data));
+        }catch(err){
+          console.log('Error :' , err.response);
+          dispatch(fetchStockScrapFailure(err?.response?.data?.error));
+        }
+      }
+        getRawMaterialScrapById();
+    },[raw_material_scrap_id]);
+
+
+    useEffect(() =>{
+      if (stockScraps){
+        setValues({
+          raw_material_id : stockScraps?.id,
+          quantity : stockScraps?.quantity,
+          reason : stockScraps?.reason
+        });
+      }
+      dispatch(setSingleSelection(stockScraps?.raw_material?.id));
+      dispatch(addMaterialToCart(stockScraps?.raw_material));
+
+    },[stockScraps]);
+
     
     // function to handle values changing
     const handleChange = (e) => {
@@ -80,42 +115,30 @@ import {
     useEffect(() => {
       dispatch(resetSingleSelectionState());
       dispatch(removeMaterialFromCart());
-    }, [location.pathname, dispatch]);
+    }, [location.pathname, dispatch , openModal]);
   
     // Sending post request
     const handleSubmit = async (e) => {
       e.preventDefault();
-      setLoading(true);
+      dispatch(updateStockScrapStart());
       try {
-        const response = await axios.post(
-          `${BASE_URL}/raw-material-scrap`,
+        const response = await axios.patch(
+          `${BASE_URL}/raw-material-scrap/${raw_material_scrap_id}`,
           values
         );
         console.log(response);
-        setLoading(false);
+        dispatch(updateStockScrapSuccess(response.data));
         setSuccessToastOpen(true);
-        setOpenModal(false);
-        resetForm();
+        const updateRawMaterialScrap = await axios.get(`${BASE_URL}/raw-material-scrap/${raw_material_scrap_id}`);
+        dispatch(fetchStockScrapSuccess(updateRawMaterialScrap.data));
       } catch (err) {
         console.log(err);
-        setError(err?.response?.data?.errors);
+        dispatch(updateStockScrapFailure(err?.response?.data?.errors));
         setOverQuantityError(err?.response?.data?.error);
         setFailToastOpen(true);
-        setLoading(false);
       }
     };
   
-    const resetForm = () => {
-      setValues({
-        raw_material_id: "",
-        quantity: "",
-        reason: "",
-      });
-      setError(null);
-      setOverQuantityError(null);
-      dispatch(removeMaterialFromCart());
-      dispatch(resetSingleSelectionState());
-    };
   
     function onCloseModal() {
       setOpenModal(false);
@@ -124,16 +147,14 @@ import {
     return (
       <>
         <Tooltip content="Click to create">
-          <Button onClick={() => setOpenModal(true)}>
+          <FiEdit onClick={() => setOpenModal(true)}>
             <div className="flex items-center gap-1">
-              {/* <FaPlus /> */}
-              Create
             </div>
-          </Button>
+          </FiEdit>
         </Tooltip>
         <Modal show={openModal} size="5xl" onClose={onCloseModal} popup>
           <Modal.Header>
-            <h3 className="font-semibold p-4">Raw Material Scrap</h3>
+            <h3 className="font-semibold p-4">Update Raw Material Scrap</h3>
           </Modal.Header>
           <Modal.Body>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -170,6 +191,10 @@ import {
                       <Table.HeadCell className="whitespace-nowrap">
                         Material Name
                       </Table.HeadCell>
+                      <Table.HeadCell>Quantity</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Remaining Quantity
+                      </Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
                         Supplier Code
                       </Table.HeadCell>
@@ -178,10 +203,6 @@ import {
                       </Table.HeadCell>
                       <Table.HeadCell>Status</Table.HeadCell>
                       <Table.HeadCell>Category</Table.HeadCell>
-                      <Table.HeadCell>Quantity</Table.HeadCell>
-                      <Table.HeadCell className="whitespace-nowrap">
-                        Remaining Quantity
-                      </Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
                         Unit Price in USD
                       </Table.HeadCell>
@@ -222,6 +243,12 @@ import {
                           </Table.Cell>
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             {materialOnCart.name}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {materialOnCart.quantity}
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {materialOnCart.remaining_quantity}
                           </Table.Cell>
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             {materialOnCart.supplier ? (
@@ -275,12 +302,6 @@ import {
                             </div>
                           </Table.Cell>
   
-                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                            {materialOnCart.quantity}
-                          </Table.Cell>
-                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                            {materialOnCart.remaining_quantity}
-                          </Table.Cell>
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             $ {materialOnCart.unit_price_in_usd}
                           </Table.Cell>
@@ -392,13 +413,10 @@ import {
                   <IoIosArrowBack className="mr-2" />
                   Back
                 </Button>
-                <Button color="failure" onClick={resetForm} className="w-sm">
-                  Cancel
-                </Button>
-                <Button type="submit" className="w-full">
-                  {loading ? (
+                <Button disabled={status == 'loading'} type="submit" className="w-full">
+                  {status == 'loading' ? (
                     <div>
-                      <Spinner /> Saving
+                      <Spinner />
                     </div>
                   ) : (
                     "Save"

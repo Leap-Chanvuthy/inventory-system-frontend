@@ -22,7 +22,7 @@ import {
 } from "../../../../../../redux/slices/selectionSlice";
 import useDebounce from "../../../../../../hooks/useDebounce";
 
-const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
+const RawMaterialRelationshipTable = ({ filters, setOpenModal  }) => {
   const dispatch = useDispatch();
   const { materialOnCart, rawMaterials, error, status } = useSelector(
     (state) => state.rawMaterials
@@ -58,6 +58,9 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
   // Function to hanlde selected id change of raw materials
   const handleSingleSelect = (id, material) => {
     dispatch(toggleSingleSelection(id));
+    setTimeout(() => {
+      setOpenModal(false);
+    }, 500);
     if (singleSelection == id) {
       dispatch(removeMaterialFromCart({ id }));
     } else {
@@ -76,7 +79,7 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
   // Fetch data when filters or page changes
   useEffect(() => {
     debouncedFetchRawMaterials(currentPage, filters.query);
-  }, [filters, currentPage, createStatus == "succeeded"]);
+  }, [filters, currentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
@@ -115,6 +118,10 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
             <Table.HeadCell className="whitespace-nowrap">
               Material Name
             </Table.HeadCell>
+            <Table.HeadCell>Quantity</Table.HeadCell>
+            <Table.HeadCell className="whitespace-nowrap">
+              Remaining Quantity
+            </Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Supplier Code
             </Table.HeadCell>
@@ -123,10 +130,6 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
             </Table.HeadCell>
             <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Category</Table.HeadCell>
-            <Table.HeadCell>Quantity</Table.HeadCell>
-            <Table.HeadCell className="whitespace-nowrap">
-              Remaining Quantity
-            </Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">
               Unit Price in USD
             </Table.HeadCell>
@@ -171,6 +174,12 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
                     {material.name}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.quantity}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    {material.remaining_quantity}
+                  </Table.Cell>
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.supplier ? (
                       material.supplier.supplier_code
                     ) : (
@@ -212,12 +221,6 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
                     </div>
                   </Table.Cell>
 
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.quantity}
-                  </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.remaining_quantity}
-                  </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     $ {material.unit_price_in_usd}
                   </Table.Cell>
