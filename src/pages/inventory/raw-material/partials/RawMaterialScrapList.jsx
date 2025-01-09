@@ -112,9 +112,12 @@ const RawMaterialScrapList = () => {
               <div className="p-5"></div>
             </Dropdown>
             {/* Refresh data */}
-            <Button color="success" onClick={resetFilters}>
-              Refresh
-            </Button>
+            <div className="flex gap-3 items-center">
+                <Tooltip content="Refresh">
+                  <Button color='success' onClick={resetFilters}>Refresh</Button>
+                </Tooltip>
+            </div>
+
           </form>
           <div className="flex gap-3 items-center">
             <Create />
