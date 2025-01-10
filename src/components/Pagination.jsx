@@ -2,9 +2,9 @@ import { Pagination } from "@mui/material";
 
 const GlobalPagination = ({ current_page, last_page, from, to, total, onPageChange }) => {
     return (
-        <div className="flex items-center flex-col lg:flex-row gap-3 justify-between dark:bg-gray-700 rounded-lg py-2 px-3">
+        <div className="flex items-center flex-col lg:flex-row gap-3 justify-between bg-gray-100 dark:bg-gray-700 rounded-lg py-2 px-3">
             <div>
-                <p className="text-sm hidden lg:flex">
+                <p className="text-sm hidden font-semibold lg:flex">
                     Showing {from} to {to} of {total} Entities
                 </p>
             </div>
