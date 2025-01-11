@@ -12,7 +12,6 @@ import {
   Tooltip,
 } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa6";
 import axios from "axios";
 import { BASE_URL } from "../../../../../components/const/constant";
 import {
@@ -21,20 +20,21 @@ import {
 } from "../../../../../components/ToastNotification";
 import { IoIosArrowBack } from "react-icons/io";
 import { IoCartOutline } from "react-icons/io5";
-import RawMaterialRelationship from "../relationships/RawMaterialRelationship";
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetSingleSelectionState,
   toggleSingleSelection,
 } from "../../../../../redux/slices/selectionSlice";
-import {
-  addMaterialToCart,
-  removeMaterialFromCart,
-} from "../../../../../redux/slices/rawMaterialSlice";
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { HiInformationCircle } from "react-icons/hi";
+import ProductRelationship from "../relationships/ProductRelationship";
+import {
+  addProductToCart,
+  removeProductFromCart,
+} from "../../../../../redux/slices/productSlice";
 
 const Create = () => {
-  const { materialOnCart } = useSelector((state) => state.rawMaterials);
+  const { productOnCart } = useSelector((state) => state.products);
   const { singleSelection } = useSelector((state) => state.selections);
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
@@ -47,7 +47,7 @@ const Create = () => {
   // initial values
 
   const [values, setValues] = useState({
-    raw_material_id: "",
+    product_id: "",
     quantity: "",
     reason: "",
   });
@@ -65,7 +65,7 @@ const Create = () => {
   useEffect(() => {
     setValues((prevValues) => ({
       ...prevValues,
-      raw_material_id: singleSelection,
+      product_id: singleSelection,
     }));
   }, [singleSelection]);
 
@@ -73,27 +73,24 @@ const Create = () => {
   const handleSingleSelect = (id, material) => {
     dispatch(toggleSingleSelection(id));
     if (singleSelection == id) {
-      dispatch(removeMaterialFromCart({ id }));
+      dispatch(removeProductFromCart({ id }));
     } else {
-      dispatch(addMaterialToCart(material));
+      dispatch(addProductToCart(material));
     }
   };
 
   // clear single selection state when component is unmounted
   useEffect(() => {
     dispatch(resetSingleSelectionState());
-    dispatch(removeMaterialFromCart());
-  }, [location.pathname, dispatch , openModal]);
+    dispatch(removeProductFromCart());
+  }, [location.pathname, dispatch, openModal]);
 
   // Sending post request
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${BASE_URL}/raw-material-scrap`,
-        values
-      );
+      const response = await axios.post(`${BASE_URL}/product-scrap`, values);
       console.log(response);
       setLoading(false);
       setSuccessToastOpen(true);
@@ -110,13 +107,13 @@ const Create = () => {
 
   const resetForm = () => {
     setValues({
-      raw_material_id: "",
+      product_id: "",
       quantity: "",
       reason: "",
     });
     setError(null);
     setOverQuantityError(null);
-    dispatch(removeMaterialFromCart());
+    dispatch(removeProductFromCart());
     dispatch(resetSingleSelectionState());
   };
 
@@ -128,37 +125,32 @@ const Create = () => {
     <>
       <Tooltip content="Click to create">
         <Button onClick={() => setOpenModal(true)}>
-          <div className="flex items-center gap-1">
-            {/* <FaPlus /> */}
-            Create New
-          </div>
+          <div className="flex items-center gap-1">Create New</div>
         </Button>
       </Tooltip>
       <Modal show={openModal} size="6xl" onClose={onCloseModal} popup>
         <Modal.Header>
-          <h3 className="font-semibold p-4">Create Raw Material Scrap</h3>
+          <h3 className="font-semibold p-4">Create Product Scrap</h3>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-6">
               <div className="flex justify-between items-center gap-3">
                 <Alert color="warning" className="w-full" icon={IoCartOutline}>
-                  <span className="font-bold">
-                    Select Raw Material Scrapping
-                  </span>
+                  <span className="font-bold">Select Product Scrapping</span>
                 </Alert>
-                <RawMaterialRelationship />
+                <ProductRelationship />
               </div>
 
               {/* Table */}
               <div className="overflow-x-auto lg:max-w-6xl  my-5">
-              <div className="my-5">
-                  {error?.raw_material_id ? (
+                <div className="my-5">
+                  {error?.product_id ? (
                     <Alert color="failure" icon={HiInformationCircle}>
                       <span className="font-medium">
-                        Raw material cannot be empty !
+                        Product cannot be empty !
                       </span>{" "}
-                      Please select raw material to create.
+                      Please select product to create.
                     </Alert>
                   ) : (
                     <></>
@@ -168,28 +160,29 @@ const Create = () => {
                   <Table.Head>
                     <Table.HeadCell>Select</Table.HeadCell>
                     <Table.HeadCell>ID</Table.HeadCell>
-                    {/* <Table.HeadCell>Image</Table.HeadCell> */}
-                    <Table.HeadCell>Code</Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
-                      Material Name
+                      Product Code
                     </Table.HeadCell>
+                    <Table.HeadCell className="whitespace-nowrap">
+                      Product Name
+                    </Table.HeadCell>
+                    <Table.HeadCell>Status</Table.HeadCell>
+                    <Table.HeadCell>Category</Table.HeadCell>
                     <Table.HeadCell>Quantity</Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
                       Remaining Quantity
                     </Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
-                      Supplier Code
+                      Warehouse location
                     </Table.HeadCell>
-                    <Table.HeadCell className="whitespace-nowrap">
-                      Supplier Name
-                    </Table.HeadCell>
-                    <Table.HeadCell>Status</Table.HeadCell>
-                    <Table.HeadCell>Category</Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
                       Unit Price in USD
                     </Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
                       Total Value in USD
+                    </Table.HeadCell>
+                    <Table.HeadCell className="whitespace-nowrap">
+                      Exchange Rate USD to Riel
                     </Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
                       Unit Price in Riel
@@ -198,73 +191,57 @@ const Create = () => {
                       Total Value in Riel
                     </Table.HeadCell>
                     <Table.HeadCell className="whitespace-nowrap">
+                      Exchange Rate Riel to USD
+                    </Table.HeadCell>
+                    <Table.HeadCell className="whitespace-nowrap">
                       Minimum Stock
                     </Table.HeadCell>
-                    <Table.HeadCell>location</Table.HeadCell>
+                    <Table.HeadCell className="whitespace-nowrap">
+                      Created
+                    </Table.HeadCell>
+                    <Table.HeadCell className="whitespace-nowrap">
+                      Updated
+                    </Table.HeadCell>
                   </Table.Head>
                   <Table.Body className="divide-y">
-                    {materialOnCart ? (
-                      <Table.Row
-                        key={materialOnCart.id}
-                        className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                      >
+                    {productOnCart ? (
+                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                         <Table.Cell>
                           <Checkbox
-                            checked={singleSelection == materialOnCart.id}
+                            checked={singleSelection == productOnCart.id}
                             onChange={() =>
                               handleSingleSelect(
-                                materialOnCart.id,
-                                materialOnCart
+                                productOnCart.id,
+                                productOnCart
                               )
                             }
                           />
                         </Table.Cell>
-                        <Table.Cell>{materialOnCart.id}</Table.Cell>
+
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.material_code}
+                          {productOnCart.id}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.name}
+                          {productOnCart.product_code}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.quantity}
-                        </Table.Cell>
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.remaining_quantity}
-                        </Table.Cell>
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.supplier ? (
-                            materialOnCart.supplier.supplier_code
-                          ) : (
-                            <div className="flex flex-wrap gap-2">
-                              <Badge color="failure">N/A</Badge>
-                            </div>
-                          )}
-                        </Table.Cell>
-                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.supplier ? (
-                            materialOnCart.supplier.name
-                          ) : (
-                            <div className="flex flex-wrap gap-2">
-                              <Badge color="failure">N/A</Badge>
-                            </div>
-                          )}
+                          {productOnCart.product_name}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           <div className="flex flex-wrap gap-2">
-                            {materialOnCart.status === "IN_STOCK" && (
+                            {productOnCart.status === "IN_STOCK" && (
                               <Badge color="success">
-                                {materialOnCart.status}
+                                {productOnCart.status}
                               </Badge>
                             )}
-                            {materialOnCart.status === "LOW_STOCK" && (
+                            {productOnCart.status === "LOW_STOCK" && (
                               <Badge color="warning">
-                                {materialOnCart.status}
+                                {productOnCart.status}
                               </Badge>
                             )}
-                            {materialOnCart.status === "OUT_OF_STOCK" && (
+                            {productOnCart.status === "OUT_OF_STOCK" && (
                               <Badge color="failure">
-                                {materialOnCart.status}
+                                {productOnCart.status}
                               </Badge>
                             )}
                           </div>
@@ -274,39 +251,75 @@ const Create = () => {
                           <div className="flex flex-wrap gap-2">
                             <Badge
                               color={
-                                materialOnCart.category ? "warning" : "failure"
+                                productOnCart.category ? "warning" : "failure"
                               }
                             >
-                              {materialOnCart.category
-                                ? materialOnCart.category.category_name
+                              {productOnCart.category
+                                ? productOnCart.category.category_name
                                 : "NULL"}
                             </Badge>
                           </div>
                         </Table.Cell>
-
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          $ {materialOnCart.unit_price_in_usd}
+                          {productOnCart.quantity}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          $ {materialOnCart.total_value_in_usd}
+                          {productOnCart.remaining_quantity}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.unit_price_in_riel} ​៛
+                          {productOnCart.warehouse_location}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.total_value_in_riel} ​៛
+                          $ {productOnCart.unit_price_in_usd}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.minimum_stock_level}
+                          $ {productOnCart.total_value_in_usd}
                         </Table.Cell>
                         <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {materialOnCart.location}
+                          ៛ {productOnCart.exchange_rate_from_usd_to_riel} / 1$
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {productOnCart.unit_price_in_riel} ​៛
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {productOnCart.total_value_in_riel} ​៛
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          $ {productOnCart.exchange_rate_from_riel_to_usd} /
+                          100៛
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {productOnCart.minimum_stock_level}
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap">
+                          {new Date(productOnCart.created_at).toLocaleString(
+                            "en-US",
+                            {
+                              weekday: "short",
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                          ,{" "}
+                          {formatDistanceToNow(
+                            new Date(productOnCart.created_at)
+                          )}{" "}
+                          ago
+                        </Table.Cell>
+                        <Table.Cell className="whitespace-nowrap">
+                          {formatDistanceToNow(
+                            new Date(productOnCart.updated_at)
+                          )}{" "}
+                          ago
                         </Table.Cell>
                       </Table.Row>
                     ) : (
                       <Table.Row>
                         <Table.Cell colSpan="8" className="text-center py-4">
-                          No raw materials selected.
+                          No products selected.
                         </Table.Cell>
                       </Table.Row>
                     )}
@@ -317,15 +330,15 @@ const Create = () => {
               {/* Table */}
 
               <div className="w-md">
-              <div className="my-5">
-                    {overQuantityError ? (
-                      <Alert color="failure" icon={HiInformationCircle}>
-                        <span className="font-medium">{overQuantityError}</span>
-                      </Alert>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
+                <div className="my-5">
+                  {overQuantityError ? (
+                    <Alert color="failure" icon={HiInformationCircle}>
+                      <span className="font-medium">{overQuantityError}</span>
+                    </Alert>
+                  ) : (
+                    <></>
+                  )}
+                </div>
                 <div className="mb-2 block">
                   <Label
                     htmlFor="quantity"
@@ -401,7 +414,7 @@ const Create = () => {
               <Button type="submit" disabled={loading} className="w-full">
                 {loading ? (
                   <div>
-                    <Spinner /> Saving
+                    <Spinner />
                   </div>
                 ) : (
                   "Save"
@@ -415,7 +428,7 @@ const Create = () => {
       <SuccessToast
         open={successToastOpen}
         onClose={() => setSuccessToastOpen(false)}
-        message={"Raw Material Scrap Created Successfully"}
+        message={"Product Scrap Created Successfully"}
       />
 
       <DangerToast

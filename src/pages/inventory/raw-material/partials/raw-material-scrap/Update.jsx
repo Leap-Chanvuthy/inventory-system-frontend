@@ -38,9 +38,9 @@ import { fetchStockScrapFailure, fetchStockScrapStart, fetchStockScrapSuccess, u
 import RawMaterialScrapTable from "../list/RawMaterialScrapTable";
   
   const Update = ({raw_material_scrap_id}) => {
-    const { materialOnCart , error , status } = useSelector((state) => state.rawMaterials);
+    const { materialOnCart } = useSelector((state) => state.rawMaterials);
     const { singleSelection } = useSelector((state) => state.selections);
-    const { stockScraps } = useSelector((state) => state.stockScraps);
+    const { stockScraps , error , status } = useSelector((state) => state.stockScraps);
     const dispatch = useDispatch();
 
     const [openModal, setOpenModal] = useState(false);

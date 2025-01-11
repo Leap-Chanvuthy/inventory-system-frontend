@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    products: [], 
+    products: [],
+    productOnCart : null,
     status: 'idle',  
     error: null,    
     loading: false, 
@@ -96,7 +97,16 @@ const productSlice = createSlice({
             state.error = action.payload;
             state.status = 'failed';
             state.loading = false;
-        }
+        },
+        setProductToCart: (state, action) => {
+            state.productOnCart = action.payload;
+          },
+          addProductToCart: (state, action) => {
+            state.productOnCart = action.payload;
+          },
+          removeProductFromCart: (state) => {
+            state.productOnCart = null;
+          },
     },
 });
 
@@ -115,7 +125,10 @@ export const {
     deleteProductFailure,
     recoverProductStart,
     recoverProductSuccess,
-    recoverProductFailure
+    recoverProductFailure,
+    setProductToCart,
+    addProductToCart,
+    removeProductFromCart,
 } = productSlice.actions;
 
 export default productSlice.reducer;
