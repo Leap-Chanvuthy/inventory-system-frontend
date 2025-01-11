@@ -34,25 +34,6 @@ const SaleOrderExport = () => {
     setValues({ ...values, [key]: value });
   };
 
-  // get raw material category
-  //   const [categories, setCategories] = useState([]);
-  //   console.log(categories);
-
-  //   useEffect(() => {
-  //     const getCategory = async (e) => {
-  //       try {
-  //         const response = await axios.get(
-  //           `${BASE_URL}/product-categories/all`
-  //         );
-  //         console.log(response.data);
-  //         setCategories(response.data);
-  //       } catch (err) {
-  //         console.log(err);
-  //       }
-  //     };
-  //     getCategory();
-  //   }, []);
-
   // get export file
   const exportSaleOrders = async (e) => {
     e.preventDefault();
@@ -246,7 +227,7 @@ const SaleOrderExport = () => {
       <SuccessToast
         open={successToastOpen}
         onClose={() => setSuccessToastOpen(false)}
-        message="Product exported successfully !"
+        message="Sale orders exported successfully !"
       />
 
       <DangerToast

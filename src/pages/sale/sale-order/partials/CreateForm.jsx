@@ -41,6 +41,7 @@ import { addToCart, decreaseQuantity, increaseQuantity, removeFromCart, resetCar
 import { resetProducts, toggleProduct, updateQuantity } from "../../../../redux/slices/productSelectionSlice";
 import CustomerRelationship from "./relationship/CustomerRelationship";
 import { addCustomerToCart, removeCustomerFromCart } from "../../../../redux/slices/customerSlice";
+import useToken from "../../../../hooks/useToken";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -58,6 +59,7 @@ const order_status = [
 
 const CreateForm = () => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { error, status } = useSelector((state) => state.saleOrders);
   const { selectedProducts } = useSelector((state) => state.productSelections);
   const { singleSelection ,  multipleSelection } = useSelector((state) => state.selections);
@@ -124,7 +126,11 @@ const CreateForm = () => {
     e.preventDefault();
     dispatch(createSaleOrderStart());
     try {
-      const response = await axios.post(`${BASE_URL}/sale-order`, values);
+      const response = await axios.post(`${BASE_URL}/sale-order`, values , {
+        headers :{
+          Authorization : `Bearer ${token}`
+        }
+      });
       console.log(response);
       dispatch(createSaleOrderSuccess(response.data));
       setSuccessToastOpen(true);

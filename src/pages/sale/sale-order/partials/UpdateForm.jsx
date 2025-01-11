@@ -315,33 +315,6 @@ const UpdateForm = () => {
                     </Select>
                   </div>
 
-                  {/* <div>
-                    <div className="mb-2 block">
-                      <Label className="font-bold" value="Order Status" />
-                    </div>
-                    <Select
-                      id="order_status"
-                      onChange={handleChange}
-                      value={values.order_status}
-                      helperText={
-                        error?.order_status && (
-                          <>
-                            <span className="font-medium text-red-400">
-                              {error.order_status}
-                            </span>
-                          </>
-                        )
-                      }
-                    >
-                      <option value="">Select an option</option>
-                      {order_status.map((status) => (
-                        <option key={status.id} value={status.status}>
-                          {status.status}
-                        </option>
-                      ))}
-                    </Select>
-                  </div> */}
-
                   <div>
                     <div className="mb-5 block">
                       <Label className="font-bold" value="Order Status" />
@@ -511,30 +484,6 @@ const UpdateForm = () => {
                       }
                     />
                   </div>
-
-                  {/* <div>
-                    <div className="mb-5 block">
-                      <Label className="font-bold" value="Order Status" />
-                    </div>
-                    <div className="flex flex-col lg:md:flex-row gap-5">
-                      {order_status.map((status) => (
-                        <div key={status.id} className="flex items-center mb-2">
-                          <Radio
-                            id={`order_status_${status.id}`}
-                            name="order_status"
-                            value={status.status}
-                            checked={values.order_status === status.status}
-                            onChange={handleRadioChange}
-                            className="mr-2"
-                          />
-                          <Label
-                            htmlFor={`order_status_${status.id}`}
-                            value={status.status}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div> */}
 
                 </div>
               </Timeline.Body>
@@ -728,6 +677,92 @@ const UpdateForm = () => {
               </Timeline.Body>
             </Timeline.Content>
           </Timeline.Item>
+
+          <Timeline.Item>
+            <Timeline.Point icon={FaUserTie} />
+            <Timeline.Content>
+              <Timeline.Title>Vendor</Timeline.Title>
+              <Timeline.Body>
+                <div className="my-5">
+                  {error?.vender_id ? (
+                    <Alert color="failure" icon={HiInformationCircle}>
+                      <span className="font-medium">
+                        Customer field is required !
+                      </span>{" "}
+                      Please login to create sale order.
+                    </Alert>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+                <div className="overflow-x-auto lg:max-w-7xl  my-5">
+                  <Table striped>
+                    <Table.Head>
+                      <Table.HeadCell>Image</Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Vender Name
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Phone
+                      </Table.HeadCell>
+                      <Table.HeadCell className="whitespace-nowrap">
+                        Email
+                      </Table.HeadCell>
+
+                    </Table.Head>
+                    <Table.Body className="divide-y">
+                      {saleOrders ? (
+                        <Table.Row
+                          className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                        >
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            <Avatar
+                              img={
+                                saleOrders?.vender?.profile_picture
+                                  ? `${BASE_IMAGE_URL}/${saleOrders?.vender?.profile_picture}`
+                                  : ""
+                              }
+                            />
+                          </Table.Cell>
+
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {saleOrders?.vender?.name}
+                          </Table.Cell>
+
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            <div className="flex flex-wrap gap-2">
+                              <Badge
+                                color={
+                                  saleOrders?.vender
+                                    ? "warning"
+                                    : "failure"
+                                }
+                              >
+                                {saleOrders?.vender?.phone_number
+                                  ? saleOrders?.vender?.phone_number
+                                  : "N/A"}
+                              </Badge>
+                            </div>
+                          </Table.Cell>
+
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {saleOrders?.vender?.email}
+                          </Table.Cell>
+                        </Table.Row>
+                      ) : (
+                        <Table.Row>
+                          <Table.Cell colSpan="16" className="text-center py-4">
+                            No user selected for sale order.
+                          </Table.Cell>
+                        </Table.Row>
+                      )}
+                    </Table.Body>
+                  </Table>
+                </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
 
           <Timeline.Item>
             <Timeline.Point icon={FaUserTie} />
