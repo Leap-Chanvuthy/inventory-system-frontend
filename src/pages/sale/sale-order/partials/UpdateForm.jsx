@@ -68,6 +68,7 @@ import {
   addCustomerToCart,
   removeCustomerFromCart,
 } from "../../../../redux/slices/customerSlice";
+import useToken from "../../../../hooks/useToken";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -85,24 +86,20 @@ const order_status = [
 
 const UpdateForm = () => {
   const { id } = useParams();
-  console.log("Id param :", id);
   const dispatch = useDispatch();
-  const { saleOrders, error, status } = useSelector(
-    (state) => state.saleOrders
-  );
+  const token = useToken();
+  const { saleOrders, error, status } = useSelector((state) => state.saleOrders);
   const { selectedProducts } = useSelector((state) => state.productSelections);
-  const { singleSelection, multipleSelection } = useSelector(
-    (state) => state.selections
-  );
+  const { singleSelection, multipleSelection } = useSelector((state) => state.selections);
   const { cartItems } = useSelector((state) => state.carts);
   const { customerOnCart } = useSelector((state) => state.customers);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
   const [overQuantityError, setOverQuantityError] = useState(null);
 
-  console.log("Multiple selections :", multipleSelection);
-  console.log("Cart items :", cartItems);
-  console.log("Product selection :", selectedProducts);
+  // console.log("Multiple selections :", multipleSelection);
+  // console.log("Cart items :", cartItems);
+  // console.log("Product selection :", selectedProducts);
 
   // Fetch specific sale order
   useEffect(() => {
@@ -247,9 +244,13 @@ const UpdateForm = () => {
     e.preventDefault();
     dispatch(updateSaleOrderStart());
     try {
-      const response = await axios.patch(
-        `${BASE_URL}/sale-order/${id}`,
-        values
+      const response = await axios.patch(`${BASE_URL}/sale-order/${id}`, values,
+        {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
+    
       );
       console.log(response);
       dispatch(updateSaleOrderSuccess(response.data));
