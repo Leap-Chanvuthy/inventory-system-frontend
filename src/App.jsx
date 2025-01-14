@@ -105,8 +105,12 @@ import UpdateSaleOrder from './pages/sale/sale-order/Update';
 import RecoverSaleOrder from "./pages/sale/sale-order/RecoverSaleOrder";
 import Setting from "./pages/inventory/setting/Setting";
 import SaleInvoice from "./pages/sale/sale-invoice/SaleInvoice";
+import useToken from "./hooks/useToken";
 
 function App() {
+
+  const token = useToken();
+  console.log(token);
 
   return (
     <BrowserRouter>
