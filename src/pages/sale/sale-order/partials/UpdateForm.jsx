@@ -106,7 +106,11 @@ const UpdateForm = () => {
     const getSaleOrderById = async () => {
       dispatch(fetchSaleOrderStart());
       try {
-        const response = await axios.get(`${BASE_URL}/sale-order/${id}`);
+        const response = await axios.get(`${BASE_URL}/sale-order/${id}` , {
+          headers :{
+            Authorization : `Bearer ${token}`
+          }
+        });
         console.log(response);
         dispatch(fetchSaleOrderSuccess(response.data));
       } catch (err) {
@@ -682,7 +686,7 @@ const UpdateForm = () => {
           <Timeline.Item>
             <Timeline.Point icon={FaUserTie} />
             <Timeline.Content>
-              <Timeline.Title>Vendor</Timeline.Title>
+              <Timeline.Title>Sale Person Info</Timeline.Title>
               <Timeline.Body>
                 <div className="my-5">
                   {error?.vender_id ? (
@@ -701,7 +705,7 @@ const UpdateForm = () => {
                     <Table.Head>
                       <Table.HeadCell>Image</Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
-                        Vender Name
+                        Sale Person
                       </Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">
                         Phone
