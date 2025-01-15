@@ -14,8 +14,10 @@ import { SuccessToast } from "../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import Update from "../category/Update";
 import useDebounce from "../../../../../hooks/useDebounce";
+import useToken from "../../../../../hooks/useToken";
 
 const CategoryTable = ({ filters }) => {
+  const token = useToken();
   const [rawMaterials, setRawMaterials] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -30,6 +32,9 @@ const CategoryTable = ({ filters }) => {
     setStatus("loading");
     try {
       const response = await axios.get(`${BASE_URL}/product-categories`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": query,
@@ -71,9 +76,11 @@ const CategoryTable = ({ filters }) => {
 
     setStatus("loading");
     try {
-      const response = await axios.delete(
-        `${BASE_URL}/product-category/delete/${selectedId}`
-      );
+      const response = await axios.delete(`${BASE_URL}/product-category/delete/${selectedId}`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
+      });
       if (response.status === 200) {
         setRawMaterials(
           rawMaterials.filter((material) => material.id !== selectedId)

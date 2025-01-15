@@ -14,10 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { CiCircleCheck } from "react-icons/ci";
 import { fetchProductsFailure, fetchProductsStart, fetchProductsSuccess, recoverProductFailure, recoverProductStart, recoverProductSuccess } from "../../../../../redux/slices/productSlice";
-
+import useToken from "../../../../../hooks/useToken";
 
 const RecoverProductTable = ({ filters }) => {
   const dispatch = useDispatch();
+  const token = useToken();
   const {products , error , status} =  useSelector((state) => state.products);
   const [selectedId, setSelectedId] = useState(null);
   const [successToastOpen , setSuccessToastOpen] = useState(false);
@@ -30,6 +31,9 @@ const RecoverProductTable = ({ filters }) => {
     dispatch(fetchProductsStart());
     try {
       const response = await axios.get(`${BASE_URL}/products/trashed`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": filters.query,
@@ -66,7 +70,11 @@ const RecoverProductTable = ({ filters }) => {
     }
     dispatch(recoverProductStart());
     try {
-      const response = await axios.patch(`${BASE_URL}/product/recover/${selectedId}`);
+      const response = await axios.patch(`${BASE_URL}/product/recover/${selectedId}`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
+      });
       console.log(response);
       if (response.status === 200) {
         dispatch(recoverProductSuccess(selectedId));

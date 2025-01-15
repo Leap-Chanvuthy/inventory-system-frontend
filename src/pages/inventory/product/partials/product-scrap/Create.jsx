@@ -32,11 +32,13 @@ import {
   addProductToCart,
   removeProductFromCart,
 } from "../../../../../redux/slices/productSlice";
+import useToken from "../../../../../hooks/useToken";
 
 const Create = () => {
   const { productOnCart } = useSelector((state) => state.products);
   const { singleSelection } = useSelector((state) => state.selections);
   const dispatch = useDispatch();
+  const token = useToken();
   const [error, setError] = useState(null);
   const [overQuantityError, setOverQuantityError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -90,7 +92,11 @@ const Create = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${BASE_URL}/product-scrap`, values);
+      const response = await axios.post(`${BASE_URL}/product-scrap`, values ,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
+      });
       console.log(response);
       setLoading(false);
       setSuccessToastOpen(true);

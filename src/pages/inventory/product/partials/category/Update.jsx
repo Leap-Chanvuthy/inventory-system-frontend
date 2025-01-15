@@ -5,9 +5,11 @@ import { BASE_URL } from "../../../../../components/const/constant";
 import { DangerToast, SuccessToast } from "../../../../../components/ToastNotification";
 import { FiEdit } from "react-icons/fi";
 import { IoIosArrowBack } from "react-icons/io";
+import useToken from "../../../../../hooks/useToken";
 
 
 const Update = ({product_category_id}) => {
+  const token = useToken();
   const [categories , setCategories] = useState([]);
   const [error , setError] = useState(null);
   const [loading , setLoading] = useState(false);
@@ -25,7 +27,11 @@ const Update = ({product_category_id}) => {
   useEffect(() =>{
     const getCategory = async () =>{
         try {
-            const response = await axios.get(`${BASE_URL}/product-category/${product_category_id}`);
+            const response = await axios.get(`${BASE_URL}/product-category/${product_category_id}`, {
+              headers : {
+                Authorization : `Bearer ${token}`
+              },
+            });
             //console.log(response);
             setCategories(response.data)
         }catch (err){
@@ -56,7 +62,11 @@ const Update = ({product_category_id}) => {
     e.preventDefault();
     setLoading(true);
     try {
-        const response = await axios.patch(`${BASE_URL}/product-category/update/${product_category_id}` , values);
+        const response = await axios.patch(`${BASE_URL}/product-category/update/${product_category_id}` , values , {
+          headers : {
+            Authorization : `Bearer ${token}`
+          },
+        });
         console.log(response);
         setLoading(false);
         setSuccessToastOpen(true)

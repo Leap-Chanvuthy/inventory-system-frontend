@@ -59,9 +59,11 @@ import {
 } from "../../../../redux/slices/materialStagingSlice";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import useToken from "../../../../hooks/useToken";
 
 const UpdateForm = () => {
   const { id } = useParams();
+  const token = useToken();
   const { products, status, error } = useSelector((state) => state.products);
   const { multipleSelection } = useSelector((state) => state.selections);
   const { cartItems } = useSelector((state) => state.carts);
@@ -81,7 +83,11 @@ const UpdateForm = () => {
     const getProductById = async () => {
       dispatch(fetchProductsStart());
       try {
-        const response = await axios.get(`${BASE_URL}/product/${id}`);
+        const response = await axios.get(`${BASE_URL}/product/${id}`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          },
+        });
         console.log(response);
         dispatch(fetchProductsSuccess(response.data));
       } catch (err) {
@@ -246,7 +252,11 @@ const UpdateForm = () => {
   useEffect(() => {
     const getCategory = async (e) => {
       try {
-        const response = await axios.get(`${BASE_URL}/product-categories/all`);
+        const response = await axios.get(`${BASE_URL}/product-categories/all`, {
+          headers : {
+            Authorization : `Bearer ${token}`
+          },
+        });
         console.log(response.data);
         setCategories(response.data);
       } catch (err) {
@@ -267,7 +277,10 @@ const UpdateForm = () => {
         params: {
           _method: "PATCH",
         },
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          Authorization : `Bearer ${token}`,
+         },
       });
       dispatch(updateProductSuccess(response.data));
       const updatedProduct = await axios.get(`${BASE_URL}/product/${id}`);

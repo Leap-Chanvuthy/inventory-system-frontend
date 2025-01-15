@@ -20,7 +20,6 @@ import {
   } from "../../../../../components/ToastNotification";
   import { IoIosArrowBack } from "react-icons/io";
   import { IoCartOutline } from "react-icons/io5";
-  import RawMaterialRelationship from "../relationships/RawMaterialRelationship";
   import { useDispatch, useSelector } from "react-redux";
   import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
   import {
@@ -33,12 +32,14 @@ import { FiEdit } from "react-icons/fi";
 import { fetchStockScrapFailure, fetchStockScrapStart, fetchStockScrapSuccess, updateStockScrapFailure, updateStockScrapStart, updateStockScrapSuccess } from "../../../../../redux/slices/stockScrapSlice";
 import { addProductToCart, removeProductFromCart } from "../../../../../redux/slices/productSlice";
 import ProductRelationship from "../relationships/ProductRelationship";
+import useToken from "../../../../../hooks/useToken";
   
   const Update = ({product_scrap_id}) => {
+    const dispatch = useDispatch();
+    const token = useToken();
     const { productOnCart } = useSelector((state) => state.products);
     const {stockScraps , error ,status } = useSelector((state) => state.stockScraps);
     const { singleSelection } = useSelector((state) => state.selections);
-    const dispatch = useDispatch();
 
     const [openModal, setOpenModal] = useState(false);
     const [overQuantityError, setOverQuantityError] = useState(null);
@@ -57,7 +58,11 @@ import ProductRelationship from "../relationships/ProductRelationship";
       const getProductScrapById = async () => {
         dispatch(fetchStockScrapStart());
         try {
-          const response = await axios.get(`${BASE_URL}/product-scrap/${product_scrap_id}`);
+          const response = await axios.get(`${BASE_URL}/product-scrap/${product_scrap_id}` , {
+            headers : {
+              Authorization : `Bearer ${token}`
+            },
+          });
           console.log(response);
           dispatch(fetchStockScrapSuccess(response.data));
         }catch(err){
@@ -114,19 +119,25 @@ import ProductRelationship from "../relationships/ProductRelationship";
       dispatch(removeProductFromCart());
     }, [location.pathname, dispatch , openModal]);
   
-    // Sending post request
+    // Sending patch request
     const handleSubmit = async (e) => {
       e.preventDefault();
       dispatch(updateStockScrapStart());
       try {
         const response = await axios.patch(
-          `${BASE_URL}/product-scrap/${product_scrap_id}`,
-          values
-        );
+          `${BASE_URL}/product-scrap/${product_scrap_id}`,values ,{
+            headers : {
+              Authorization : `Bearer ${token}`
+            },
+          });
         console.log(response);
         dispatch(updateStockScrapSuccess(response.data));
         setSuccessToastOpen(true);
-        const updateProductScrap = await axios.get(`${BASE_URL}/product-scrap/${product_scrap_id}`);
+        const updateProductScrap = await axios.get(`${BASE_URL}/product-scrap/${product_scrap_id}` ,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          },
+        });
         dispatch(fetchStockScrapSuccess(updateProductScrap.data));
       } catch (err) {
         console.log(err.response.data.errors);

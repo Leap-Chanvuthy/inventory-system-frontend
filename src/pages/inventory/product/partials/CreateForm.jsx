@@ -48,15 +48,14 @@ import {
 } from "../../../../redux/slices/materialStagingSlice";
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import useToken from "../../../../hooks/useToken";
 
 const CreateForm = () => {
+  const token = useToken();
   const { status, error } = useSelector((state) => state.products);
   const { multipleSelection } = useSelector((state) => state.selections);
   const { cartItems } = useSelector((state) => state.carts);
   const { selectedMaterials } = useSelector((state) => state.materialStagings);
-
-  console.log(multipleSelection);
-  console.log("Select material stagging:", selectedMaterials);
 
   const dispatch = useDispatch();
   const [openSuccess, setOpenSuccess] = useState(false);
@@ -158,7 +157,11 @@ const CreateForm = () => {
   useEffect(() => {
     const getCategory = async (e) => {
       try {
-        const response = await axios.get(`${BASE_URL}/product-categories/all`);
+        const response = await axios.get(`${BASE_URL}/product-categories/all` , {
+          headers : {
+            Authorization : `Bearer ${token}`
+          },
+        });
         console.log(response.data);
         setCategories(response.data);
       } catch (err) {
@@ -175,7 +178,11 @@ const CreateForm = () => {
     dispatch(addProductStart());
     try {
       const response = await axios.post(`${BASE_URL}/product`, values, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 
+          "Content-Type": "multipart/form-data" ,
+          Authorization : `Bearer ${token}`
+        },
+        
       });
       dispatch(addProductSuccess(response.data));
       dispatch(resetMaterials());

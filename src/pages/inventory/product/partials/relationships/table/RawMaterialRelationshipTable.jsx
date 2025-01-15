@@ -41,8 +41,10 @@ import {
   toggleMaterial,
 } from "../../../../../../redux/slices/materialStagingSlice";
 import useDebounce from "../../../../../../hooks/useDebounce";
+import useToken from "../../../../../../hooks/useToken";
 
 const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
+  const token = useToken();
   const dispatch = useDispatch();
   const { rawMaterials, error, status } = useSelector(
     (state) => state.rawMaterials
@@ -60,6 +62,9 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
     dispatch(fetchRawMaterialsStart());
     try {
       const response = await axios.get(`${BASE_URL}/raw-materials`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": query,
@@ -116,7 +121,11 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
     dispatch(deleteRawMaterialStart());
     try {
       const response = await axios.delete(
-        `${BASE_URL}/raw-material/${selectedId}`
+        `${BASE_URL}/raw-material/${selectedId}`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          },
+        }
       );
       console.log(response);
       if (response.status === 200) {
@@ -197,7 +206,7 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
             <Table.HeadCell>location</Table.HeadCell>
             <Table.HeadCell>Created</Table.HeadCell>
             <Table.HeadCell>Updated</Table.HeadCell>
-            <Table.HeadCell>Actions</Table.HeadCell>
+            {/* <Table.HeadCell>Actions</Table.HeadCell> */}
           </Table.Head>
           <Table.Body className="divide-y">
             {rawMaterials.length > 0 ? (
@@ -312,7 +321,7 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
                   <Table.Cell className="whitespace-nowrap">
                     {formatDistanceToNow(new Date(material.updated_at))} ago
                   </Table.Cell>
-                  <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {/* <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Link to={`/raw-material/update/${material.id}`}>
                       <FiEdit />
                     </Link>
@@ -323,7 +332,7 @@ const RawMaterialRelationshipTable = ({ filters, createStatus }) => {
                         setSelectedId(material.id);
                       }}
                     />
-                  </Table.Cell>
+                  </Table.Cell> */}
                 </Table.Row>
               ))
             ) : (

@@ -20,8 +20,10 @@ import { toggleSingleSelection } from "../../../../../../redux/slices/selectionS
 import LoadingState from "../../../../../inventory/product/partials/list/LoadingState";
 import { IoEyeSharp } from "react-icons/io5";
 import useDebounce from "../../../../../../hooks/useDebounce";
+import useToken from "../../../../../../hooks/useToken";
 
 const ProductRelationshipTable = ({ filters }) => {
+  const token = useToken();
   const dispatch = useDispatch();
   const { products, error, status } = useSelector((state) => state.products);
   const { singleSelection } = useSelector((state) => state.selections);
@@ -38,6 +40,9 @@ const ProductRelationshipTable = ({ filters }) => {
     dispatch(fetchProductsStart());
     try {
       const response = await axios.get(`${BASE_URL}/products`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": query,

@@ -13,8 +13,10 @@ import { FiEdit } from "react-icons/fi";
 
 import useDebounce from "../../../../../hooks/useDebounce";
 import Update from "../product-scrap/Update";
+import useToken from "../../../../../hooks/useToken";
 
 const ProductScrapTable = ({ filters }) => {
+  const token = useToken();
   const [products, setProducts] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -29,6 +31,9 @@ const ProductScrapTable = ({ filters }) => {
     setStatus("loading");
     try {
       const response = await axios.get(`${BASE_URL}/product-scraps`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": query,
@@ -70,7 +75,11 @@ const ProductScrapTable = ({ filters }) => {
 
     setStatus("loading");
     try {
-      const response = await axios.delete(`${BASE_URL}/product-scrap/${selectedId}`);
+      const response = await axios.delete(`${BASE_URL}/product-scrap/${selectedId}`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
+      });
       if (response.status === 200) {
         setProducts(rawMaterials.filter(material => material.id !== selectedId));
         setOpenModal(false);

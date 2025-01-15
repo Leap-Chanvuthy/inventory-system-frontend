@@ -12,8 +12,10 @@ import {
   DangerToast,
   SuccessToast,
 } from "../../../../../components/ToastNotification";
+import useToken from "../../../../../hooks/useToken";
 
 const ProductExport = () => {
+  const token = useToken();
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -49,9 +51,11 @@ const ProductExport = () => {
   useEffect(() => {
     const getCategory = async (e) => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/product-categories/all`
-        );
+        const response = await axios.get(`${BASE_URL}/product-categories/all` , {
+          headers : {
+            Authorization : `Bearer ${token}`
+          },
+        });
         console.log(response.data);
         setCategories(response.data);
       } catch (err) {
@@ -67,6 +71,9 @@ const ProductExport = () => {
     setLoading(true);
     try {
       const response = await axios.get(`${BASE_URL}/products/export`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           "filter[product_name]": values.product_name,
           "filter[status]": values.status,
