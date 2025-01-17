@@ -283,8 +283,11 @@ const UpdateForm = () => {
          },
       });
       dispatch(updateProductSuccess(response.data));
-      const updatedProduct = await axios.get(`${BASE_URL}/product/${id}`);
-      //   console.log("updated material:", updatedProduct)
+      const updatedProduct = await axios.get(`${BASE_URL}/product/${id}`, {
+        headers :{
+          Authorization : `Bearer ${token}`
+        }
+      });
       dispatch(fetchProductsSuccess(updatedProduct.data));
       setOpenSuccess(true);
     } catch (error) {
@@ -676,7 +679,7 @@ const UpdateForm = () => {
                         </div>
                       </div>
 
-                      <h2 className="text-md text-black font-semibold my-3">
+                      <h2 className="text-md text-black dark:text-white font-semibold my-3">
                         Riel Currency (Auto Calculated)
                       </h2>
 
@@ -799,7 +802,10 @@ const UpdateForm = () => {
               <Timeline.Item>
                 <Timeline.Point icon={FaPlus} />
                 <Timeline.Content>
-                  <Timeline.Title>Move Raw Material to Product</Timeline.Title>
+                  <Timeline.Title>Raw Materials</Timeline.Title>
+                  <div className="my-5">
+                    <RawMaterialRelationship createStatus={status} />
+                  </div>
                   <Timeline.Body>
                     <div className="my-5">
                       {error?.raw_materials ? (
@@ -964,7 +970,6 @@ const UpdateForm = () => {
                       <></>
                     )}
                   </div>
-                  <RawMaterialRelationship createStatus={status} />
                 </Timeline.Content>
               </Timeline.Item>
             </Timeline>
