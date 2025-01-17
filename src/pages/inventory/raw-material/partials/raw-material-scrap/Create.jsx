@@ -85,7 +85,7 @@ const Create = () => {
   useEffect(() => {
     dispatch(resetSingleSelectionState());
     dispatch(removeMaterialFromCart());
-  }, [location.pathname, dispatch , openModal]);
+  }, [location.pathname, dispatch]);
 
   // Sending post request
   const handleSubmit = async (e) => {
