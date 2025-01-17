@@ -64,7 +64,15 @@ const Create = () => {
   };
 
   // handle raw_material_id change
+  // useEffect(() => {
+  //   setValues((prevValues) => ({
+  //     ...prevValues,
+  //     raw_material_id: singleSelection,
+  //   }));
+  // }, [singleSelection]);
+
   useEffect(() => {
+    console.log("Selected ID in CreateForm:", singleSelection);
     setValues((prevValues) => ({
       ...prevValues,
       raw_material_id: singleSelection,
@@ -105,7 +113,9 @@ const Create = () => {
       setLoading(false);
       setSuccessToastOpen(true);
       setOpenModal(false);
-      resetForm();
+      if (response.status === 200) {
+        resetForm();
+      }
     } catch (err) {
       console.log(err);
       setError(err?.response?.data?.errors);
