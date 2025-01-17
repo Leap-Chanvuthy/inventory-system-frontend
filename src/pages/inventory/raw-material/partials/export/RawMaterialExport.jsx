@@ -162,7 +162,7 @@ const RawMaterialExport = () => {
                     <option value="">Select an option</option>
                     {categories &&
                       categories.map((category) => (
-                        <option value={category.id}>
+                        <option key={category.id} value={category.id}>
                           {category.category_name}
                         </option>
                       ))}
