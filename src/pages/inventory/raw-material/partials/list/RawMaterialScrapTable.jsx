@@ -13,8 +13,10 @@ import { FiEdit } from "react-icons/fi";
 
 import useDebounce from "../../../../../hooks/useDebounce";
 import Update from "../raw-material-scrap/Update";
+import useToken from "../../../../../hooks/useToken";
 
 const RawMaterialScrapTable = ({ filters }) => {
+  const token = useToken();
   const [rawMaterials, setRawMaterials] = useState([]);
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -29,6 +31,9 @@ const RawMaterialScrapTable = ({ filters }) => {
     setStatus("loading");
     try {
       const response = await axios.get(`${BASE_URL}/raw-material-scraps`, {
+        headers : {
+          Authorization : `Bearer ${token}`,
+        },
         params: {
           page,
           "filter[search]": query,
@@ -70,7 +75,11 @@ const RawMaterialScrapTable = ({ filters }) => {
 
     setStatus("loading");
     try {
-      const response = await axios.delete(`${BASE_URL}/raw-material-scrap/${selectedId}`);
+      const response = await axios.delete(`${BASE_URL}/raw-material-scrap/${selectedId}`,{
+        headers : {
+          Authorization : `Bearer ${token}`,
+        }
+      });
       if (response.status === 200) {
         setRawMaterials(rawMaterials.filter(material => material.id !== selectedId));
         setOpenModal(false);

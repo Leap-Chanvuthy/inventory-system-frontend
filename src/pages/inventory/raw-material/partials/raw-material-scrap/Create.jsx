@@ -32,11 +32,13 @@ import {
   removeMaterialFromCart,
 } from "../../../../../redux/slices/rawMaterialSlice";
 import { HiInformationCircle } from "react-icons/hi";
+import useToken from "../../../../../hooks/useToken";
 
 const Create = () => {
+  const dispatch = useDispatch();
+  const token = useToken();
   const { materialOnCart } = useSelector((state) => state.rawMaterials);
   const { singleSelection } = useSelector((state) => state.selections);
-  const dispatch = useDispatch();
   const [error, setError] = useState(null);
   const [overQuantityError, setOverQuantityError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -92,7 +94,12 @@ const Create = () => {
     try {
       const response = await axios.post(
         `${BASE_URL}/raw-material-scrap`,
-        values
+        values,
+        {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
       );
       console.log(response);
       setLoading(false);

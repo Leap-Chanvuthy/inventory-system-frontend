@@ -56,7 +56,11 @@ const Update = ({raw_material_category_id}) => {
     e.preventDefault();
     setLoading(true);
     try {
-        const response = await axios.patch(`${BASE_URL}/raw-material-category/update/${raw_material_category_id}` , values);
+        const response = await axios.patch(`${BASE_URL}/raw-material-category/update/${raw_material_category_id}` , values, {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
         console.log(response);
         setLoading(false);
         setSuccessToastOpen(true)

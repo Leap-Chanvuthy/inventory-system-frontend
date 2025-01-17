@@ -29,11 +29,13 @@ import {
 } from "../../../../redux/slices/selectionSlice";
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import useToken from "../../../../hooks/useToken";
 
 const CreateForm = () => {
+  const dispatch = useDispatch();
+  const token = useToken();
   const { status, error } = useSelector((state) => state.rawMaterials);
   const { singleSelection } = useSelector((state) => state.selections);
-  const dispatch = useDispatch();
   const [openSuccess, setOpenSuccess] = useState(false);
   const [failedToastOpen, setFailToastOpen] = useState(false);
 
@@ -106,7 +108,11 @@ const CreateForm = () => {
     const getCategory = async (e) => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/non-paginate/raw-material-categories`
+          `${BASE_URL}/non-paginate/raw-material-categories`,{
+            headers : {
+              Authorization : `Bearer ${token}`
+            }
+          }
         );
         console.log(response.data);
         setCategories(response.data);
@@ -124,33 +130,14 @@ const CreateForm = () => {
     dispatch(addRawMaterialStart());
     try {
       const response = await axios.post(`${BASE_URL}/raw-materials`, values, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          Authorization : `Bearer ${token}`
+         },
       });
       dispatch(addRawMaterialSuccess(response.data));
       setOpenSuccess(true);
-      setValues({
-        image: [],
-        name: "",
-        material_code: "",
-        quantity: "",
-        // remaining_quantity: "",
-        unit_price_in_usd: "",
-        // total_value_in_usd: "",
-        exchange_rate_from_usd_to_riel: "",
-        // unit_price_in_riel: "",
-        // total_value_in_riel: "",
-        // exchange_rate_from_riel_to_usd: "",
-        minimum_stock_level: "",
-        raw_material_category_id: "",
-        unit_of_measurement: "",
-        package_size: "",
-        status: "",
-        location: "",
-        description: "",
-        expiry_date: "",
-        supplier_id: "",
-      });
-      dispatch(toggleSingleSelection(null));
+      resetForm();
     } catch (error) {
       console.error("Error submitting the form:", error);
       setFailToastOpen(true);
@@ -189,7 +176,7 @@ const CreateForm = () => {
       <SuccessToast
         open={openSuccess}
         onClose={() => setOpenSuccess(false)}
-        message="Product Created Successfully"
+        message="Raw Material Created Successfully"
       />
 
       <DangerToast

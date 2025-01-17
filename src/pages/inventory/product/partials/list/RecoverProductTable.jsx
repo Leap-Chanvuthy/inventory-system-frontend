@@ -70,7 +70,7 @@ const RecoverProductTable = ({ filters }) => {
     }
     dispatch(recoverProductStart());
     try {
-      const response = await axios.patch(`${BASE_URL}/product/recover/${selectedId}`, {
+      const response = await axios.patch(`${BASE_URL}/product/recover/${selectedId}`,{} , {
         headers : {
           Authorization : `Bearer ${token}`
         },

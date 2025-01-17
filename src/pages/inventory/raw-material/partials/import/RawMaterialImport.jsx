@@ -11,8 +11,10 @@ import { HiInformationCircle } from "react-icons/hi";
 import { BsCloudUpload } from "react-icons/bs";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from "react-router-dom";
+import useToken from "../../../../../hooks/useToken";
 
 const RawMaterialImport = () => {
+  const token = useToken();
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
@@ -44,6 +46,7 @@ const RawMaterialImport = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization : `Bearer ${token}`,
           },
         }
       );

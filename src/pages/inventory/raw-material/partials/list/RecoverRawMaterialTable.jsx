@@ -12,10 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { recoverRawMaterialFailure, recoverRawMaterialStart, recoverRawMaterialSuccess, fetchRawMaterialsFailure, fetchRawMaterialsStart, fetchRawMaterialsSuccess } from "../../../../../redux/slices/rawMaterialSlice";
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { CiCircleCheck } from "react-icons/ci";
+import useToken from "../../../../../hooks/useToken";
 
 
 const RecoverRawMaterialTable = ({ filters }) => {
   const dispatch = useDispatch();
+  const token = useToken();
   const {rawMaterials , error , status} =  useSelector((state) => state.rawMaterials);
   const [selectedId, setSelectedId] = useState(null);
   const [successToastOpen , setSuccessToastOpen] = useState(false);
@@ -28,6 +30,9 @@ const RecoverRawMaterialTable = ({ filters }) => {
     dispatch(fetchRawMaterialsStart());
     try {
       const response = await axios.get(`${BASE_URL}/raw-materials/trashed`, {
+        headers :{
+          Authorization : `Bearer ${token}`,
+        },
         params: {
           page,
           "filter[search]": filters.query,
@@ -64,13 +69,15 @@ const RecoverRawMaterialTable = ({ filters }) => {
     }
     dispatch(recoverRawMaterialStart());
     try {
-      const response = await axios.patch(`${BASE_URL}/raw-materials/recover/${selectedId}`);
+      const response = await axios.patch(`${BASE_URL}/raw-material/recover/${selectedId}`, {}, {
+        headers :{
+          Authorization : `Bearer ${token}`,
+        },
+      });
       console.log(response);
-      if (response.status === 200) {
         dispatch(recoverRawMaterialSuccess(selectedId));
         setOpenModal(false);
         setSuccessToastOpen(true);
-      }
     } catch (err) {
       console.log("Restore error:", err.response);
       dispatch(

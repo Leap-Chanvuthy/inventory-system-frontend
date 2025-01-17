@@ -36,12 +36,14 @@ import {
 import { FiEdit } from "react-icons/fi";
 import { fetchStockScrapFailure, fetchStockScrapStart, fetchStockScrapSuccess, updateStockScrapFailure, updateStockScrapStart, updateStockScrapSuccess } from "../../../../../redux/slices/stockScrapSlice";
 import RawMaterialScrapTable from "../list/RawMaterialScrapTable";
+import useToken from "../../../../../hooks/useToken";
   
   const Update = ({raw_material_scrap_id}) => {
+    const dispatch = useDispatch();
+    const token = useToken();
     const { materialOnCart } = useSelector((state) => state.rawMaterials);
     const { singleSelection } = useSelector((state) => state.selections);
     const { stockScraps , error , status } = useSelector((state) => state.stockScraps);
-    const dispatch = useDispatch();
 
     const [openModal, setOpenModal] = useState(false);
     const [overQuantityError, setOverQuantityError] = useState(null);
@@ -60,7 +62,11 @@ import RawMaterialScrapTable from "../list/RawMaterialScrapTable";
       const getRawMaterialScrapById = async () => {
         dispatch(fetchStockScrapStart());
         try {
-          const response = await axios.get(`${BASE_URL}/raw-material-scrap/${raw_material_scrap_id}`);
+          const response = await axios.get(`${BASE_URL}/raw-material-scrap/${raw_material_scrap_id}`,{
+            headers : {
+              Authorization : `Bearer ${token}`
+            }
+          });
           console.log(response);
           dispatch(fetchStockScrapSuccess(response.data));
         }catch(err){
@@ -124,12 +130,21 @@ import RawMaterialScrapTable from "../list/RawMaterialScrapTable";
       try {
         const response = await axios.patch(
           `${BASE_URL}/raw-material-scrap/${raw_material_scrap_id}`,
-          values
+          values,
+          {
+            headers : {
+              Authorization : `Bearer ${token}`
+            }
+          }
         );
         console.log(response);
         dispatch(updateStockScrapSuccess(response.data));
         setSuccessToastOpen(true);
-        const updateRawMaterialScrap = await axios.get(`${BASE_URL}/raw-material-scrap/${raw_material_scrap_id}`);
+        const updateRawMaterialScrap = await axios.get(`${BASE_URL}/raw-material-scrap/${raw_material_scrap_id}`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
         dispatch(fetchStockScrapSuccess(updateRawMaterialScrap.data));
       } catch (err) {
         console.log(err);

@@ -44,11 +44,13 @@ import SupplierRelationship from "./relationships/SupplierRelationship";
 import { IoIosArrowBack } from "react-icons/io";
 import { FaTrashCan } from "react-icons/fa6";
 import { MdFileDownload } from "react-icons/md";
+import useToken from "../../../../hooks/useToken";
 
 const UpdateForm = () => {
+  const dispatch = useDispatch();
+  const token = useToken();
   const [openSuccess, setOpenSuccess] = useState(false);
   const [failedToastOpen, setFailToastOpen] = useState(false);
-  const dispatch = useDispatch();
   const { status, error, rawMaterials } = useSelector(
     (state) => state.rawMaterials
   );
@@ -60,7 +62,11 @@ const UpdateForm = () => {
     const getMaterialById = async (e) => {
       dispatch(fetchRawMaterialsStart());
       try {
-        const response = await axios.get(`${BASE_URL}/raw-material/${id}`);
+        const response = await axios.get(`${BASE_URL}/raw-material/${id}`, {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
         console.log(response);
         dispatch(fetchRawMaterialsSuccess(response.data));
       } catch (err) {
@@ -200,12 +206,20 @@ const UpdateForm = () => {
     dispatch(deleteRawMaterialStart());
     try {
       const response = await axios.delete(
-        `${BASE_URL}/raw-material/${id}/images/${imageId}`
+        `${BASE_URL}/raw-material/${id}/images/${imageId}`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
       );
       console.log(response);
       dispatch(deleteRawMaterialSuccess(id));
       setOpenModal(false);
-      const updatedMaterial = await axios.get(`${BASE_URL}/raw-material/${id}`);
+      const updatedMaterial = await axios.get(`${BASE_URL}/raw-material/${id}`,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
       dispatch(fetchRawMaterialsSuccess(updatedMaterial.data));
     } catch (err) {
       console.log(err.response);
@@ -229,7 +243,10 @@ const UpdateForm = () => {
           params: {
             _method: "PATCH",
           },
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 
+            "Content-Type": "multipart/form-data",
+            Authorization : `Bearer ${token}`
+           },
         }
       );
       dispatch(updateRawMaterialSuccess(response));

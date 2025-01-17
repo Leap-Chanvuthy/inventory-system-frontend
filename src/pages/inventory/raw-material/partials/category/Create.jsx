@@ -5,9 +5,11 @@ import axios from "axios";
 import { BASE_URL } from "../../../../../components/const/constant";
 import { DangerToast, SuccessToast } from "../../../../../components/ToastNotification";
 import { IoIosArrowBack } from "react-icons/io";
+import useToken from "../../../../../hooks/useToken";
 
 
 const Create = () => {
+  const token = useToken();
   const [error , setError] = useState(null);
   const [loading , setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -33,15 +35,16 @@ const Create = () => {
     e.preventDefault();
     setLoading(true);
     try {
-        const response = await axios.post (`${BASE_URL}/raw-material-category/create` , values);
+        const response = await axios.post (`${BASE_URL}/raw-material-category/create` , values, {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
         console.log(response);
         setLoading(false);
         setSuccessToastOpen(true)
         setOpenModal(false);
-        setValues({
-          category_name : "",
-          description : ""
-        });
+        resetForm();
     }catch (err){
         console.log(err);
         setError(err?.response?.data?.errors);

@@ -24,8 +24,10 @@ import { ImWarning } from "react-icons/im";
 import { FiEdit } from "react-icons/fi";
 import { IoEyeSharp } from "react-icons/io5";
 import useDebounce from "../../../../../hooks/useDebounce";
+import useToken from "../../../../../hooks/useToken";
 
 const RawMaterialTable = ({ filters }) => {
+  const token = useToken();
   const dispatch = useDispatch();
   const { rawMaterials, error, status } = useSelector(
     (state) => state.rawMaterials
@@ -41,6 +43,9 @@ const RawMaterialTable = ({ filters }) => {
     dispatch(fetchRawMaterialsStart());
     try {
       const response = await axios.get(`${BASE_URL}/raw-materials`, {
+        headers :{
+          Authorization : `Bearer ${token}`,
+        },
         params: {
           page,
           "filter[search]": query,
@@ -85,7 +90,11 @@ const RawMaterialTable = ({ filters }) => {
     dispatch(deleteRawMaterialStart());
     try {
       const response = await axios.delete(
-        `${BASE_URL}/raw-material/${selectedId}`
+        `${BASE_URL}/raw-material/${selectedId}`,{
+          headers :{
+            Authorization : `Bearer ${token}`,
+          },
+        }
       );
       console.log(response);
       if (response.status === 200) {
