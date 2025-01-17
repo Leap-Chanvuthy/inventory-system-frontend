@@ -31,6 +31,9 @@ const RawMaterialRelationshipTable = ({ filters, setOpenModal  }) => {
   );
 
   const { singleSelection } = useSelector((state) => state.selections);
+
+  console.log("Single selection ID:",singleSelection);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
