@@ -64,15 +64,7 @@ const Create = () => {
   };
 
   // handle raw_material_id change
-  // useEffect(() => {
-  //   setValues((prevValues) => ({
-  //     ...prevValues,
-  //     raw_material_id: singleSelection,
-  //   }));
-  // }, [singleSelection]);
-
   useEffect(() => {
-    console.log("Selected ID in CreateForm:", singleSelection);
     setValues((prevValues) => ({
       ...prevValues,
       raw_material_id: singleSelection,
