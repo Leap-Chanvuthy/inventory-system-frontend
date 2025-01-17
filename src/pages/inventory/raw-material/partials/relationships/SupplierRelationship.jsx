@@ -7,11 +7,13 @@ import {
   Select,
   Label,
   Modal,
+  Alert,
+  Tooltip,
 } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import SupplierRelationshipTable from "./table/SupplierRelationshipTable";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaUserTie } from "react-icons/fa";
 import { toggleSingleSelection } from "../../../../../redux/slices/selectionSlice";
 
 const SupplierRelationship = () => {
@@ -56,13 +58,19 @@ const SupplierRelationship = () => {
 
   return (
     <div>
-      <Button onClick={() => setOpenModal(true)}>
-        <div className="flex items-center gap-1">
-          <FaPlus />
-          Supplier
-        </div>
-      </Button>
-      <Modal size="6xl" show={openModal} onClose={() => setOpenModal(false)}>
+      <div className="flex justify-between items-center gap-3">
+          <Alert color="success" className="w-full" icon={FaUserTie}>
+            <span className="font-bold">Select supplier for this raw material</span>
+          </Alert>
+        <Tooltip content="Click to add products to cart">
+            <Button onClick={() => setOpenModal(true)} color='gray'>
+              <div className="flex items-center gap-1">
+                <FaPlus className="font-bold text-lg text-gray-600" />
+              </div>
+            </Button>
+        </Tooltip>
+      </div>
+      <Modal size="7xl" show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
           <span className="font-bold">Supplier</span>
         </Modal.Header>

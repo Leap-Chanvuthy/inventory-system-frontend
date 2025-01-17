@@ -109,9 +109,6 @@ import useToken from "./hooks/useToken";
 
 function App() {
 
-  const token = useToken();
-  console.log(token);
-
   return (
     <BrowserRouter>
       <Routes>

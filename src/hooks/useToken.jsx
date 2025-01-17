@@ -22,19 +22,17 @@ const useToken = () => {
   useEffect(() => {
     if (token) {
       try {
-        const [, payload] = token.split("."); // Extract token payload
-        const decoded = JSON.parse(atob(payload)); // Decode the payload
+        const [, payload] = token.split(".");
+        const decoded = JSON.parse(atob(payload));
 
-        const exp = decoded.exp * 1000; // Convert expiration time to milliseconds
+        const exp = decoded.exp * 1000;
         const currentTime = Date.now();
 
         if (currentTime >= exp) {
-          // Token already expired
           console.log("Token is expired. Logging out...");
-          localStorage.removeItem("auth"); // Clear localStorage
-          dispatch(logout()); // Trigger logout action
+          localStorage.removeItem("auth");
+          dispatch(logout());
         } else {
-          // Calculate remaining time
           const remainingTime = exp - currentTime;
           console.log(`Token will expire in ${remainingTime / 1000} seconds.`);
 
@@ -44,7 +42,6 @@ const useToken = () => {
             dispatch(logout());
           }, remainingTime);
 
-          // Cleanup timeout on component unmount
           return () => clearTimeout(timeout);
         }
       } catch (error) {

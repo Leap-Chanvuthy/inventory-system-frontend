@@ -189,8 +189,11 @@ const UpdateForm = () => {
     const getCategory = async (e) => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/non-paginate/raw-material-categories`
-        );
+          `${BASE_URL}/non-paginate/raw-material-categories`,{
+            headers :{
+              Authorization : `Bearer ${token}`
+            }
+          });
         console.log(response);
         setCategories(response.data);
       } catch (err) {
@@ -250,10 +253,13 @@ const UpdateForm = () => {
         }
       );
       dispatch(updateRawMaterialSuccess(response));
-      const updatedMaterial = await axios.get(`${BASE_URL}/raw-material/${id}`);
+      const updatedMaterial = await axios.get(`${BASE_URL}/raw-material/${id}`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
       console.log("updated material:", updatedMaterial);
       dispatch(fetchRawMaterialsSuccess(updatedMaterial.data));
-      // dispatch(fetchRawMaterialsSuccess());
       setOpenSuccess(true);
     } catch (error) {
       setFailToastOpen(true);

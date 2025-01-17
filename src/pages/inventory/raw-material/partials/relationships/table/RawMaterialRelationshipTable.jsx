@@ -21,8 +21,10 @@ import {
   toggleSingleSelection,
 } from "../../../../../../redux/slices/selectionSlice";
 import useDebounce from "../../../../../../hooks/useDebounce";
+import useToken from "../../../../../../hooks/useToken";
 
 const RawMaterialRelationshipTable = ({ filters, setOpenModal  }) => {
+  const token = useToken();
   const dispatch = useDispatch();
   const { materialOnCart, rawMaterials, error, status } = useSelector(
     (state) => state.rawMaterials
@@ -37,6 +39,9 @@ const RawMaterialRelationshipTable = ({ filters, setOpenModal  }) => {
     dispatch(fetchRawMaterialsStart());
     try {
       const response = await axios.get(`${BASE_URL}/raw-materials`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": query,

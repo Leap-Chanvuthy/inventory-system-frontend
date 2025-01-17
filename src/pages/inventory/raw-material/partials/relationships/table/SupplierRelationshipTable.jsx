@@ -23,9 +23,10 @@ import { Button, Modal } from "flowbite-react";
 import { SuccessToast } from "../../../../../../components/ToastNotification";
 import { ImWarning } from "react-icons/im";
 import useDebounce from "../../../../../../hooks/useDebounce";
+import useToken from "../../../../../../hooks/useToken";
 
 const SupplierRelationshipTable = ({ filters }) => {
-
+  const token = useToken();
   const { suppliers, error, status } = useSelector((state) => state.suppliers);
   const {singleSelection} = useSelector((state) => state.selections);
   const dispatch = useDispatch();
@@ -42,29 +43,29 @@ const SupplierRelationshipTable = ({ filters }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
 
-  const handleDelete = async () => {
-    if (!selectedId) {
-      console.log("No supplier selected for deletion");
-      return;
-    }
-    dispatch(deleteSupplierStart());
-    try {
-      const response = await axios.delete(`${BASE_URL}/supplier/${selectedId}`);
-      console.log(response);
-      if (response.status === 200) {
-        dispatch(deleteSupplierSuccess(selectedId));
-        setOpenModal(false);
-        setSuccessToastOpen(true);
-      }
-    } catch (err) {
-      console.log("Delete error:", err.message);
-      dispatch(
-        deleteSupplierFailed(
-          err.message || "Error deleting data from the server."
-        )
-      );
-    }
-  };
+  // const handleDelete = async () => {
+  //   if (!selectedId) {
+  //     console.log("No supplier selected for deletion");
+  //     return;
+  //   }
+  //   dispatch(deleteSupplierStart());
+  //   try {
+  //     const response = await axios.delete(`${BASE_URL}/supplier/${selectedId}`);
+  //     console.log(response);
+  //     if (response.status === 200) {
+  //       dispatch(deleteSupplierSuccess(selectedId));
+  //       setOpenModal(false);
+  //       setSuccessToastOpen(true);
+  //     }
+  //   } catch (err) {
+  //     console.log("Delete error:", err.message);
+  //     dispatch(
+  //       deleteSupplierFailed(
+  //         err.message || "Error deleting data from the server."
+  //       )
+  //     );
+  //   }
+  // };
 
   // Fetch data & pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -75,6 +76,9 @@ const SupplierRelationshipTable = ({ filters }) => {
     dispatch(getSuppliersStart());
     try {
       const response = await axios.get(`${BASE_URL}/suppliers`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": search,
@@ -157,7 +161,7 @@ const SupplierRelationshipTable = ({ filters }) => {
             <Table.HeadCell>Email</Table.HeadCell>
             <Table.HeadCell>Website</Table.HeadCell>
             <Table.HeadCell className="whitespace-nowrap">Social Media</Table.HeadCell>
-            <Table.HeadCell>Actions</Table.HeadCell>
+            {/* <Table.HeadCell>Actions</Table.HeadCell> */}
           </Table.Head>
           <Table.Body className="divide-y">
             {suppliers.length > 0 ? (
@@ -241,7 +245,7 @@ const SupplierRelationshipTable = ({ filters }) => {
                       {supplier.social_media}
                     </a>
                   </Table.Cell>
-                  <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {/* <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Link to={`/supplier/update/${supplier.id}`}><FiEdit /></Link>
                     <MdDelete
                       className="text-red-600 text-lg cursor-pointer"
@@ -250,7 +254,7 @@ const SupplierRelationshipTable = ({ filters }) => {
                         setSelectedId(supplier.id);
                       }}
                     />
-                  </Table.Cell>
+                  </Table.Cell> */}
                 </Table.Row>
               ))
             ) : (
@@ -275,7 +279,7 @@ const SupplierRelationshipTable = ({ filters }) => {
         />
       </div>
 
-      <>
+      {/* <>
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header><p className="text-center font-bold text-lg capitalize">Are you sure want to delete ?</p></Modal.Header>
         <Modal.Body>
@@ -291,7 +295,7 @@ const SupplierRelationshipTable = ({ filters }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      </>
+      </> */}
 
       <SuccessToast
         open={successToastOpen}
