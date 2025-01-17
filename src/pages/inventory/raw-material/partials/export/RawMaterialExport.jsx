@@ -58,7 +58,11 @@ const RawMaterialExport = () => {
     const getCategory = async (e) => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/non-paginate/raw-material-categories`
+          `${BASE_URL}/non-paginate/raw-material-categories`,{
+            headers :{
+              Authorization : `Bearer ${token}`
+            }
+          }
         );
         console.log(response.data);
         setCategories(response.data);
