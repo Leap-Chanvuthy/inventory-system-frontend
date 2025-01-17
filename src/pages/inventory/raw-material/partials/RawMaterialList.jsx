@@ -16,8 +16,10 @@ import RawMaterialExport from "./export/RawMaterialExport";
 import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import Create from "./category/Create";
+import useToken from "../../../../hooks/useToken";
 
 const RawMaterialList = () => {
+  const token = useToken();
   const [filters, setFilters] = useState({
     query: "",
     category_id: "",
@@ -28,8 +30,6 @@ const RawMaterialList = () => {
 
     // get raw material category
     const [categories , setCategories] = useState([]);
-    console.log(categories)
-  
     useEffect(() =>{
       const getCategory = async (e) =>{
         try {
