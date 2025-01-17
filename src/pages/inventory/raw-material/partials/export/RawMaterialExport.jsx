@@ -19,8 +19,10 @@ import {
   DangerToast,
   SuccessToast,
 } from "../../../../../components/ToastNotification";
+import useToken from "../../../../../hooks/useToken";
 
 const RawMaterialExport = () => {
+  const token = useToken();
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
