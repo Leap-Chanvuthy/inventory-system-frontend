@@ -849,7 +849,10 @@ const CreateForm = () => {
               <Timeline.Item>
                 <Timeline.Point icon={FaPlus} />
                 <Timeline.Content>
-                  <Timeline.Title>Move Raw Material to Product</Timeline.Title>
+                  <Timeline.Title>Raw Materials</Timeline.Title>
+                  <div className="my-5">
+                    <RawMaterialRelationship />
+                  </div>
                   <Timeline.Body>
                     <div className="my-5">
                       {error?.raw_materials ? (
@@ -1011,7 +1014,6 @@ const CreateForm = () => {
                       <></>
                     )}
                   </div>
-                  <RawMaterialRelationship />
                 </Timeline.Content>
               </Timeline.Item>
             </Timeline>

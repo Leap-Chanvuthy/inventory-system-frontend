@@ -15,8 +15,12 @@ import axios from "axios";
 import { BASE_URL } from "../../../../components/const/constant";
 import ProductTable from "./list/ProductTable";
 import ProductExport from "./export/ProductExport";
+import useToken from "../../../../hooks/useToken";
 
 const RawMaterialList = () => {
+  
+  const token = useToken();
+
   const [filters, setFilters] = useState({
     query: "",
     category_id: "",
@@ -31,7 +35,11 @@ const RawMaterialList = () => {
       const getCategory = async (e) =>{
         try {
           
-          const response = await axios.get(`${BASE_URL}/product-categories/all`)
+          const response = await axios.get(`${BASE_URL}/product-categories/all`,{
+            headers :{
+              Authorization : `Bearer ${token}`,
+            }
+          })
           console.log(response.data);
           setCategories(response.data);
         }catch (err){

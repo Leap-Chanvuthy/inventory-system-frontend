@@ -8,8 +8,10 @@ import {
   Label,
   Button,
   Modal,
+  Alert,
+  Tooltip,
 } from "flowbite-react";
-import { IoSearchOutline } from "react-icons/io5";
+import { IoCartOutline, IoSearchOutline } from "react-icons/io5";
 import RawMaterialRelationshipTable from "./table/RawMaterialRelationshipTable";
 import { FaPlus } from "react-icons/fa";
 import { BASE_URL } from "../../../../../components/const/constant";
@@ -86,12 +88,18 @@ const RawMaterialRelationship = ({ createStatus }) => {
 
   return (
     <div>
-      <Button onClick={() => setOpenModal(true)}>
-        <div className="flex items-center gap-1">
-          <FaPlus />
-          {/* Raw Materials */}
-        </div>
-      </Button>
+      <div className="flex justify-between items-center gap-3">
+          <Alert color="success" className="w-full" icon={IoCartOutline}>
+            <span className="font-bold">Select raw materials to create this product</span>
+          </Alert>
+        <Tooltip content="Click to select raw materials">
+            <Button onClick={() => setOpenModal(true)} color='gray'>
+              <div className="flex items-center gap-1">
+                <FaPlus className="font-bold text-lg text-gray-600" />
+              </div>
+            </Button>
+        </Tooltip>
+      </div>
       <Modal size="6xl" show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
           <span className="font-bold">Raw Materials</span>
