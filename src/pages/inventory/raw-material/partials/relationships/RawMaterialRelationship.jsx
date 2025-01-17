@@ -16,9 +16,11 @@ import { BASE_URL } from "../../../../../components/const/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { resetSingleSelectionState } from "../../../../../redux/slices/selectionSlice";
 import { removeMaterialFromCart } from "../../../../../redux/slices/rawMaterialSlice";
+import useToken from "../../../../../hooks/useToken";
 
 const RawMaterialRelationship = ({ createStatus }) => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { singleSelection } = useSelector((state) => state.selections);
   const [openModal, setOpenModal] = useState(false);
   const [filters, setFilters] = useState({
@@ -70,8 +72,11 @@ const RawMaterialRelationship = ({ createStatus }) => {
     const getCategory = async (e) => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/non-paginate/raw-material-categories`
-        );
+          `${BASE_URL}/non-paginate/raw-material-categories`,{
+            headers : {
+              Authorization : `Bearer ${token}`
+            } 
+          });
         // console.log(response.data);
         setCategories(response.data);
       } catch (err) {
