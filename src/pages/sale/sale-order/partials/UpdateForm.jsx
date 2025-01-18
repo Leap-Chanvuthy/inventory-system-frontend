@@ -700,8 +700,8 @@ const UpdateForm = () => {
                     <></>
                   )}
                 </div>
-                <div className="overflow-x-auto lg:max-w-7xl  my-5">
-                  <Table striped>
+                <div className="overflow-x-auto lg:max-w-3xl  my-5">
+                  <Table hoverable>
                     <Table.Head>
                       <Table.HeadCell>Image</Table.HeadCell>
                       <Table.HeadCell className="whitespace-nowrap">

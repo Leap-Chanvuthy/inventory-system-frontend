@@ -252,19 +252,19 @@ const Product = ({ filters }) => {
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     $ {product.unit_price_in_usd}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">
                     $ {product.total_value_in_usd}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">
                     ៛ {product.exchange_rate_from_usd_to_riel} / 1$
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">
                     {product.unit_price_in_riel} ​៛
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">
                     {product.total_value_in_riel} ​៛
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">
                     $ {product.exchange_rate_from_riel_to_usd} / 100៛
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
