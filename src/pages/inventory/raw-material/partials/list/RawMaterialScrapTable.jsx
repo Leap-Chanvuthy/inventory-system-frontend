@@ -149,31 +149,31 @@ const RawMaterialScrapTable = ({ filters }) => {
                     {material.quantity}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.raw_material.material_code}
+                    {material.raw_material?.material_code}
                   </Table.Cell>
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {material.raw_material.name}
+                    {material.raw_material?.name}
                   </Table.Cell>
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
-                      {material.raw_material.status === "IN_STOCK" && (
-                        <Badge color="success">{material.raw_material.status}</Badge>
+                      {material.raw_material?.status === "IN_STOCK" && (
+                        <Badge color="success">{material.raw_material?.status}</Badge>
                       )}
-                      {material.raw_material.status === "LOW_STOCK" && (
-                        <Badge color="warning">{material.raw_material.status}</Badge>
+                      {material.raw_material?.status === "LOW_STOCK" && (
+                        <Badge color="warning">{material.raw_material?.status}</Badge>
                       )}
-                      {material.raw_material.status === "OUT_OF_STOCK" && (
-                        <Badge color="failure">{material.raw_material.status}</Badge>
+                      {material.raw_material?.status === "OUT_OF_STOCK" && (
+                        <Badge color="failure">{material.raw_material?.status}</Badge>
                       )}
                     </div>
                   </Table.Cell>
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <div className="flex flex-wrap gap-2">
-                      <Badge color={material.raw_material.category ? "warning" : "failure"}>
-                        {material.raw_material.category
-                          ? material.raw_material.category.category_name
+                      <Badge color={material.raw_material?.category ? "warning" : "failure"}>
+                        {material.raw_material?.category
+                          ? material.raw_material?.category.category_name
                           : "NULL"}
                       </Badge>
                     </div>
