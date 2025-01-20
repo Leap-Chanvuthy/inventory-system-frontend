@@ -74,7 +74,9 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
               <Sidebar.Item active={pathname === "sale-orders"} >
                 <Link to='/sale-orders'>Sale Order</Link>
               </Sidebar.Item>
-              <Sidebar.Item href="#">Invoice</Sidebar.Item>
+              <Sidebar.Item>
+                 <Link to='/sale-invoices'>Sale Invoices</Link>
+              </Sidebar.Item>
               <Sidebar.Item active={pathname === "/customers"}>
                 <Link to='/customers'>Customers</Link>
               </Sidebar.Item>
