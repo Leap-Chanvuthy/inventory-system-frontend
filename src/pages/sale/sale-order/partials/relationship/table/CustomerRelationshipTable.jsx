@@ -21,11 +21,13 @@ import {
 import useDebounce from "../../../../../../hooks/useDebounce";
 import { IoEyeSharp } from "react-icons/io5";
 import { toggleSingleSelection } from "../../../../../../redux/slices/selectionSlice";
+import useToken from "../../../../../../hooks/useToken";
 
 const CustomerRelationshipTable = ({ filters , setOpenModal }) => {
+  const dispatch = useDispatch();
+  const token = useToken();
   const { customers, error, status , customerOnCart } = useSelector((state) => state.customers);
   const {singleSelection} = useSelector((state) => state.selections);
-  const dispatch = useDispatch();
 
   console.log("Customer selection :" , singleSelection);
   console.log("Customer on cart :" , customerOnCart);
@@ -39,6 +41,9 @@ const CustomerRelationshipTable = ({ filters , setOpenModal }) => {
     dispatch(fetchCustomerStart());
     try {
       const response = await axios.get(`${BASE_URL}/customers`, {
+        headers: {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": search,

@@ -25,13 +25,15 @@ import {
 } from "../../../../../redux/slices/saleOrderSlice";
 import useDebounce from "../../../../../hooks/useDebounce";
 import { IoEyeSharp } from "react-icons/io5";
+import useToken from "../../../../../hooks/useToken";
 
 const SaleOrderTable = ({ filters }) => {
+  const dispatch = useDispatch();
+  const token = useToken();
+
   const { saleOrders, error, status } = useSelector(
     (state) => state.saleOrders
   );
-  console.log(saleOrders);
-  const dispatch = useDispatch();
 
   // handle delete function
   const [openModal, setOpenModal] = useState(false);
@@ -46,7 +48,11 @@ const SaleOrderTable = ({ filters }) => {
     dispatch(deleteSaleOrderStart());
     try {
       const response = await axios.delete(
-        `${BASE_URL}/sale-order/${selectedId}`
+        `${BASE_URL}/sale-order/${selectedId}`,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log(response);
       if (response.status === 200) {
@@ -73,6 +79,9 @@ const SaleOrderTable = ({ filters }) => {
     dispatch(fetchSaleOrderStart());
     try {
       const response = await axios.get(`${BASE_URL}/sale-orders`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           page,
           "filter[search]": search,

@@ -26,10 +26,12 @@ import {
 import CustomerMap from "../map/CustomerMap";
 import useDebounce from "../../../../../hooks/useDebounce";
 import { IoEyeSharp } from "react-icons/io5";
+import useToken from "../../../../../hooks/useToken";
 
 const CustomerTable = ({ filters }) => {
-  const { customers, error, status } = useSelector((state) => state.customers);
   const dispatch = useDispatch();
+  const token = useToken();
+  const { customers, error, status } = useSelector((state) => state.customers);
 
   // handle delete function
   const [openModal, setOpenModal] = useState(false);
@@ -43,7 +45,9 @@ const CustomerTable = ({ filters }) => {
     }
     dispatch(deleteCustomerStart());
     try {
-      const response = await axios.delete(`${BASE_URL}/customer/${selectedId}`);
+      const response = await axios.delete(`${BASE_URL}/customer/${selectedId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       console.log(response);
       if (response.status === 200) {
         dispatch(deleteCustomerSuccess(selectedId));
@@ -69,6 +73,7 @@ const CustomerTable = ({ filters }) => {
     dispatch(fetchCustomerStart());
     try {
       const response = await axios.get(`${BASE_URL}/customers`, {
+        headers: { Authorization: `Bearer ${token}` },
         params: {
           page,
           "filter[search]": search,
@@ -141,7 +146,7 @@ const CustomerTable = ({ filters }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto lg:max-w-6xl  my-5">
+      <div className="overflow-x-auto lg:max-w-7xl  my-5">
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Detail</Table.HeadCell>
@@ -238,11 +243,23 @@ const CustomerTable = ({ filters }) => {
                   </Table.Cell>
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {customer.email_address}
+                    <div className="flex flex-wrap gap-2">
+                      {customer.email_address ? (
+                        customer.email_address
+                      ) : (
+                        <Badge color="failure">N/A</Badge>
+                      )}
+                    </div>
                   </Table.Cell>
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    {customer.social_medial}
+                    <div className="flex flex-wrap gap-2">
+                      {customer.social_medial ? (
+                        customer.social_medial
+                      ) : (
+                        <Badge color="failure">N/A</Badge>
+                      )}
+                    </div>
                   </Table.Cell>
 
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">

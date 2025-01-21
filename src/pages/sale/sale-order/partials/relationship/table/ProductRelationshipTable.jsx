@@ -28,9 +28,11 @@ import { ImWarning } from "react-icons/im";
 import { FiEdit } from "react-icons/fi";
 import { IoEyeSharp } from "react-icons/io5";
 import useDebounce from "../../../../../../hooks/useDebounce";
+import useToken from "../../../../../../hooks/useToken";
 
 const ProductRelationshipTable = ({ filters }) => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { products, error, status } = useSelector((state) => state.products);
   const {multipleSelection} = useSelector((state) => state.selections);
   const {cartItems} = useSelector((state) => state.carts);
@@ -53,6 +55,9 @@ const ProductRelationshipTable = ({ filters }) => {
     dispatch(fetchProductsStart());
     try {
       const response = await axios.get(`${BASE_URL}/products`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
           "filter[search]": query,
@@ -108,7 +113,11 @@ const ProductRelationshipTable = ({ filters }) => {
     }
     dispatch(deleteProductStart());
     try {
-      const response = await axios.delete(`${BASE_URL}/product/${selectedId}`);
+      const response = await axios.delete(`${BASE_URL}/product/${selectedId}`,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
       console.log(response);
       if (response.status === 200) {
         dispatch(deleteProductSuccess(selectedId));

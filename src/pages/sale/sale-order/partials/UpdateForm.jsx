@@ -38,9 +38,6 @@ import {
 import { Link, useParams } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import {
-  createSaleOrderFailed,
-  createSaleOrderStart,
-  createSaleOrderSuccess,
   fetchSaleOrderFailed,
   fetchSaleOrderStart,
   fetchSaleOrderSuccess,
@@ -51,8 +48,6 @@ import {
 import ProductRelationship from "./relationship/ProductRelationship";
 import {
   addToCart,
-  decreaseQuantity,
-  increaseQuantity,
   removeFromCart,
   resetCartItems,
   setCart,
@@ -258,7 +253,11 @@ const UpdateForm = () => {
       );
       console.log(response);
       dispatch(updateSaleOrderSuccess(response.data));
-      const updatedSaleOrder = await axios.get(`${BASE_URL}/sale-order/${id}`);
+      const updatedSaleOrder = await axios.get(`${BASE_URL}/sale-order/${id}`, {
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
       dispatch(fetchSaleOrderSuccess(updatedSaleOrder.data));
       setSuccessToastOpen(true);
       //   resetForm();
