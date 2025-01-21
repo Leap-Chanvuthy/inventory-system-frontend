@@ -120,7 +120,7 @@ function App() {
         </Route>
 
         {/* Admin and Vendor Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['VENDOR']} />}>
+        <Route element={<ProtectedRoute allowedRoles={['VENDER']} />}>
           <Route path="/customers" element={<Layout><Customer /></Layout>} />
           <Route path="/customers/recover" element={<Layout><RecoverCustomer /></Layout>} />
           <Route path="/customers/create" element={<Layout><CreateCustomer /></Layout>} />
