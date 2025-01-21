@@ -19,6 +19,7 @@ import { HiInformationCircle } from "react-icons/hi";
 import { resetMultipleSelectionState } from "../../../../redux/slices/selectionSlice";
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import useToken from "../../../../hooks/useToken";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -29,6 +30,7 @@ const payment_methods = [
 
 const CreateForm = () => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { error, status } = useSelector((state) => state.invoices);
   const { multipleSelection } = useSelector((state) => state.selections);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
@@ -47,6 +49,14 @@ const CreateForm = () => {
   console.log(values);
 
 
+  // Reset state when componet unmount
+  useEffect (() => {
+    return () => {
+      dispatch(resetMultipleSelectionState());
+    }
+  },[location.pathname , dispatch])
+
+
   // handle values change
   const handleChange = (e) => {
     const key = e.target.id;
@@ -62,7 +72,11 @@ const CreateForm = () => {
     e.preventDefault();
     dispatch(addInvoiceStart());
     try {
-      const response = await axios.post(`${BASE_URL}/purchase-invoice`, values);
+      const response = await axios.post(`${BASE_URL}/purchase-invoice`, values,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
       console.log(response);
       dispatch(addInvoiceSuccess(response.data));
       setSuccessToastOpen(true);
@@ -285,7 +299,7 @@ const CreateForm = () => {
           <Button color="failure" onClick={resetForm} className="w-sm">
             Cancel
           </Button>
-          <Button type="submit" className="w-full">
+          <Button disabled={status == 'loading'} type="submit" className="w-full">
             {status === "loading" ? (
               <div>
                 <Spinner /> Saving

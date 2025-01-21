@@ -15,9 +15,11 @@ import { SuccessToast } from "../../../../../../components/ToastNotification";
 import { HiInformationCircle } from "react-icons/hi";
 import { toggleMultipleSelection } from "../../../../../../redux/slices/selectionSlice";
 import useDebounce from "../../../../../../hooks/useDebounce";
+import useToken from "../../../../../../hooks/useToken";
 
 const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   const dispatch = useDispatch();
+  const token = useToken();
   const {rawMaterials , error , status} =  useSelector((state) => state.rawMaterials);
   const {multipleSelection} = useSelector((state) => state.selections);
   const [selectedId, setSelectedId] = useState(null);
@@ -31,6 +33,9 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
     dispatch(fetchRawMaterialsStart());
     try {
       const response = await axios.get(`${BASE_URL}/raw-materials/no-invoice`, {
+        headers: {
+          Authorization : `Bearer ${token}`,  
+        },
         params: {
           page,
           "filter[search]": search,
@@ -72,28 +77,6 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
   };
 
 
-  // delete raw material function
-  const handleDelete = async () => {
-    if (!selectedId) {
-      console.log("No user selected for deletion");
-      return;
-    }
-    dispatch(deleteRawMaterialStart());
-    try {
-      const response = await axios.delete(`${BASE_URL}/raw-material/${selectedId}`);
-      console.log(response);
-      if (response.status === 200) {
-        dispatch(deleteRawMaterialSuccess(selectedId));
-        setOpenModal(false);
-        setSuccessToastOpen(true);
-      }
-    } catch (err) {
-      console.log("Delete error:", err.message);
-      dispatch(
-        deleteRawMaterialFailure(err.message || "Error deleting data from the server.")
-      );
-    }
-  };
 
   if (!Array.isArray(rawMaterials)) {
     return <LoadingState />;
@@ -141,7 +124,6 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
             <Table.HeadCell>location</Table.HeadCell>
             <Table.HeadCell>Created</Table.HeadCell>
             <Table.HeadCell>Updated</Table.HeadCell>
-            <Table.HeadCell>Actions</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {rawMaterials.length > 0 ? (
@@ -159,17 +141,6 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                   <Table.Cell>
                     {material.id}
                   </Table.Cell>
-                  {/* <Table.Cell className="whitespace-nowrap">
-                    { material.raw_material_images && material.raw_material_images.length > 0 ? (
-                      <Avatar
-                        img={`${BASE_IMAGE_URL}/${material.raw_material_images[0].image}`}
-                        alt={material.name}
-                        className="w-10 h-10 object-cover"
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </Table.Cell> */}
                   <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     {material.material_code}
                   </Table.Cell>
@@ -238,16 +209,6 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
                   <Table.Cell className="whitespace-nowrap">
                     {formatDistanceToNow(new Date(material.updated_at))} ago
                   </Table.Cell>
-                  <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                    <Link to={`/raw-material/update/${material.id}`}><FiEdit /></Link>
-                    <MdDelete
-                      className="text-red-600 text-lg cursor-pointer"
-                      onClick={() => {
-                        setOpenModal(true);
-                        setSelectedId(material.id);
-                      }}
-                    />
-                  </Table.Cell>
                 </Table.Row>
               ))
             ) : (
@@ -273,27 +234,6 @@ const RawMaterialRelationshipTable = ({ filters , createStatus }) => {
         />
       </div>
 
-      <Modal size='lg' show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header><p className="text-center font-bold text-lg capitalize">Are you sure want to delete ?</p></Modal.Header>
-        <Modal.Body>
-          <div className="flex items-center gap-3 p-4 border-l-4 border-red-600 bg-red-100">
-            <ImWarning className="text-lg text-red-500" />
-            <p className="text-red-500 capitalize">Item will be shown in recover list after deleted.</p>
-          </div>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button onClick={handleDelete} color='failure'>
-            {status == "loading" ? <Spinner /> : "Delete"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <SuccessToast
-        open={successToastOpen}
-        onClose={() => setSuccessToastOpen(false)}
-        message="Raw material deleted successfully!"
-      />
     </div>
   );
 };

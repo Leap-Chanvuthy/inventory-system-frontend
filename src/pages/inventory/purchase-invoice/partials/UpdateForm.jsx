@@ -43,6 +43,7 @@ import {
   toggleMultipleSelection,
 } from "../../../../redux/slices/selectionSlice";
 import { IoIosArrowBack } from "react-icons/io";
+import useToken from "../../../../hooks/useToken";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -53,6 +54,7 @@ const payment_methods = [
 
 const UpdateForm = () => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { error, status, invoices } = useSelector((state) => state.invoices);
   console.log(invoices);
   const { multipleSelection } = useSelector((state) => state.selections);
@@ -66,7 +68,11 @@ const UpdateForm = () => {
     const getInvoice = async (e) => {
       dispatch(fetchInvoiceStart());
       try {
-        const response = await axios.get(`${BASE_URL}/purchase-invoice/${id}`);
+        const response = await axios.get(`${BASE_URL}/purchase-invoice/${id}` ,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         dispatch(fetchInvoiceSuccess(response.data));
         console.log("Invoice response:", response);
       } catch (err) {
@@ -177,16 +183,20 @@ const UpdateForm = () => {
     dispatch(updateInvoiceStart());
     try {
       const response = await axios.patch(
-        `${BASE_URL}/purchase-invoice/${id}`,
-        values
-      );
+        `${BASE_URL}/purchase-invoice/${id}`, values , {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
       console.log(response);
       dispatch(updateInvoiceSuccess(response));
       setSuccessToastOpen(true);
       // Fetch the updated invoice details to ensure data consistency
-      const updatedInvoice = await axios.get(
-        `${BASE_URL}/purchase-invoice/${id}`
-      );
+      const updatedInvoice = await axios.get(`${BASE_URL}/purchase-invoice/${id}`, {
+        headers :{
+          Authorization : `Bearer ${token}`
+        },
+      });
       dispatch(fetchInvoiceSuccess(updatedInvoice.data));
       dispatch(resetMultipleSelectionState());
     } catch (err) {
@@ -917,7 +927,7 @@ const UpdateForm = () => {
               Back
             </Button>
           </Link>
-          <Button type="submit" className="w-full">
+          <Button disabled={status == 'loading'} type="submit" className="w-full">
             {status === "loading" ? (
               <div>
                 <Spinner /> Saving
