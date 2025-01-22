@@ -10,8 +10,10 @@ import { BASE_URL } from "../../../../../components/const/constant";
 import { HiInformationCircle } from "react-icons/hi";
 import { IoIosArrowBack } from "react-icons/io";
 import { Link } from "react-router-dom";
+import useToken from "../../../../../hooks/useToken";
 
 const SupplierImport = () => {
+  const token = useToken();
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,9 +22,6 @@ const SupplierImport = () => {
   const [toastOpen, setToastOpen] = useState(false);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
 
-  // const handleFileChange = (event) => {
-  //   setSelectedFile(event.target.files[0]);
-  // };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -56,6 +55,7 @@ const SupplierImport = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization : `Bearer ${token}` 
           },
         }
       );
