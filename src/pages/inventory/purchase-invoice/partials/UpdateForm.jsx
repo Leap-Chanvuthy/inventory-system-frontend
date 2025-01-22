@@ -44,6 +44,7 @@ import {
 } from "../../../../redux/slices/selectionSlice";
 import { IoIosArrowBack } from "react-icons/io";
 import useToken from "../../../../hooks/useToken";
+import Detail from "../Detail";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },
@@ -211,6 +212,19 @@ const UpdateForm = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <Timeline>
+
+        <Timeline.Item>
+            <Timeline.Point icon={IoCartOutline} />
+            <Timeline.Content>
+              <Timeline.Title>Invoice Detail</Timeline.Title>
+              <Timeline.Body>
+                  <div class="my-5">
+                    <Detail purchaseInvoice={invoices}/>
+                  </div>
+              </Timeline.Body>
+            </Timeline.Content>
+          </Timeline.Item>
+
           <Timeline.Item>
             <Timeline.Point icon={FaFileInvoiceDollar} />
             <Timeline.Content>
