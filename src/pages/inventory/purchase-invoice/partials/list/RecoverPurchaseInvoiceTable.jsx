@@ -19,9 +19,11 @@ import {
 import { SuccessToast } from "../../../../../components/ToastNotification";
 import { TbRestore } from "react-icons/tb";
 import {CiCircleCheck} from 'react-icons/ci';
+import useToken from "../../../../../hooks/useToken";
 
 const RecoverPurchaseInvoiceTable = ({ filters }) => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { invoices, error, status } = useSelector((state) => state.invoices);
   const [selectedId, setSelectedId] = useState(null);
   const [successToastOpen , setSuccessToastOpen] = useState(false);
@@ -34,6 +36,9 @@ const RecoverPurchaseInvoiceTable = ({ filters }) => {
     dispatch(fetchInvoiceStart());
     try {
       const response = await axios.get(`${BASE_URL}/purchase-invoices/trashed`, {
+        headers : {
+          Authorization : `Bearer ${token}`,
+        },
         params: {
           page,
           'filter[search]' : filters.search,
@@ -72,7 +77,11 @@ const RecoverPurchaseInvoiceTable = ({ filters }) => {
     }
     dispatch(recoverInvoiceStart());
     try {
-      const response = await axios.patch(`${BASE_URL}/purchase-invoice/recover/${selectedId}`);
+      const response = await axios.patch(`${BASE_URL}/purchase-invoice/recover/${selectedId}`, {} ,{
+        headers : {
+          Authorization : `Bearer ${token}`,
+        },
+      });
       console.log(response);
       if (response.status === 200) {
         dispatch(recoverInvoiceSuccess(selectedId));

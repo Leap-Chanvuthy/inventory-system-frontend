@@ -29,10 +29,13 @@ import { HiCheck } from "react-icons/hi";
 import { ImWarning } from "react-icons/im";
 import { IoEyeSharp } from "react-icons/io5";
 import useDebounce from "../../../../../hooks/useDebounce";
+import useToken from "../../../../../hooks/useToken";
+
 
 const SupplierTable = ({ filters }) => {
-  const { suppliers, error, status } = useSelector((state) => state.suppliers);
   const dispatch = useDispatch();
+  const token = useToken();
+  const { suppliers, error, status } = useSelector((state) => state.suppliers);
 
   // handle delete function
   const [openModal, setOpenModal] = useState(false);
@@ -46,7 +49,9 @@ const SupplierTable = ({ filters }) => {
     }
     dispatch(deleteSupplierStart());
     try {
-      const response = await axios.delete(`${BASE_URL}/supplier/${selectedId}`);
+      const response = await axios.delete(`${BASE_URL}/supplier/${selectedId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       console.log(response);
       if (response.status === 200) {
         dispatch(deleteSupplierSuccess(selectedId));
@@ -72,6 +77,7 @@ const SupplierTable = ({ filters }) => {
     dispatch(getSuppliersStart());
     try {
       const response = await axios.get(`${BASE_URL}/suppliers`, {
+        headers: { Authorization: `Bearer ${token}` },
         params: {
           page,
           "filter[search]": search,
@@ -143,7 +149,7 @@ const SupplierTable = ({ filters }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto lg:max-w-6xl  my-5">
+      <div className="overflow-x-auto lg:max-w-7xl  my-5">
         <Table striped>
           <Table.Head>
             <Table.HeadCell>Details</Table.HeadCell>

@@ -25,6 +25,7 @@ import RawMaterialRelationship from "./relationship/RawMaterialRelationship";
 import { Link } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
+import useToken from "../../../../hooks/useToken";
 
 const mapContainerStyle = {
   width: "100%",
@@ -42,8 +43,8 @@ const center = {
 };
 
 const CreateForm = () => {
-  // diapatch redux action
   const dispatch = useDispatch();
+  const token = useToken();
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
   const { error, status } = useSelector((state) => state.suppliers);
@@ -138,6 +139,7 @@ const CreateForm = () => {
       const response = await axios.post(`${BASE_URL}/supplier`, values, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization : `Bearer ${token}`
         },
       });
       console.log(response);

@@ -62,7 +62,7 @@ const SideBar = ({ isOpen, toggleSidebar }) => {
                 <Link to='/suppliers'>Suppliers</Link>
               </Sidebar.Item>
               <Sidebar.Item >
-                <Link to='/settings'>Settings</Link>
+                <Link to='/settings'>Categories</Link>
               </Sidebar.Item>
             </Sidebar.Collapse>
             : <></>

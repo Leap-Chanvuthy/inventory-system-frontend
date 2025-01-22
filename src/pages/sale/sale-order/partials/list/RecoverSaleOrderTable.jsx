@@ -21,15 +21,17 @@ import {
   recoverSaleOrderSuccess,
 } from "../../../../../redux/slices/saleOrderSlice";
 import useDebounce from "../../../../../hooks/useDebounce";
-import { IoEyeSharp } from "react-icons/io5";
 import { CiCircleCheck } from "react-icons/ci";
 import { TbRestore } from "react-icons/tb";
+import useToken from "../../../../../hooks/useToken";
 
 const RecoverSaleOrderTable = ({ filters }) => {
+  const dispatch = useDispatch();
+  const token = useToken();
+
   const { saleOrders, error, status } = useSelector(
     (state) => state.saleOrders
   );
-  const dispatch = useDispatch();
 
   // handle delete function
   const [openModal, setOpenModal] = useState(false);
@@ -46,7 +48,11 @@ const RecoverSaleOrderTable = ({ filters }) => {
     dispatch(recoverSaleOrderStart());
     try {
       const response = await axios.patch(
-        `${BASE_URL}/sale-order/recover/${selectedId}`
+        `${BASE_URL}/sale-order/recover/${selectedId}`, {} , {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       console.log(response);
       if (response.status === 200) {
@@ -79,6 +85,9 @@ const RecoverSaleOrderTable = ({ filters }) => {
     dispatch(fetchSaleOrderStart());
     try {
       const response = await axios.get(`${BASE_URL}/sale-orders/trashed`, {
+        headers :{
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           page,
           "filter[search]": search,

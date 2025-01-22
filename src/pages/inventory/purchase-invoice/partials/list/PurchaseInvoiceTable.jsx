@@ -23,9 +23,11 @@ import { IoEyeSharp, IoPrintOutline } from "react-icons/io5";
 import GenerateInvoice from "../print/GenerateInvoice";
 import ReactDOMServer from "react-dom/server";
 import useDebounce from "../../../../../hooks/useDebounce";
+import useToken from '../../../../../hooks/useToken';
 
 const PurchaseInvoiceTable = ({ filters }) => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { invoices, error, status } = useSelector((state) => state.invoices);
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
@@ -88,6 +90,9 @@ const PurchaseInvoiceTable = ({ filters }) => {
     dispatch(fetchInvoiceStart());
     try {
       const response = await axios.get(`${BASE_URL}/purchase-invoices`, {
+        headers: {
+          Authorization : `Bearer ${token}`,
+        },
         params: {
           page,
           "filter[search]": search,
@@ -135,7 +140,11 @@ const PurchaseInvoiceTable = ({ filters }) => {
     dispatch(deleteInvoiceStart());
     try {
       const response = await axios.delete(
-        `${BASE_URL}/purchase-invoice/${selectedId}`
+        `${BASE_URL}/purchase-invoice/${selectedId}`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
       );
       console.log(response);
       if (response.status === 200) {

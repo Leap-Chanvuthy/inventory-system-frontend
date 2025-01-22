@@ -40,6 +40,7 @@ import {
 import RawMaterialRelationship from "./relationship/RawMaterialRelationship";
 import { IoIosArrowBack } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
+import useToken from "../../../../hooks/useToken";
 
 const mapContainerStyle = {
   width: "100%",
@@ -57,8 +58,8 @@ const center = {
 };
 
 const UpdateForm = () => {
-  // diapatch redux action
   const dispatch = useDispatch();
+  const token = useToken();
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
   const { error, status, suppliers } = useSelector((state) => state.suppliers);
@@ -73,7 +74,9 @@ const UpdateForm = () => {
     const getSupplierById = async () => {
       dispatch(getSuppliersStart());
       try {
-        const response = await axios.get(`${BASE_URL}/supplier/${id}`);
+        const response = await axios.get(`${BASE_URL}/supplier/${id}`, {
+          headers: {Authorization : `Bearer ${token}`},
+        });
         dispatch(getSupplierSuccess(response.data));
         console.log("suppliers data response from axios:", response);
       } catch (err) {
@@ -238,13 +241,16 @@ const UpdateForm = () => {
         },
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
       console.log(response);
       dispatch(createSupplierSuccess(response));
       setSuccessToastOpen(true);
       setImagePreview(null);
-      const updatedSupplier = await axios.get(`${BASE_URL}/supplier/${id}`);
+      const updatedSupplier = await axios.get(`${BASE_URL}/supplier/${id}`, {
+        headers :  {Authorization: `Bearer ${token}`},
+      });
       dispatch(getSupplierSuccess(updatedSupplier.data));
       dispatch(resetMultipleSelectionState());
     } catch (error) {
