@@ -4,7 +4,6 @@ import axios from 'axios';
 import useToken from '../../../hooks/useToken';
 import { BASE_URL } from '../../const/constant';
 
-// Import and register necessary Chart.js components
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -34,7 +33,6 @@ const RawMaterialCount = () => {
         });
         const count = response.data.raw_material_count || 0;
 
-        // Update chart data
         setChartData({
           labels: ['Raw Material Count'],
           datasets: [
@@ -78,7 +76,7 @@ const RawMaterialCount = () => {
             y: {
               beginAtZero: true,
               ticks: {
-                precision: 0, // Ensure whole number ticks
+                precision: 0,
               },
             },
           },

@@ -4,7 +4,6 @@ import axios from 'axios';
 import useToken from '../../../hooks/useToken';
 import { BASE_URL } from '../../const/constant';
 
-// Import and register necessary Chart.js components
 import {
   Chart as ChartJS,
   CategoryScale,

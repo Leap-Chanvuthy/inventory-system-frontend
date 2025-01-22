@@ -40,11 +40,11 @@ const RawMaterialByCategory = () => {
 
         const categories = response.data.categories || [];
         setChartData({
-          labels: categories.map(item => item.category), // Use category as labels
+          labels: categories.map(item => item.category), 
           datasets: [
             {
               label: 'Raw Material by Category',
-              data: categories.map(item => item.amount), // Use amount for the data
+              data: categories.map(item => item.amount), 
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 1,
@@ -90,7 +90,7 @@ const RawMaterialByCategory = () => {
                 text: 'Amount',
               },
               ticks: {
-                precision: 0, // Ensure whole numbers on the y-axis
+                precision: 0, 
               },
             },
           },

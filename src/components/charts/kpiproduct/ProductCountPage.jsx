@@ -83,7 +83,7 @@ const ProductCountPage = () => {
                 text: 'Values',
               },
               ticks: {
-                precision: 0, // Ensures whole numbers for readability
+                precision: 0, 
               },
             },
           },

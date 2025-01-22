@@ -4,7 +4,6 @@ import axios from 'axios';
 import useToken from '../../../hooks/useToken';
 import { BASE_URL } from '../../const/constant';
 
-// Import and register necessary Chart.js components
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -35,11 +34,11 @@ const ProductByCategoryPage = () => {
 
         const categories = response.data.categories || [];
         setChartData({
-          labels: categories.map(item => item.category), // Extract category names for labels
+          labels: categories.map(item => item.category), 
           datasets: [
             {
               label: 'Products by Category',
-              data: categories.map(item => item.amount), // Extract amounts for data
+              data: categories.map(item => item.amount),
               backgroundColor: 'rgba(75, 192, 192, 0.2)',
               borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 1,
@@ -85,7 +84,7 @@ const ProductByCategoryPage = () => {
                 text: 'Amount',
               },
               ticks: {
-                precision: 0, // Ensures whole numbers for better readability
+                precision: 0, 
               },
             },
           },
