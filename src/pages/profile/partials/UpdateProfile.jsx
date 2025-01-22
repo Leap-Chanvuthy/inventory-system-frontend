@@ -5,10 +5,12 @@ import { updateUserProfileFailure, updateUserProfileStart, updateUserProfileSucc
 import axios from "axios";
 import { BASE_URL } from "../../../components/const/constant";
 import { DangerToast, SuccessToast } from "../../../components/ToastNotification";
+import useToken from "../../../hooks/useToken";
 
 
 const UpdateProfile = () => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { currentUser, status, error } = useSelector((state) => state.auth);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openFailure, setOpenFailure] = useState(false);
@@ -34,7 +36,7 @@ const UpdateProfile = () => {
         `${BASE_URL}/profile/update`,
         values,
         {
-          headers: { Authorization: `Bearer ${currentUser.authorisation.token}` }, 
+          headers: { Authorization: `Bearer ${token}` }, 
         }
       );
 
@@ -87,7 +89,7 @@ const UpdateProfile = () => {
             </div>
           </div>
         </div>
-        <Button type="submit">
+        <Button disabled={status == "loading"} type="submit">
           {status === 'loading' ? <Spinner /> : 'Save'}
         </Button>
       </form>

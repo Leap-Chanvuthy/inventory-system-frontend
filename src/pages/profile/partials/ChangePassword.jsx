@@ -12,12 +12,13 @@ import {
   DangerToast,
   SuccessToast,
 } from "../../../components/ToastNotification";
+import useToken from "../../../hooks/useToken";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
+  const token = useToken();
   const { status, error } = useSelector((state) => state.password);
   const { currentUser } = useSelector((state) => state.auth);
-  console.log(error);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openFailure, setOpenFailure] = useState(false);
 
@@ -40,7 +41,7 @@ const ChangePassword = () => {
     dispatch(changePasswordStart());
     try {
       const response = await axios.post(`${BASE_URL}/change-password`, values, {
-        headers: { Authorization: `Bearer ${currentUser.authorisation.token}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       console.log("Response:", response);
