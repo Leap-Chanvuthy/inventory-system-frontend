@@ -293,7 +293,7 @@ const UpdateForm = () => {
               <Timeline.Title>Invoice Detail</Timeline.Title>
               <Timeline.Body>
                   <div class="my-5">
-                    <Detail saleOrder={saleOrders}/>
+                    <Detail saleOrder={saleOrders} sale_id={id}/>
                   </div>
               </Timeline.Body>
             </Timeline.Content>

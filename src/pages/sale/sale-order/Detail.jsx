@@ -158,10 +158,10 @@
 //                             </Table.HeadCell>
 //                             <Table.HeadCell>Category</Table.HeadCell>
 //                             <Table.HeadCell className="whitespace-nowrap">
-//                             Unit Price 
+//                             Unit Price
 //                             </Table.HeadCell>
 //                             <Table.HeadCell className="whitespace-nowrap">
-//                             Total Price 
+//                             Total Price
 //                             </Table.HeadCell>
 //                         </Table.Head>
 //                         <Table.Body className="divide-y">
@@ -244,19 +244,54 @@
 
 // export default Detail;
 
-
-
 import React, { useState } from "react";
-import { Modal, Button, Timeline, Table, Badge, Avatar } from "flowbite-react";
+import { Modal, Button, Timeline, Table, Badge, Avatar, Spinner } from "flowbite-react";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 import { FaUserTie } from "react-icons/fa6";
+import { BASE_URL } from "../../../components/const/constant";
+import axios from "axios";
+import useToken from "../../../hooks/useToken";
+import { DangerToast, SuccessToast } from "../../../components/ToastNotification";
+import { MdOutlineFileDownload } from "react-icons/md";
 
-const Detail = ({ saleOrder, status }) => {
+const Detail = ({ saleOrder, sale_id }) => {
+  const token = useToken();
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successToastOpen, setSuccessToastOpen] = useState(false);
+  const [failToastOpen, setFailToastOpen] = useState(false);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
+
+  const exportSaleOrders = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}/sale-orders/export`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          "filter[id]": sale_id,
+        },
+        responseType: "blob",
+      });
+      console.log(response);
+      if (response.status === 200) {
+        window.location.href = `${BASE_URL}/sale-orders/export?filter[id]=${sale_id}`;
+      }
+      setLoading(false);
+      setSuccessToastOpen(true);
+    } catch (err) {
+      setLoading(false);
+      setError(err?.response?.data?.error);
+      console.log(err);
+      setFailToastOpen(true);
+    }
+  };
 
   return (
     <div>
@@ -288,14 +323,17 @@ const Detail = ({ saleOrder, status }) => {
                     <div>
                       <h3 className="font-bold">Order Date:</h3>
                       <p>
-                        {new Date(saleOrder?.order_date).toLocaleString("en-US", {
-                          weekday: "short",
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                        {new Date(saleOrder?.order_date).toLocaleString(
+                          "en-US",
+                          {
+                            weekday: "short",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
                       </p>
                     </div>
                     <div>
@@ -313,11 +351,15 @@ const Detail = ({ saleOrder, status }) => {
                 <Timeline.Body>
                   <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 gap-5 my-5">
                     <div>
-                      <h3 className="font-bold">Total Amount with Tax (USD):</h3>
+                      <h3 className="font-bold">
+                        Total Amount with Tax (USD):
+                      </h3>
                       <p>{saleOrder?.grand_total_with_tax_in_usd} $</p>
                     </div>
                     <div>
-                      <h3 className="font-bold">Total Amount with Tax (Riel):</h3>
+                      <h3 className="font-bold">
+                        Total Amount with Tax (Riel):
+                      </h3>
                       <p>{saleOrder?.grand_total_with_tax_in_riel} ៛</p>
                     </div>
                     <div>
@@ -327,13 +369,17 @@ const Detail = ({ saleOrder, status }) => {
                     <div>
                       <h3 className="font-bold">Discount:</h3>
                       <p>
-                        {saleOrder?.discount_percentage} % | {saleOrder?.discount_value_in_usd} $ / {saleOrder?.discount_value_in_riel} ៛
+                        {saleOrder?.discount_percentage} % |{" "}
+                        {saleOrder?.discount_value_in_usd} $ /{" "}
+                        {saleOrder?.discount_value_in_riel} ៛
                       </p>
                     </div>
                     <div>
                       <h3 className="font-bold">Tax:</h3>
                       <p>
-                        {saleOrder?.tax_percentage} % | {saleOrder?.tax_value_in_usd} $ / {saleOrder?.tax_value_in_riel} ៛
+                        {saleOrder?.tax_percentage} % |{" "}
+                        {saleOrder?.tax_value_in_usd} $ /{" "}
+                        {saleOrder?.tax_value_in_riel} ៛
                       </p>
                     </div>
                   </div>
@@ -389,17 +435,30 @@ const Detail = ({ saleOrder, status }) => {
                   <div className="overflow-x-auto lg:max-w-7xl my-5">
                     <Table striped>
                       <Table.Head>
-                        <Table.HeadCell className="whitespace-nowrap">Product Code</Table.HeadCell>
-                        <Table.HeadCell className="whitespace-nowrap">Product Name</Table.HeadCell>
-                        <Table.HeadCell className="whitespace-nowrap">Order Qty</Table.HeadCell>
+                        <Table.HeadCell className="whitespace-nowrap">
+                          Product Code
+                        </Table.HeadCell>
+                        <Table.HeadCell className="whitespace-nowrap">
+                          Product Name
+                        </Table.HeadCell>
+                        <Table.HeadCell className="whitespace-nowrap">
+                          Order Qty
+                        </Table.HeadCell>
                         <Table.HeadCell>Category</Table.HeadCell>
-                        <Table.HeadCell className="whitespace-nowrap">Unit Price</Table.HeadCell>
-                        <Table.HeadCell className="whitespace-nowrap">Total Price</Table.HeadCell>
+                        <Table.HeadCell className="whitespace-nowrap">
+                          Unit Price
+                        </Table.HeadCell>
+                        <Table.HeadCell className="whitespace-nowrap">
+                          Total Price
+                        </Table.HeadCell>
                       </Table.Head>
                       <Table.Body className="divide-y">
                         {saleOrder?.products?.length > 0 ? (
                           saleOrder.products.map((product) => (
-                            <Table.Row key={product.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                            <Table.Row
+                              key={product.id}
+                              className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                            >
                               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                 {product.product_code}
                               </Table.Cell>
@@ -411,22 +470,38 @@ const Detail = ({ saleOrder, status }) => {
                               </Table.Cell>
                               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                 <div className="flex flex-wrap gap-2">
-                                  <Badge color={product.category ? "warning" : "failure"}>
-                                    {product.category ? product.category.category_name : "NULL"}
+                                  <Badge
+                                    color={
+                                      product.category ? "warning" : "failure"
+                                    }
+                                  >
+                                    {product.category
+                                      ? product.category.category_name
+                                      : "NULL"}
                                   </Badge>
                                 </div>
                               </Table.Cell>
                               <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">
-                                $ {product.unit_price_in_usd} | {product.unit_price_in_riel} ៛
+                                $ {product.unit_price_in_usd} |{" "}
+                                {product.unit_price_in_riel} ៛
                               </Table.Cell>
                               <Table.Cell className="whitespace-nowrap font-bold text-green-700 dark:text-white">
-                                $ {product.unit_price_in_usd * product.pivot.quantity_sold} | {product.unit_price_in_riel * product.pivot.quantity_sold} ៛
+                                ${" "}
+                                {product.unit_price_in_usd *
+                                  product.pivot.quantity_sold}{" "}
+                                |{" "}
+                                {product.unit_price_in_riel *
+                                  product.pivot.quantity_sold}{" "}
+                                ៛
                               </Table.Cell>
                             </Table.Row>
                           ))
                         ) : (
                           <Table.Row>
-                            <Table.Cell colSpan="8" className="text-center py-4">
+                            <Table.Cell
+                              colSpan="8"
+                              className="text-center py-4"
+                            >
                               No products found.
                             </Table.Cell>
                           </Table.Row>
@@ -463,8 +538,24 @@ const Detail = ({ saleOrder, status }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={closeModal}>Close</Button>
+          <Button onClick={exportSaleOrders} color='gray' disabled={loading}>
+            {loading ? <Spinner /> :
+            <MdOutlineFileDownload /> }
+          </Button>
         </Modal.Footer>
       </Modal>
+
+      <SuccessToast
+        open={successToastOpen}
+        onClose={() => setSuccessToastOpen(false)}
+        message="Sale orders exported successfully !"
+      />
+
+      <DangerToast
+        open={failToastOpen}
+        onClose={() => setFailToastOpen(false)}
+        message={`${error} || Something Went Wrong!"`}
+      />
     </div>
   );
 };
