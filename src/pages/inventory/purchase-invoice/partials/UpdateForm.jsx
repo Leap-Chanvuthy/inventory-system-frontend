@@ -44,7 +44,6 @@ import {
 } from "../../../../redux/slices/selectionSlice";
 import { IoIosArrowBack } from "react-icons/io";
 import useToken from "../../../../hooks/useToken";
-import Detail from "../Detail";
 
 const payment_methods = [
   { id: 1, payment_method: "CREDIT_CARD" },

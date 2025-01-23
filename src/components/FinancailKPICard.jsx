@@ -2,7 +2,7 @@ import { Card } from "flowbite-react";
 import { MdOutlineAttachMoney } from "react-icons/md";
 
 
-const FinancailKPICard = ({title , data}) => {
+const FinancailKPICard = ({title , data }) => {
   return (
     <Card className="w-full">
       <div className="flex items-center gap-10">
@@ -15,7 +15,7 @@ const FinancailKPICard = ({title , data}) => {
             {title}
           </p>
           <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            $ {data}
+            {data}
           </h5>
         </div>
       </div>

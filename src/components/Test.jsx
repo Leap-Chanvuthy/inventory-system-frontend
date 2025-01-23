@@ -88,6 +88,13 @@ import {
   setMultipleSelection,
 } from "../redux/slices/selectionSlice";
 import TestMaterialStaging from "./TestMaterialStaging";
+import RawMaterialByCategory from "./charts/raw-meterial/RawMaterialByCategory";
+import RawMaterialByStatus from "./charts/raw-meterial/RawMaterialByStatus";
+import RawMaterialCount from "./charts/raw-meterial/RawMaterialCount";
+import TopValuedRawMaterials from "./charts/raw-meterial/TopValuedRawMaterials";
+import ProductByCategoryPage from "./charts/kpiproduct/ProductByCategoryPage";
+import ProductByStatusPage from "./charts/kpiproduct/ProductByStatusPage";
+import ProductCountPage from "./charts/kpiproduct/ProductCountPage";
 
 const books = [
   { id: 1, book: "To Kill a Mockingbird", author: "Harper Lee" },
@@ -168,6 +175,16 @@ const Test = () => {
       {/* Test Material Staging    */}
 
       <TestMaterialStaging />    
+      {/* Test Material KPI    */}
+
+      <RawMaterialByCategory/>
+      <RawMaterialByStatus/>
+      <RawMaterialCount/>
+      <TopValuedRawMaterials/>
+      <ProductByCategoryPage/>
+      <ProductByStatusPage/>
+      <ProductCountPage/>
+      <TopValuedRawMaterials/>
 
     </div>
   );
