@@ -3,7 +3,6 @@ import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
 import useToken from '../../../hooks/useToken';
 import { BASE_URL } from '../../const/constant';
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,9 +13,16 @@ import {
   Legend,
 } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-const ProductByCategoryPage = () => {
+const ProductByCategory = () => {
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true);
   const token = useToken();
@@ -37,16 +43,16 @@ const ProductByCategoryPage = () => {
           labels: categories.map(item => item.category), 
           datasets: [
             {
-              label: 'Products by Category',
-              data: categories.map(item => item.amount),
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
+              label: 'Product by Category',
+              data: categories.map(item => item.amount), 
+              backgroundColor: '#8B5CF6',
+              borderColor: '#8B5CF6',
               borderWidth: 1,
             },
           ],
         });
       } catch (error) {
-        console.error('Error fetching products by category:', error);
+        console.error('Error fetching product by category:', error);
       } finally {
         setLoading(false);
       }
@@ -60,21 +66,24 @@ const ProductByCategoryPage = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h3>Products by Category</h3>
+    <div className='w-full lg:md:h-96'>
+      <h3 className='font-bold text-lg'>Product by Category</h3>
       <Bar
         data={chartData}
         options={{
           responsive: true,
           plugins: {
             legend: { position: 'top' },
-            title: { display: true, text: 'Products by Category' },
+            title: { display: true, text: 'Product by Category' },
           },
           scales: {
             x: {
               title: {
                 display: true,
                 text: 'Category',
+              },
+              grid: {
+                color: '#e8e6dc',
               },
             },
             y: {
@@ -86,6 +95,9 @@ const ProductByCategoryPage = () => {
               ticks: {
                 precision: 0, 
               },
+              grid: {
+                color: '#e8e6dc',
+              },
             },
           },
         }}
@@ -94,4 +106,4 @@ const ProductByCategoryPage = () => {
   );
 };
 
-export default ProductByCategoryPage;
+export default ProductByCategory;

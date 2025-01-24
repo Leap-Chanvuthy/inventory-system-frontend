@@ -4,7 +4,7 @@ import axios from 'axios';
 import useToken from '../../../hooks/useToken';
 import { BASE_URL } from '../../const/constant';
 
-const ProductByStatusPage = () => {
+const ProductByStatus = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const token = useToken();
@@ -26,8 +26,8 @@ const ProductByStatusPage = () => {
             {
               label: 'Products by Status',
               data: statusData.map(item => item.product_amount),
-              backgroundColor: 'rgba(153, 102, 255, 0.2)',
-              borderColor: 'rgba(153, 102, 255, 1)',
+              backgroundColor: '#F59E0B', // Solid color
+              borderColor: '#F59E0B', // Solid color
               borderWidth: 1,
             },
           ],
@@ -47,8 +47,8 @@ const ProductByStatusPage = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h3>Products by Status</h3>
+    <div className='w-full h-96'>
+      <h3 className='font-bold text-lg'>Product by Status</h3>
       <Bar
         data={data}
         options={{
@@ -58,7 +58,28 @@ const ProductByStatusPage = () => {
             title: { display: true, text: 'Products by Status' },
           },
           scales: {
-            y: { beginAtZero: true },
+            x: {
+              title: {
+                display: true,
+                text: 'Status',
+              },
+              grid: {
+                color: '#e8e6dc', // Custom grid color for x-axis
+              },
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Amount',
+              },
+              ticks: {
+                precision: 0,
+              },
+              grid: {
+                color: '#e8e6dc', // Custom grid color for x-axis
+              },
+            },
           },
         }}
       />
@@ -66,4 +87,4 @@ const ProductByStatusPage = () => {
   );
 };
 
-export default ProductByStatusPage;
+export default ProductByStatus;

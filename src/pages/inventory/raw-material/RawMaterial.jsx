@@ -19,14 +19,14 @@ const RawMaterial = () => {
       <div className="flex flex-col gap-5 my-5">
         <Tabs aria-label="Tabs with icons" className="my-5" variant="underline">
           <Tabs.Item active title="Raw Materials" icon={IoCartOutline}>
+            <div class="mb-10">
+              <RawMaterialCount />
+            </div>
+            <RawMaterialList />
             <div className="grid grid-cols-1 lg:md:grid-cols-2 gap-5 my-5">
               <TopValuedRawMaterials />
               <RawMaterialByCategory />
               <RawMaterialByStatus />
-            </div>
-            <RawMaterialList />
-            <div className="w-sm">
-              <RawMaterialCount />
             </div>
           </Tabs.Item>
           <Tabs.Item title="Raw Materials Scrap" icon={IoMdSettings}>
