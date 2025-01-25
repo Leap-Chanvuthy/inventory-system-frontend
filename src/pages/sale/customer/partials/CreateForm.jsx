@@ -20,6 +20,7 @@ import {
   createCustomerStart,
   createCustomerSuccess,
 } from "../../../../redux/slices/customerSlice";
+import useToken from "../../../../hooks/useToken";
 
 const mapContainerStyle = {
   width: "100%",
@@ -39,6 +40,7 @@ const center = {
 const CreateForm = () => {
   const { error, status, customers } = useSelector((state) => state.customers);
   const dispatch = useDispatch();
+  const token = useToken();
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -63,7 +65,11 @@ const CreateForm = () => {
   useEffect(() => {
     const getCategory = async (e) => {
       try {
-        const response = await axios.get(`${BASE_URL}/customer-categories/all`);
+        const response = await axios.get(`${BASE_URL}/customer-categories/all` , {
+          headers : {
+            Authorization: `Bearer ${token}`
+          }
+        });
         console.log(response.data);
         setCategories(response.data);
       } catch (err) {
@@ -124,6 +130,7 @@ const CreateForm = () => {
       const response = await axios.post(`${BASE_URL}/customer`, values, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization : `Bearer ${token}`
         },
       });
       console.log(response);

@@ -32,6 +32,7 @@ import {
 } from "../../../../redux/slices/customerSlice";
 import { useParams } from "react-router-dom";
 import { getCurrencyStart } from "../../../../redux/slices/currencySlice";
+import useToken from "../../../../hooks/useToken";
 
 const mapContainerStyle = {
   width: "100%",
@@ -51,6 +52,7 @@ const center = {
 const UpdateForm = () => {
   const { error, status, customers } = useSelector((state) => state.customers);
   const dispatch = useDispatch();
+  const token = useToken();
   const { id } = useParams();
   const [successToastOpen, setSuccessToastOpen] = useState(false);
   const [failToastOpen, setFailToastOpen] = useState(false);
@@ -80,7 +82,11 @@ const UpdateForm = () => {
     const getCustomerById = async () => {
       dispatch(fetchCustomerStart());
       try {
-        const response = await axios.get(`${BASE_URL}/customer/${id}}`);
+        const response = await axios.get(`${BASE_URL}/customer/${id}}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
         console.log(response);
         dispatch(fetchCustomerSuccess(response.data));
       } catch (err) {
@@ -127,7 +133,11 @@ const UpdateForm = () => {
   useEffect(() => {
     const getCategory = async (e) => {
       try {
-        const response = await axios.get(`${BASE_URL}/customer-categories/all`);
+        const response = await axios.get(`${BASE_URL}/customer-categories/all` , {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
         console.log(response.data);
         setCategories(response.data);
       } catch (err) {
@@ -191,13 +201,18 @@ const UpdateForm = () => {
         },
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       });
       console.log(response);
       setSuccessToastOpen(true);
       setOpenSuccess(true);
       dispatch(updateCustomerSuccess(response.data));
-      const updatedCustomer = await axios.get(`${BASE_URL}/customer/${id}`);
+      const updatedCustomer = await axios.get(`${BASE_URL}/customer/${id}` ,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       dispatch(fetchCustomerSuccess(updatedCustomer.data));
     } catch (err) {
       console.log(err.response);

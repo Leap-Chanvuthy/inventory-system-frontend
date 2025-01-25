@@ -310,7 +310,7 @@ const RawMaterialTable = ({ filters }) => {
                   </Table.Cell>
                   <Table.Cell className="flex items-center cursor-pointer gap-3 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     <Link to={`/raw-material/update/${material.id}`}>
-                      <FiEdit />
+                      <FiEdit className=" text-md" />
                     </Link>
                     <MdDelete
                       className="text-red-600 text-lg cursor-pointer"
