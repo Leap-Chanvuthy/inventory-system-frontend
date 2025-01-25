@@ -56,7 +56,7 @@ const RawMaterialCount = () => {
 
   return (
     <div>
-      <h3 className='font-bold text-lg'>Stock Summary</h3>
+      <h3 className='font-bold text-lg'>Raw Material Stock Summary</h3>
       <div className="w-full grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-5 my-5">
         <FinancailKPICard data={values.current_stock_value_in_usd} title="Stock Value in USD" />
         <FinancailKPICard data={values.current_stock_value_in_riel} title="Stock Value in Riel"/>
