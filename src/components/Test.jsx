@@ -98,6 +98,9 @@ import ProductByStatus from "./charts/product/ProductByStatus";
 import TopValuedProducts from "./charts/product/TopValuedProducts";
 import CustomerByCategory from "./charts/customer/CustomerByCategory";
 import TopSpentCustomer from "./charts/customer/TopSpentCustomer";
+import SupplierByStatus from "./charts/supplier/SupplierByStatus";
+import SupplierByCategory from "./charts/supplier/SupplierByCategory";
+import TopSupplier from "./charts/supplier/TopSupplier";
 
 const books = [
   { id: 1, book: "To Kill a Mockingbird", author: "Harper Lee" },
@@ -195,6 +198,12 @@ const Test = () => {
       {/* Customer KPI */}
       <CustomerByCategory />
       <TopSpentCustomer />
+
+
+      {/* Supplier KPI */}
+      <SupplierByStatus />
+      <SupplierByCategory />
+      <TopSupplier />
 
     </div>
   );
