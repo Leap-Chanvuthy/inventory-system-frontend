@@ -6,6 +6,7 @@ import RawMaterialCount from "../../../components/charts/raw-meterial/RawMateria
 import TopValuedRawMaterials from "../../../components/charts/raw-meterial/TopValuedRawMaterials";
 import ProductCount from "../../../components/charts/product/ProductCount";
 import TopValuedProduct from "../../../components/charts/product/TopValuedProducts";
+import TopSupplier from "../../../components/charts/supplier/TopSupplier";
 
 const Summary = () => {
   const [seeMore, setSeeMore] = useState(false);
@@ -19,7 +20,8 @@ const Summary = () => {
           <RawMaterialCount />
           <ProductCount />
         </div>
-        <div className="flex flex-col lg:md:flex-row gap-5">
+        <div className="grid grid-cols-1 lg:md:grid-cols-2 gap-5">
+          <TopSupplier />
           <TopValuedRawMaterials />
           <TopValuedProduct />
         </div>
