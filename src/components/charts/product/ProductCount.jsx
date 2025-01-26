@@ -107,6 +107,8 @@ import useToken from '../../../hooks/useToken';
 import { BASE_URL } from '../../const/constant';
 import FinancailKPICard from '../../FinancailKPICard';
 import NonFinancailKPICard from '../../NonFinancialKPICard';
+import FinancialCardLoading from '../../FinancialCardLoading';
+import NonFinancialCardLoading from '../../NonFinancialCardLoading';
 
 
 const ProductCount = () => {
@@ -152,7 +154,14 @@ const ProductCount = () => {
   }, [token]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-5 my-5">
+        <FinancialCardLoading />
+        <FinancialCardLoading />
+        <NonFinancialCardLoading />
+        <NonFinancialCardLoading />
+      </div>
+    );
   }
 
   return (

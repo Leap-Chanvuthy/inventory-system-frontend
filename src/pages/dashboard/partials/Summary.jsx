@@ -7,6 +7,9 @@ import TopValuedRawMaterials from "../../../components/charts/raw-meterial/TopVa
 import ProductCount from "../../../components/charts/product/ProductCount";
 import TopValuedProduct from "../../../components/charts/product/TopValuedProducts";
 import TopSupplier from "../../../components/charts/supplier/TopSupplier";
+import TotalExpense from "../../../components/charts/kpi/TotalExpense";
+import TotalIncome from "../../../components/charts/kpi/TotalIncome";
+import TotalInvoice from "../../../components/charts/kpi/TotalInvoice";
 
 const Summary = () => {
   const [seeMore, setSeeMore] = useState(false);
@@ -19,6 +22,9 @@ const Summary = () => {
         <div className="">
           <RawMaterialCount />
           <ProductCount />
+          <TotalExpense />
+          <TotalIncome />
+          <TotalInvoice />
         </div>
         <div className="grid grid-cols-1 lg:md:grid-cols-2 gap-5">
           <TopSupplier />

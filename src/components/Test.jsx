@@ -101,6 +101,8 @@ import TopSpentCustomer from "./charts/customer/TopSpentCustomer";
 import SupplierByStatus from "./charts/supplier/SupplierByStatus";
 import SupplierByCategory from "./charts/supplier/SupplierByCategory";
 import TopSupplier from "./charts/supplier/TopSupplier";
+import TotalExpense from "./charts/kpi/TotalExpense";
+import TotalIncome from "./charts/kpi/TotalIncome";
 
 const books = [
   { id: 1, book: "To Kill a Mockingbird", author: "Harper Lee" },
@@ -182,28 +184,34 @@ const Test = () => {
 
       <TestMaterialStaging />    
       {/* Test Material KPI    */}
-      <RawMaterialByCategory/>
+      {/* <RawMaterialByCategory/>
       <RawMaterialByStatus/>
       <RawMaterialCount/>
-      <TopValuedRawMaterials/>
+      <TopValuedRawMaterials/> */}
 
 
        {/* Product KPI */}
-      <ProductByCategory/>
+      {/* <ProductByCategory/>
       <ProductByStatus/>
       <ProductCount/>
-      <TopValuedProducts />
+      <TopValuedProducts /> */}
 
 
       {/* Customer KPI */}
-      <CustomerByCategory />
-      <TopSpentCustomer />
+      {/* <CustomerByCategory />
+      <TopSpentCustomer /> */}
 
 
       {/* Supplier KPI */}
-      <SupplierByStatus />
+      {/* <SupplierByStatus />
       <SupplierByCategory />
-      <TopSupplier />
+      <TopSupplier /> */}
+
+
+      {/* General KPI */}
+      <TotalExpense />
+      <TotalIncome />
+
 
     </div>
   );
