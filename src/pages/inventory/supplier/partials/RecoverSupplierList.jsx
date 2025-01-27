@@ -6,15 +6,13 @@ import {
   Dropdown,
   Select,
   Label,
-  Tooltip,
 } from "flowbite-react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import SupplierTable from "./list/SupplierTable";
 import SupplierExport from "./Export/SupplierExport";
-import { TbRestore } from "react-icons/tb";
+import RecoverSupplierTable from "./list/RecoverSupplierTable";
 
-const SupplierList = () => {
+const RecoverSupplierList = () => {
   const [filters, setFilters] = useState({
     search: "",
     status: "",
@@ -133,28 +131,17 @@ const SupplierList = () => {
                   </div>
                 </div>
               </Dropdown>
-
-              <div className="flex gap-3 items-center">
-              <SupplierExport />
-              <Link to='/suppliers/recover'>
-                <Tooltip content="Recover">
-                  <Button color="success" className="flex justify-center items-center">
-                    <TbRestore className="text-xl" />{" "}
-                  </Button>
-                </Tooltip>
-              </Link>
-            </div>
-              
             </form>
+            <SupplierExport />
           </div>
           <Link to="/suppliers/create">
             <Button color="info">Create New</Button>
           </Link>
         </div>
       </div>
-      <SupplierTable filters={filters} />
+      <RecoverSupplierTable filters={filters} />
     </div>
   );
 };
 
-export default SupplierList;
+export default RecoverSupplierList;

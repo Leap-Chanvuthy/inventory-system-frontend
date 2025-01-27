@@ -54,7 +54,27 @@ const supplierSlice = createSlice({
         state.status = "succeeded";
         state.message = action.payload;
         state.suppliers = state.suppliers.filter(supplier => supplier.id !== action.payload);
-      }      
+    },
+        recoverSupplierStart(state) {
+          state.status = "loading";
+          state.laoding = true;
+          state.error = null;
+        },
+        recoverSupplierSuccess(state, action) {
+          const id = action.payload;
+          state.suppliers = state.suppliers.filter(
+            (supplier) => supplier.id !== id
+          );
+          state.status = "succeeded";
+          state.laoding = false;
+        },
+        recoverSupplierFailure(state, action) {
+          state.error = action.payload;
+          state.status = "failed";
+          state.laoding = false;
+        },     
+      
+      
   },
 });
 
@@ -68,6 +88,9 @@ export const {
   deleteSupplierStart,
   deleteSupplierSuccess,
   deleteSupplierFailed,
+  recoverSupplierFailure,
+  recoverSupplierStart,
+  recoverSupplierSuccess
 } = supplierSlice.actions;
 
 export default supplierSlice.reducer;

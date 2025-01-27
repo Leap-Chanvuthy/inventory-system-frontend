@@ -84,6 +84,7 @@ import UpdateRawMaterial from "./pages/inventory/raw-material/Update";
 import Supplier from "./pages/inventory/supplier/Supplier";
 import CreateSupplier from "./pages/inventory/supplier/Create";
 import UpdateSupplier from "./pages/inventory/supplier/Update";
+import RecoverSupplier from "./pages/inventory/supplier/RecoverSupplier";
 import RecoverRawMaterial from "./pages/inventory/raw-material/RecoverRawMaterial";
 import ProtectedRoute from "./components/privilege/ProtectedRoute";
 import UnauthenticatedRoute from "./components/privilege/UnauthenticatedRoute";
@@ -143,6 +144,7 @@ function App() {
           <Route path="/raw-material/update/:id" element={<Layout><UpdateRawMaterial/></Layout>} />
 
           <Route path="/suppliers" element={<Layout><Supplier /></Layout>} />
+          <Route path="/suppliers/recover" element={<Layout><RecoverSupplier /></Layout>} />
           <Route path="/suppliers/create" element={<Layout><CreateSupplier /></Layout>} />
           <Route path="/supplier/update/:id" element={<Layout><UpdateSupplier /></Layout>} />
 

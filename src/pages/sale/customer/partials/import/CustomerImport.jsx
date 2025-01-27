@@ -6,8 +6,10 @@ import { DangerToast, SuccessToast } from "../../../../../components/ToastNotifi
 import { BASE_URL } from "../../../../../components/const/constant";
 import { HiInformationCircle } from "react-icons/hi";
 import { BsCloudUpload } from "react-icons/bs";
+import useToken from "../../../../../hooks/useToken";
 
 const CustomerImport = () => {
+  const token = useToken();
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,6 +38,7 @@ const CustomerImport = () => {
       const response = await axios.post(`${BASE_URL}/customers/import`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization : `Bearer ${token}`,
         },
       });
 
