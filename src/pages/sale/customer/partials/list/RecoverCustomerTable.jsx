@@ -22,10 +22,12 @@ import {
 } from "../../../../../redux/slices/customerSlice";
 import { CiCircleCheck } from "react-icons/ci";
 import { TbRestore } from "react-icons/tb";
+import useToken from "../../../../../hooks/useToken";
 
 const RecoverCustomerTable = ({ filters }) => {
   const { customers, error, status } = useSelector((state) => state.customers);
   const dispatch = useDispatch();
+  const token = useToken();
 
   // recover customers function
   const [openModal, setOpenModal] = useState(false);
@@ -38,7 +40,11 @@ const RecoverCustomerTable = ({ filters }) => {
     }
     dispatch(recoverCustomerStart());
     try {
-      const response = await axios.patch(`${BASE_URL}/customer/recover/${selectedId}`);
+      const response = await axios.patch(`${BASE_URL}/customer/recover/${selectedId}`, {} , {
+        headers :{
+          Authorization : `Bearer ${token}`
+        }
+      });
       console.log(response);
       if (response.status === 200) {
         dispatch(recoverCustomerSuccess(selectedId));
@@ -64,6 +70,9 @@ const RecoverCustomerTable = ({ filters }) => {
     dispatch(fetchCustomerStart());
     try {
       const response = await axios.get(`${BASE_URL}/customers/trashed`, {
+        headers: {
+          Authorization : `Bearer ${token}`
+        },
         params: {
           page,
             "filter[search]": filters?.search,
@@ -112,9 +121,7 @@ const RecoverCustomerTable = ({ filters }) => {
 
   if (!Array.isArray(customers)) {
     return (
-      <div className="text-center py-5 text-red-500">
-        Customers data is invalid.
-      </div>
+      <LoadingState />
     );
   }
 
@@ -273,7 +280,6 @@ const RecoverCustomerTable = ({ filters }) => {
       {/* <div className="my-5 flex flex-col gap-3">
         <SupplierMap locations={locations} />
       </div> */}
-      map here
 
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header><p className="text-center font-bold text-lg">Are you sure want to recover this item ?</p></Modal.Header>
