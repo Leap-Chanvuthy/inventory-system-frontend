@@ -65,7 +65,7 @@ const TotalExpense = () => {
     <div>
       <h3 className='font-bold text-lg'>Expenditure To Supplier Summary</h3>
       <div className="w-full grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-5 my-5">
-        <FinancailKPICard data={values.total_expense_riel_to_supplier} title="Total Expense USD" />
+        <FinancailKPICard data={values.total_expense_usd_to_supplier} title="Total Expense USD" />
         <FinancailKPICard data={values.total_expense_riel_to_supplier} title="Total Expense Riel"/>
         <FinancailKPICard data={values.total_indebted_usd_to_supplier} title="Total Indebted USD" />
         <FinancailKPICard data={values.total_indebted_riel_to_supplier} title="Total Indebted Riel"/>
